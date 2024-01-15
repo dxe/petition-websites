@@ -1,16 +1,24 @@
-import { ReactNode } from "react";
+import { HTMLProps, ReactNode, useCallback } from "react";
 import heroDuckImg from "./assets/hero.jpeg";
 import aboutImg1 from "./assets/about1.webp";
 import aboutImg2 from "./assets/about2.webp";
 import aboutImg3 from "./assets/about3.webp";
 import { cn } from "./utils";
+import { Petition } from "./components/petition.tsx";
+import { Button } from "./components/ui/button.tsx";
 
 const App = () => {
   // TODO: add GA
+
+  const scrollToPetition = useCallback(() => {
+    const petitionSection = document.getElementById("petition-section");
+    petitionSection?.scrollIntoView({ behavior: "smooth" });
+  }, []);
+
   return (
     <div className="flex flex-col gap-6 items-center">
       <section
-        className="md:h-[90vh] w-full text-white lg:bg-center md:bg-[40%] bg-[45%] bg-cover flex flex-col"
+        className="md:min-h-[90vh] w-full text-white lg:bg-center md:bg-[40%] bg-[45%] bg-cover flex flex-col"
         style={{
           backgroundImage: `url(${heroDuckImg})`,
         }}
@@ -26,13 +34,26 @@ const App = () => {
                 rampant disease and criminal animal cruelty.
               </p>
             </div>
-            <button className="text-black self-start py-3 px-5 bg-white">
+            <Button
+              className="self-start"
+              variant="secondary"
+              size="lg"
+              onClick={scrollToPetition}
+            >
               Tell the DA to prosecute Reichardt
-            </button>
+            </Button>
           </div>
         </div>
       </section>
-      <Section className="bg-green-400">TODO: Petition</Section>
+      <Section
+        className="gap-12 items-center bg-slate-200 xl:rounded-lg py-12 md:px-16"
+        id="petition-section"
+      >
+        <h2 className="font-semibold text-xl uppercase text-left self-start">
+          Contact the District Attorney Now
+        </h2>
+        <Petition />
+      </Section>
       <Section>
         <h2 className="border-b border-slate-300 pb-2 uppercase text-lg tracking-wide text-slate-800">
           About Reichardt Duck Farm
@@ -81,9 +102,9 @@ const App = () => {
           </div>
         </div>
       </Section>
-      <Section className="flex md:flex-row gap-4 md:gap-8 text-center items-center">
+      <Section className="flex md:flex-row gap-8 text-center items-center bg-slate-200 xl:rounded-lg py-12 md:py-4">
         <iframe
-          src="https://player.vimeo.com/video/899045165?h=2603019680"
+          src="https://player.vimeo.com/video/899045165?h=2603019680&autoplay=0&title=0&byline=0&portrait=0&badge=0"
           allow="autoplay; fullscreen"
           allowFullScreen
           className="border-0 h-[500px] md:h-[700px] aspect-[9/16]"
@@ -92,35 +113,35 @@ const App = () => {
           <h4 className="text-3xl uppercase font-medium">
             Ducklings Trapped In Wire
           </h4>
-          <p>
+          <p className="max-w-md">
             Investigators found dozens of ducklings trapped in wire on one night
             in October.
           </p>
-          <button className="text-white py-3 px-5 bg-black">
+          <Button size="lg" onClick={scrollToPetition}>
             Tell the DA to prosecute Reichardt
-          </button>
+          </Button>
         </div>
       </Section>
-      <Section className="flex md:flex-row gap-4 md:gap-8 text-center items-center">
+      <Section className="flex md:flex-row gap-8 text-center items-center bg-slate-200 xl:rounded-lg py-12 md:py-4">
         <iframe
-          src="https://player.vimeo.com/video/899042025?h=d2d319d36b"
+          src="https://player.vimeo.com/video/899042025?h=d2d319d36b&autoplay=0&title=0&byline=0&portrait=0&badge=0"
           allow="autoplay; fullscreen"
           allowFullScreen
           className="border-0 h-[500px] md:h-[700px] aspect-[9/16]"
         ></iframe>
         <div className="flex gap-6 flex-col items-center flex-grow">
           <h4 className="text-3xl uppercase font-medium">Meet River</h4>
-          <p>
+          <p className="max-w-md">
             River was on the verge of death at Reichardt Duck Farm.
             Investigators knew they couldn't leave him behind so they rushed him
             to the vet.
           </p>
-          <button className="text-white py-3 px-5 bg-black">
+          <Button size="lg" onClick={scrollToPetition}>
             Tell the DA to prosecute Reichardt
-          </button>
+          </Button>
         </div>
       </Section>
-      <Section className="text-center pt-4 pb-12 text-sm border-t border-slate-300">
+      <Section className="text-center pt-4 pb-12 text-sm border-t border-slate-300 text-slate-600">
         &copy; {new Date().getFullYear()} Help The Ducks
       </Section>
     </div>
@@ -132,12 +153,14 @@ export default App;
 const Section = ({
   children,
   className,
+  ...props
 }: {
   children: ReactNode;
   className?: string;
-}) => {
+} & HTMLProps<HTMLDivElement>) => {
   return (
     <section
+      {...props}
       className={cn(
         "flex flex-col gap-8 max-w-screen-xl w-full p-4",
         className,
