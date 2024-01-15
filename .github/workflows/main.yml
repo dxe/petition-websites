@@ -27,7 +27,7 @@ jobs:
       - name: typecheck
         run: pnpm typecheck
       - name: check format
-        run: pnpm prettier
+        run: pnpm format
         continue-on-error: false
       - uses: jakejarvis/s3-sync-action@master
         with:
