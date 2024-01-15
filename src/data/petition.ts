@@ -66,13 +66,10 @@ California Health and Safety Code Section 25990(a) provides, in pertinent part: 
 Ducks at Reichardt are routinely neglected and abused. Sick and disabled ducks are denied veterinary care and left to die. Ducks are confined in housing that is unsuitable for their species. They are denied water to swim in and forced to spend their lives standing on a wire floor that digs into their feet. Many ducks develop foot infections due to these conditions. These findings have been consistent for a decade. 
 
 In 2014, Reichardt was investigated by Mercy For Animals. The investigation found ducks being swung around by their necks, mutilated without anesthetic, and being left to die with bleeding wounds.
-https://www.youtube.com/watch?v=jiil6ONtDxU  
 
-In 2019, Reichardt was investigated by Direct Action Everywhere. The investigation found dead ducks piled up in dumpsters, dead ducks being left to rot among living birds, and disabled ducks flailing on their backs, unable to get to food or water. Testing revealed that a highly contagious disease called Riemerella anatipestifer was rampant at the facility.
-https://www.youtube.com/watch?v=HhYYrur9ORQ 
+In 2019, Reichardt was investigated by Direct Action Everywhere. The investigation found dead ducks piled up in dumpsters, dead ducks being left to rot among living birds, and disabled ducks flailing on their backs, unable to get to food or water. Testing revealed that a highly contagious disease called Riemerella anatipestifer was rampant at the facility. 
 
 In 2023, Reichardt was investigated again by Direct Action Everywhere. The investigation found cruelty consistent with findings in 2014 and 2019. It additionally found several dangerous, zoonotic bacteria rampant on the farm, including E. coli, Salmonella, and Staphylococcus.
-https://www.instagram.com/reel/C1UxsjkpV6b/ 
 
 I hope that your office will take appropriate action to stop the disease, cruelty, and neglect at Reichardt Duck Farm. 
 
