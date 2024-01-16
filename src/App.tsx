@@ -49,7 +49,7 @@ const App = () => {
         className="gap-12 items-center bg-slate-200 xl:rounded-lg py-12 md:px-16"
         id="petition-section"
       >
-        <h2 className="font-semibold text-xl uppercase text-left self-start">
+        <h2 className="font-semibold text-xl uppercase self-start text-center md:text-left w-full">
           Contact the District Attorney Now
         </h2>
         <Petition />
@@ -103,12 +103,6 @@ const App = () => {
         </div>
       </Section>
       <Section className="flex md:flex-row gap-8 text-center items-center bg-slate-200 xl:rounded-lg py-12 md:py-4">
-        <iframe
-          src="https://player.vimeo.com/video/899045165?h=2603019680&autoplay=0&title=0&byline=0&portrait=0&badge=0"
-          allow="autoplay; fullscreen"
-          allowFullScreen
-          className="border-0 h-[500px] md:h-[700px] aspect-[9/16]"
-        ></iframe>
         <div className="flex gap-6 flex-col items-center flex-grow">
           <h4 className="text-3xl uppercase font-medium">
             Ducklings Trapped In Wire
@@ -117,18 +111,25 @@ const App = () => {
             Investigators found dozens of ducklings trapped in wire on one night
             in October.
           </p>
-          <Button size="lg" onClick={scrollToPetition}>
+          <Button
+            size="lg"
+            onClick={scrollToPetition}
+            className="hidden md:flex"
+          >
             Tell the DA to prosecute Reichardt
           </Button>
         </div>
-      </Section>
-      <Section className="flex md:flex-row gap-8 text-center items-center bg-slate-200 xl:rounded-lg py-12 md:py-4">
         <iframe
-          src="https://player.vimeo.com/video/899042025?h=d2d319d36b&autoplay=0&title=0&byline=0&portrait=0&badge=0"
+          src="https://player.vimeo.com/video/899045165?h=2603019680&autoplay=0&title=0&byline=0&portrait=0&badge=0"
           allow="autoplay; fullscreen"
           allowFullScreen
-          className="border-0 h-[500px] md:h-[700px] aspect-[9/16]"
-        ></iframe>
+          className="border-0 h-[500px] md:h-[700px] aspect-[9/16] md:order-first"
+        ></iframe>{" "}
+        <Button size="lg" onClick={scrollToPetition} className="flex md:hidden">
+          Tell the DA to prosecute Reichardt
+        </Button>
+      </Section>
+      <Section className="flex md:flex-row gap-8 text-center items-center bg-slate-200 xl:rounded-lg py-12 md:py-4">
         <div className="flex gap-6 flex-col items-center flex-grow">
           <h4 className="text-3xl uppercase font-medium">Meet River</h4>
           <p className="max-w-md">
@@ -136,12 +137,25 @@ const App = () => {
             Investigators knew they couldn't leave him behind so they rushed him
             to the vet.
           </p>
-          <Button size="lg" onClick={scrollToPetition}>
+          <Button
+            size="lg"
+            onClick={scrollToPetition}
+            className="hidden md:flex"
+          >
             Tell the DA to prosecute Reichardt
           </Button>
         </div>
+        <iframe
+          src="https://player.vimeo.com/video/899042025?h=d2d319d36b&autoplay=0&title=0&byline=0&portrait=0&badge=0"
+          allow="autoplay; fullscreen"
+          allowFullScreen
+          className="border-0 h-[500px] md:h-[700px] aspect-[9/16] md:order-first"
+        ></iframe>
+        <Button size="lg" onClick={scrollToPetition} className="flex md:hidden">
+          Tell the DA to prosecute Reichardt
+        </Button>
       </Section>
-      <Section className="text-center pt-4 pb-12 text-sm border-t border-slate-300 text-slate-600">
+      <Section className="text-center pt-4 pb-12 text-sm md:border-t border-slate-300 text-slate-600">
         &copy; {new Date().getFullYear()} Help The Ducks
       </Section>
     </div>
