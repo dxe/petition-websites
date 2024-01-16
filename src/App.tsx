@@ -183,7 +183,7 @@ const App = () => {
               src="https://player.vimeo.com/video/899042025?h=d2d319d36b&autoplay=1&title=0&byline=0&portrait=0&badge=0"
               allow="autoplay; fullscreen"
               allowFullScreen
-              className="border-0 w-full h-full aspect-[9/16] md:order-first"
+              className="border-0 w-full h-full aspect-[9/16] md:order-first max-h-[80vh]"
             ></iframe>
           </DialogContent>
         </Dialog>
