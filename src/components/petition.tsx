@@ -20,7 +20,7 @@ import { Button } from "./ui/button.tsx";
 import { Textarea } from "./ui/textarea.tsx";
 import { Checkbox } from "./ui/checkbox.tsx";
 import { SonomaCities } from "../data/zipcodes.ts";
-import { cn } from "../utils.ts";
+import { cn } from "~/utils.ts";
 import {
   Select,
   SelectContent,
