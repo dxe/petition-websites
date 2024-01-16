@@ -1,23 +1,21 @@
-import { HTMLProps, ReactNode } from "react";
-import heroDuckImg from "./assets/hero.jpeg";
-import aboutImg1 from "./assets/about1.webp";
-import aboutImg2 from "./assets/about2.webp";
-import aboutImg3 from "./assets/about3.webp";
-import { cn } from "./utils";
-import { Petition } from "./components/petition.tsx";
-import { Button } from "./components/ui/button.tsx";
-import video1Thumb from "./assets/video1.jpeg";
-import video2Thumb from "./assets/video2.jpeg";
-import { PlayIcon } from "./components/svg/play-icon.tsx";
+import { useScrollToId } from "../hooks/useScrollToId.ts";
+import heroDuckImg from "../assets/hero.jpeg";
+import { Button } from "../components/ui/button.tsx";
+import { Petition } from "../components/petition.tsx";
+import aboutImg1 from "../assets/about1.webp";
+import aboutImg2 from "../assets/about2.webp";
+import aboutImg3 from "../assets/about3.webp";
 import {
   Dialog,
   DialogContent,
   DialogTrigger,
-} from "./components/ui/dialog.tsx";
-import { useScrollToId } from "./hooks/useScrollToId.ts";
+} from "../components/ui/dialog.tsx";
+import { PlayIcon } from "../components/svg/play-icon.tsx";
+import video1Thumb from "../assets/video1.jpeg";
+import video2Thumb from "../assets/video2.jpeg";
+import { Section } from "../components/section.tsx";
 
-// TODO: add GA
-const App = () => {
+const HomePage = () => {
   return (
     <div className="flex flex-col gap-6 items-center">
       <Hero />
@@ -29,29 +27,7 @@ const App = () => {
     </div>
   );
 };
-
-export default App;
-
-const Section = ({
-  children,
-  className,
-  ...props
-}: {
-  children: ReactNode;
-  className?: string;
-} & HTMLProps<HTMLDivElement>) => {
-  return (
-    <section
-      {...props}
-      className={cn(
-        "flex flex-col gap-8 max-w-screen-xl w-full p-4",
-        className,
-      )}
-    >
-      {children}
-    </section>
-  );
-};
+export const component = HomePage;
 
 const Hero = () => {
   const scrollToPetition = useScrollToId("petition-section");
