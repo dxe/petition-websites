@@ -227,6 +227,7 @@ export const Petition = () => {
                   <Checkbox
                     checked={field.value}
                     onCheckedChange={field.onChange}
+                    aria-label="Outside the United States?"
                   />
                 </FormControl>
                 <FormLabel className="!mt-0">
