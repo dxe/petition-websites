@@ -6,6 +6,14 @@ import aboutImg3 from "./assets/about3.webp";
 import { cn } from "./utils";
 import { Petition } from "./components/petition.tsx";
 import { Button } from "./components/ui/button.tsx";
+import video1Thumb from "./assets/video1.jpeg";
+import video2Thumb from "./assets/video2.jpeg";
+import { PlayIcon } from "./components/svg/play-icon.tsx";
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+} from "./components/ui/dialog.tsx";
 
 const App = () => {
   // TODO: add GA
@@ -102,8 +110,8 @@ const App = () => {
           </div>
         </div>
       </Section>
-      <Section className="flex md:flex-row gap-8 text-center items-center bg-slate-200 xl:rounded-lg py-12 md:py-4">
-        <div className="flex gap-6 flex-col items-center flex-grow">
+      <Section className="flex md:flex-row gap-8 text-center justify-evenly items-center bg-slate-200 xl:rounded-lg py-12 md:py-4">
+        <div className="flex gap-6 flex-col items-center">
           <h4 className="text-3xl uppercase font-medium">
             Ducklings Trapped In Wire
           </h4>
@@ -119,18 +127,32 @@ const App = () => {
             Tell the DA to prosecute Reichardt
           </Button>
         </div>
-        <iframe
-          src="https://player.vimeo.com/video/899045165?h=2603019680&autoplay=0&title=0&byline=0&portrait=0&badge=0"
-          allow="autoplay; fullscreen"
-          allowFullScreen
-          className="border-0 h-[500px] md:h-[700px] aspect-[9/16] md:order-first"
-        ></iframe>{" "}
+        <Dialog>
+          <DialogTrigger asChild>
+            <button className="md:order-first max-w-[325px] relative">
+              <PlayIcon className="inset-0 absolute w-full h-full scale-[33%]" />
+              <img
+                src={video1Thumb}
+                className="aspect-square rounded-md"
+                alt="Watch"
+              />
+            </button>
+          </DialogTrigger>
+          <DialogContent className="w-full flex justify-center bg-black">
+            <iframe
+              src="https://player.vimeo.com/video/899045165?h=2603019680&autoplay=1&title=0&byline=0&portrait=0&badge=0"
+              allow="autoplay; fullscreen"
+              allowFullScreen
+              className="border-0 w-full h-full aspect-[9/16] md:order-first max-h-[80vh]"
+            ></iframe>
+          </DialogContent>
+        </Dialog>
         <Button size="lg" onClick={scrollToPetition} className="flex md:hidden">
           Tell the DA to prosecute Reichardt
         </Button>
       </Section>
-      <Section className="flex md:flex-row gap-8 text-center items-center bg-slate-200 xl:rounded-lg py-12 md:py-4">
-        <div className="flex gap-6 flex-col items-center flex-grow">
+      <Section className="flex md:flex-row gap-8 text-center justify-evenly items-center bg-slate-200 xl:rounded-lg py-12 md:py-4">
+        <div className="flex gap-6 flex-col items-center">
           <h4 className="text-3xl uppercase font-medium">Meet River</h4>
           <p className="max-w-md">
             River was on the verge of death at Reichardt Duck Farm.
@@ -145,12 +167,26 @@ const App = () => {
             Tell the DA to prosecute Reichardt
           </Button>
         </div>
-        <iframe
-          src="https://player.vimeo.com/video/899042025?h=d2d319d36b&autoplay=0&title=0&byline=0&portrait=0&badge=0"
-          allow="autoplay; fullscreen"
-          allowFullScreen
-          className="border-0 h-[500px] md:h-[700px] aspect-[9/16] md:order-first"
-        ></iframe>
+        <Dialog>
+          <DialogTrigger asChild>
+            <button className="md:order-first max-w-[325px] relative">
+              <PlayIcon className="inset-0 absolute w-full h-full scale-[33%]" />
+              <img
+                src={video2Thumb}
+                className="aspect-square rounded-md"
+                alt="Watch"
+              />
+            </button>
+          </DialogTrigger>
+          <DialogContent className="w-full flex justify-center bg-black">
+            <iframe
+              src="https://player.vimeo.com/video/899042025?h=d2d319d36b&autoplay=1&title=0&byline=0&portrait=0&badge=0"
+              allow="autoplay; fullscreen"
+              allowFullScreen
+              className="border-0 w-full h-full aspect-[9/16] md:order-first"
+            ></iframe>
+          </DialogContent>
+        </Dialog>
         <Button size="lg" onClick={scrollToPetition} className="flex md:hidden">
           Tell the DA to prosecute Reichardt
         </Button>
