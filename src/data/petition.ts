@@ -5,14 +5,18 @@ const EmptyStringToUndefined = z.literal("").transform(() => undefined);
 
 export const PetitionFormSchema = z
   .object({
-    name: z.string().min(2, { message: "Name too short" }),
-    email: z.string().email(),
+    name: z
+      .string()
+      .min(2, { message: "Name too short" })
+      .max(255, { message: "Name too long" }),
+    email: z.string().email().max(255, { message: "Email too long" }),
     phone: z
       .string()
       .regex(/^[0-9+-]*$/, {
         message: "Phone number may only contain numbers, +, and -",
       })
       .min(10, { message: "Phone number too short" })
+      .max(255, { message: "Phone number too long" })
       .or(EmptyStringToUndefined)
       .optional(),
     outsideUS: z.boolean(),
@@ -22,10 +26,15 @@ export const PetitionFormSchema = z
       .length(5, { message: "Zip code must be 5 digits or empty" })
       .or(EmptyStringToUndefined)
       .optional(),
-    city: z.string().or(EmptyStringToUndefined).optional(),
+    city: z
+      .string()
+      .max(255, { message: "City too long" })
+      .or(EmptyStringToUndefined)
+      .optional(),
     message: z
       .string()
-      .min(10, { message: "Message must be at least 10 characters" }),
+      .min(10, { message: "Message must be at least 10 characters" })
+      .max(10_000, { message: "Please limit message to 10,000 characters" }),
   })
   .superRefine((data, ctx) => {
     // If outside of US, throw away the zip code.
