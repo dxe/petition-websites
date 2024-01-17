@@ -13,7 +13,7 @@ func mustGetOrCreateDb() *sqlx.DB {
 
 	db, err := sqlx.Open("mysql", dsn)
 	if err != nil {
-		log.Fatalf("Error connecting to database: %q", err)
+		log.Fatalf("Error connecting to database: %v", err)
 	}
 	fmt.Println("Connected to database")
 
@@ -21,13 +21,13 @@ func mustGetOrCreateDb() *sqlx.DB {
 	query := fmt.Sprintf("CREATE DATABASE IF NOT EXISTS %s", dbName)
 	_, err = db.Exec(query)
 	if err != nil {
-		log.Fatalf("Error creating database: %q", err)
+		log.Fatalf("Error creating database: %v", err)
 	}
 
 	// Connect to the specific database.
 	db, err = sqlx.Open("mysql", config.Dsn)
 	if err != nil {
-		log.Fatalf("Error connecting to specified database: %q", err)
+		log.Fatalf("Error connecting to specified database: %v", err)
 	}
 
 	createTableQuery := `
@@ -46,7 +46,7 @@ func mustGetOrCreateDb() *sqlx.DB {
 		)`
 	_, err = db.Exec(createTableQuery)
 	if err != nil {
-		log.Fatalf("Error creating messages table: %q", err)
+		log.Fatalf("Error creating messages table: %v", err)
 	}
 
 	return db
