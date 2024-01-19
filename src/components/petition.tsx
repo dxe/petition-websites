@@ -59,35 +59,29 @@ export const Petition = () => {
   const onSubmit = useMemo(
     () =>
       handleSubmit(async (data) => {
-        console.log(data); // TODO: remove
-        const params = {
-          id: "helptheducks",
-          name: data.name,
-          email: data.email,
-          ...(data.phone && { phone: data.phone }),
-          ...(data.zip && { zip: data.zip }),
-          ...(data.city && { city: data.city }),
-          ...(!data.outsideUS && { country: "United States" }),
-          fullHref: window.location.href,
-        };
-        console.log(params);
-        const resp = await ky.post(PETITION_API_URL, {
-          body: new URLSearchParams(params),
+        // We purposefully do these one at a time. If the first one fails,
+        // we don't want to submit the second one. This allows the user to
+        // resubmit the form without causing duplicate emails to be sent.
+        const petitionResp = await ky.post(PETITION_API_URL, {
+          body: new URLSearchParams({
+            id: "helptheducks",
+            name: data.name,
+            email: data.email,
+            ...(data.phone && { phone: data.phone }),
+            ...(data.zip && { zip: data.zip }),
+            ...(data.city && { city: data.city }),
+            ...(!data.outsideUS && { country: "United States" }),
+            fullHref: window.location.href,
+          }),
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
           },
           throwHttpErrors: false,
         });
-        console.log(resp.status);
-        if (resp.status !== 200) {
-          // TODO: handle error
-          alert(
-            "There was an error submitting your petition. Please try again.",
-          );
-          return;
+        if (petitionResp.status !== 200) {
+          throw new Error("Error submitting petition");
         }
-        // TODO: submit to new duck service too. (json)
-        const resp2 = await ky.post(CAMPAIGN_MAILER_API_URL, {
+        const campaignMailerResp = await ky.post(CAMPAIGN_MAILER_API_URL, {
           json: {
             name: data.name,
             email: data.email,
@@ -102,11 +96,8 @@ export const Petition = () => {
           },
           throwHttpErrors: false,
         });
-        console.log(resp2.status);
-        if (resp2.status !== 200) {
-          alert(
-            "There was an error submitting to duck service. Please try again.",
-          );
+        if (campaignMailerResp.status !== 200) {
+          throw new Error("Error submitting message");
         }
       }),
     [handleSubmit],
