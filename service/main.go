@@ -51,7 +51,7 @@ func main() {
 	go worker()
 
 	fmt.Printf("Listening on port %v\n", config.Port)
-	http.ListenAndServe("localhost:"+config.Port, r)
+	http.ListenAndServe(":"+config.Port, r)
 }
 
 func worker() {
