@@ -37,7 +37,7 @@ func main() {
 		MaxAge:           300, // Maximum value not ignored by any of major browsers.
 	}))
 
-	db = mustGetOrCreateDb()
+	db = getDb()
 	defer db.Close()
 
 	r.Route("/message", func(r chi.Router) {
