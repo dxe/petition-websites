@@ -5,7 +5,7 @@ import {
 } from "../data/petition.ts";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Form,
   FormControl,
@@ -29,6 +29,10 @@ import {
   SelectValue,
 } from "./ui/select.tsx";
 import ky from "ky";
+import { Alert, AlertDescription, AlertTitle } from "./ui/alert.tsx";
+import { LoaderIcon, MailCheckIcon } from "lucide-react";
+import { Simulate } from "react-dom/test-utils";
+import reset = Simulate.reset;
 
 const PETITION_API_URL = "https://petitions-229503.appspot.com/api/sign";
 
@@ -54,17 +58,21 @@ export const Petition = () => {
     },
   });
   const {
-    formState: { dirtyFields },
+    formState: { dirtyFields, touchedFields },
     setValue,
     getValues,
     watch,
     handleSubmit,
     control,
+    resetField,
   } = form;
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const onSubmit = useMemo(
     () =>
       handleSubmit(async (data) => {
+        setIsSubmitting(true);
         window.dataLayer?.push({
           event: "form_submitted",
         });
@@ -88,6 +96,8 @@ export const Petition = () => {
           throwHttpErrors: false,
         });
         if (petitionResp.status !== 200) {
+          setIsSubmitting(false);
+          alert("Error submitting. Please try again.");
           throw new Error("Error submitting petition");
         }
         const campaignMailerResp = await ky.post(CAMPAIGN_MAILER_API_URL, {
@@ -106,8 +116,12 @@ export const Petition = () => {
           throwHttpErrors: false,
         });
         if (campaignMailerResp.status !== 200) {
+          setIsSubmitting(false);
+          alert("Error submitting. Please try again.");
           throw new Error("Error submitting message");
         }
+        setIsSubmitted(true);
+        setIsSubmitting(false);
       }),
     [handleSubmit],
   );
@@ -136,23 +150,30 @@ export const Petition = () => {
   const injectValuesIntoMessage = useCallback(
     (name: string | undefined, city: string | undefined) => {
       if (dirtyFields.message) {
-        alert(
-          "You've already customized the message, so it couldn't be automatically updated with your new name or city. Please be sure to double check your message before submitting.",
+        console.log(
+          "Skipped updating message with name or city since it has been customized.",
         );
         return;
       }
-      setValue(
-        "message",
-        DEFAULT_MESSAGE.replace("[Your name]", name || "[Your name]").replace(
-          "[Your city if you live in Sonoma County]",
-          city || "",
-        ),
-      );
+      resetField("message", {
+        defaultValue: DEFAULT_MESSAGE.replace(
+          "[Your name]",
+          name || "[Your name]",
+        ).replace("[Your city if you live in Sonoma County]", city || ""),
+      });
     },
     [dirtyFields.message, setValue],
   );
 
-  return (
+  return isSubmitted ? (
+    <Alert className="self-center w-fit bg-slate-100">
+      <MailCheckIcon className="h-4 w-4" />
+      <AlertTitle>Thank you</AlertTitle>
+      <AlertDescription>
+        Your message has been submitted. Thank you for taking action!
+      </AlertDescription>
+    </Alert>
+  ) : (
     <Form {...form}>
       <form
         onSubmit={onSubmit}
@@ -162,6 +183,7 @@ export const Petition = () => {
           <FormField
             control={control}
             name="name"
+            disabled={isSubmitting}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Full Name</FormLabel>
@@ -183,6 +205,7 @@ export const Petition = () => {
           <FormField
             control={control}
             name="email"
+            disabled={isSubmitting}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Email</FormLabel>
@@ -200,6 +223,7 @@ export const Petition = () => {
           <FormField
             control={control}
             name="phone"
+            disabled={isSubmitting}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Phone Number</FormLabel>
@@ -213,7 +237,7 @@ export const Petition = () => {
           <FormField
             control={control}
             name="zip"
-            disabled={outsideUS}
+            disabled={outsideUS || isSubmitting}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Zip Code</FormLabel>
@@ -238,6 +262,7 @@ export const Petition = () => {
           <FormField
             control={control}
             name="city"
+            disabled={outsideUS || isSubmitting}
             render={({ field }) => (
               <FormItem className={cn({ hidden: !cities.length })}>
                 <FormLabel>City</FormLabel>
@@ -269,6 +294,7 @@ export const Petition = () => {
           <FormField
             control={control}
             name="outsideUS"
+            disabled={isSubmitting}
             render={({ field }) => (
               <FormItem
                 className={cn("flex gap-2 items-center", {
@@ -294,6 +320,7 @@ export const Petition = () => {
           <FormField
             control={control}
             name="message"
+            disabled={isSubmitting}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Message</FormLabel>
@@ -304,7 +331,12 @@ export const Petition = () => {
               </FormItem>
             )}
           />
-          <Button type="submit">Submit</Button>
+          <Button type="submit" disabled={isSubmitting}>
+            {isSubmitting && (
+              <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />
+            )}
+            Submit
+          </Button>
           <p className="text-xs text-center">
             By signing, you agree to receive email messages from Direct Action
             Everywhere. You may unsubscribe at any time.
