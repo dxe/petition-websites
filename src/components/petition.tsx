@@ -31,8 +31,6 @@ import {
 import ky from "ky";
 import { Alert, AlertDescription, AlertTitle } from "./ui/alert.tsx";
 import { LoaderIcon, MailCheckIcon } from "lucide-react";
-import { Simulate } from "react-dom/test-utils";
-import reset = Simulate.reset;
 
 const PETITION_API_URL = "https://petitions-229503.appspot.com/api/sign";
 
@@ -58,7 +56,7 @@ export const Petition = () => {
     },
   });
   const {
-    formState: { dirtyFields, touchedFields },
+    formState: { dirtyFields },
     setValue,
     getValues,
     watch,
