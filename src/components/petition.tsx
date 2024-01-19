@@ -34,6 +34,12 @@ const PETITION_API_URL = "https://petitions-229503.appspot.com/api/sign";
 
 const CAMPAIGN_MAILER_API_URL = "https://helptheducks.dxe.io/message/create";
 
+declare global {
+  interface Window {
+    dataLayer?: any[];
+  }
+}
+
 export const Petition = () => {
   const form = useForm<PetitionForm>({
     resolver: zodResolver(PetitionFormSchema),
@@ -59,6 +65,9 @@ export const Petition = () => {
   const onSubmit = useMemo(
     () =>
       handleSubmit(async (data) => {
+        window.dataLayer?.push({
+          event: "form_submitted",
+        });
         // We purposefully do these one at a time. If the first one fails,
         // we don't want to submit the second one. This allows the user to
         // resubmit the form without causing duplicate emails to be sent.

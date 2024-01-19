@@ -40,6 +40,15 @@ export const PetitionFormSchema = z
     // If outside of US, throw away the zip code.
     if (data.outsideUS) {
       data.zip = undefined;
+    } else {
+      // If inside US, zip code is required.
+      if (!data.zip) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Zip code is required",
+          path: ["zip"],
+        });
+      }
     }
     const isInSonoma = !!(
       data.zip &&
