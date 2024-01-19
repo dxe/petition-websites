@@ -40,6 +40,10 @@ func main() {
 	db = getDb()
 	defer db.Close()
 
+	r.Get("/healthz", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	})
+
 	r.Route("/message", func(r chi.Router) {
 		r.Post("/create", createMessageHandler)
 	})
