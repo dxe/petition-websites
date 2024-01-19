@@ -38,7 +38,7 @@ const CAMPAIGN_MAILER_API_URL = "https://helptheducks.dxe.io/message/create";
 
 declare global {
   interface Window {
-    dataLayer?: any[];
+    dataLayer?: unknown[];
   }
 }
 
@@ -160,7 +160,7 @@ export const Petition = () => {
         ).replace("[Your city if you live in Sonoma County]", city || ""),
       });
     },
-    [dirtyFields.message, setValue],
+    [dirtyFields.message, resetField],
   );
 
   return isSubmitted ? (
