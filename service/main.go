@@ -78,8 +78,9 @@ func processNewMessages() {
 		err := mailer.Send(mailClient, mailer.SendOptions{
 			From:    fmt.Sprintf("%s <%s>", message.Name, fromEmail),
 			ReplyTo: message.Email,
-			To:      "jake@directactioneverywhere.com", // TODO
-			Subject: "Testing email",                   // TODO
+			// TODO: change this after confirming everything is working okay
+			To:      "jake@directactioneverywhere.com",
+			Subject: "Prosecute Reichardt Duck Farm for Animal Abuse",
 			Body:    message.Message,
 		})
 		if err != nil {
