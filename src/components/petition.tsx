@@ -28,6 +28,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select.tsx";
+import ky from "ky";
+
+const PETITION_API_URL = "https://petitions-229503.appspot.com/api/sign";
+
+const CAMPAIGN_MAILER_API_URL = "https://helptheducks.dxe.io/message/create";
 
 export const Petition = () => {
   const form = useForm<PetitionForm>({
@@ -53,9 +58,56 @@ export const Petition = () => {
 
   const onSubmit = useMemo(
     () =>
-      handleSubmit((data) => {
-        // TODO: submit to petition service & new backend for sending email to district attorney.
-        console.log(data);
+      handleSubmit(async (data) => {
+        console.log(data); // TODO: remove
+        const params = {
+          id: "helptheducks",
+          name: data.name,
+          email: data.email,
+          ...(data.phone && { phone: data.phone }),
+          ...(data.zip && { zip: data.zip }),
+          ...(data.city && { city: data.city }),
+          ...(!data.outsideUS && { country: "United States" }),
+          fullHref: window.location.href,
+        };
+        console.log(params);
+        const resp = await ky.post(PETITION_API_URL, {
+          body: new URLSearchParams(params),
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          throwHttpErrors: false,
+        });
+        console.log(resp.status);
+        if (resp.status !== 200) {
+          // TODO: handle error
+          alert(
+            "There was an error submitting your petition. Please try again.",
+          );
+          return;
+        }
+        // TODO: submit to new duck service too. (json)
+        const resp2 = await ky.post(CAMPAIGN_MAILER_API_URL, {
+          json: {
+            name: data.name,
+            email: data.email,
+            ...(data.phone && { phone: data.phone }),
+            outside_us: data.outsideUS,
+            ...(data.zip && { zip: data.zip }),
+            ...(data.city && { city: data.city }),
+            message: data.message,
+          },
+          headers: {
+            "Content-Type": "application/json",
+          },
+          throwHttpErrors: false,
+        });
+        console.log(resp2.status);
+        if (resp2.status !== 200) {
+          alert(
+            "There was an error submitting to duck service. Please try again.",
+          );
+        }
       }),
     [handleSubmit],
   );

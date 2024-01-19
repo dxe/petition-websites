@@ -38,6 +38,9 @@ dependencies:
   clsx:
     specifier: ^2.1.0
     version: 2.1.0
+  ky:
+    specifier: ^1.2.0
+    version: 1.2.0
   lucide-react:
     specifier: ^0.309.0
     version: 0.309.0(react@18.2.0)
@@ -3652,6 +3655,11 @@ packages:
     resolution: {integrity: sha512-1zGZ9MF9H22UnkpVeuaGKOjfA2t6WrfdrJmGjy16ykcjnKQDmHVX+KI477rpbGevz/5FD4MC3xf1oxylBgcaQw==}
     engines: {node: '>=14.14.0'}
     dev: true
+
+  /ky@1.2.0:
+    resolution: {integrity: sha512-dnPW+T78MuJ9tLAiF/apJV7bP7RRRCARXQxsCmsWiKLXqGtMBOgDVOFRYzCAfNe/OrRyFyor5ESgvvC+QWEqOA==}
+    engines: {node: '>=18'}
+    dev: false
 
   /levn@0.4.1:
     resolution: {integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==}

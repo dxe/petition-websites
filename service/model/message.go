@@ -68,7 +68,7 @@ func GetMessagesToProcess(db *sqlx.DB) ([]Message, error) {
 		tx.Rollback()
 		return nil, nil
 	}
-	ids := make([]int, len(messages))
+	ids := make([]interface{}, len(messages))
 	for i, message := range messages {
 		ids[i] = message.ID
 	}
@@ -77,7 +77,8 @@ func GetMessagesToProcess(db *sqlx.DB) ([]Message, error) {
 		placeholders[i] = "?"
 	}
 
-	_, err = tx.Exec("UPDATE messages SET status = 'IN_PROGRESS' WHERE id IN (%s)", strings.Join(placeholders, ","))
+	query := fmt.Sprintf("UPDATE messages SET status = 'IN_PROGRESS' WHERE id IN (%s)", strings.Join(placeholders, ","))
+	_, err = tx.Exec(query, ids...)
 	if err != nil {
 		tx.Rollback()
 		return nil, fmt.Errorf("error updating message status to IN_PROGRESS: %v", err)
