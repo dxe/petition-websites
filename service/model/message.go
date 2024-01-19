@@ -51,11 +51,41 @@ func InsertMessage(db *sqlx.DB, message Message) error {
 }
 
 func GetMessagesToProcess(db *sqlx.DB) ([]Message, error) {
+	tx, err := db.Beginx()
+	if err != nil {
+		return nil, fmt.Errorf("error beginning transaction: %v", err)
+	}
 	var messages []Message
-	err := db.Select(
+	err = tx.Select(
 		&messages,
-		`SELECT id, name, email, message FROM messages WHERE status = 'PENDING' LIMIT 50`,
+		`SELECT id, name, email, message FROM messages WHERE status = 'PENDING' LIMIT 50 FOR UPDATE`,
 	)
+	if err != nil {
+		tx.Rollback()
+		return nil, fmt.Errorf("error selecting messages: %v", err)
+	}
+	if len(messages) == 0 {
+		tx.Rollback()
+		return nil, nil
+	}
+	ids := make([]int, len(messages))
+	for i, message := range messages {
+		ids[i] = message.ID
+	}
+	placeholders := make([]string, len(ids))
+	for i := range placeholders {
+		placeholders[i] = "?"
+	}
+
+	_, err = tx.Exec("UPDATE messages SET status = 'IN_PROGRESS' WHERE id IN (%s)", strings.Join(placeholders, ","))
+	if err != nil {
+		tx.Rollback()
+		return nil, fmt.Errorf("error updating message status to IN_PROGRESS: %v", err)
+	}
+	err = tx.Commit()
+	if err != nil {
+		return nil, fmt.Errorf("error committing transaction: %v", err)
+	}
 	return messages, err
 }
 
