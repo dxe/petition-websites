@@ -5,7 +5,7 @@ import {
 } from "../data/petition.ts";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   Form,
   FormControl,
@@ -31,16 +31,19 @@ import {
 import ky from "ky";
 import { Alert, AlertDescription, AlertTitle } from "./ui/alert.tsx";
 import { LoaderIcon, MailCheckIcon } from "lucide-react";
+import ReCAPTCHA from "react-google-recaptcha";
 
 const PETITION_API_URL = "https://petitions-229503.appspot.com/api/sign";
 
-const CAMPAIGN_MAILER_API_URL = "https://helptheducks.dxe.io/message/create";
+const CAMPAIGN_MAILER_API_URL = `${import.meta.env.PROD ? "https://helptheducks.dxe.io" : "http://localhost:3333"}/message/create`;
 
 declare global {
   interface Window {
     dataLayer?: unknown[];
   }
 }
+
+const CAPTCHA_SITE_KEY = "6LdiglcpAAAAAM9XE_TNnAiZ22NR9nSRxHMOFn8E";
 
 export const Petition = () => {
   const form = useForm<PetitionForm>({
@@ -70,10 +73,21 @@ export const Petition = () => {
   const onSubmit = useMemo(
     () =>
       handleSubmit(async (data) => {
-        setIsSubmitting(true);
         window.dataLayer?.push({
           event: "form_submitted",
         });
+        setIsSubmitting(true);
+        if (!recaptchaRef.current) {
+          alert("Error loading captcha. Please refresh the page & try again.");
+          setIsSubmitting(false);
+          return;
+        }
+        const token = await recaptchaRef.current.executeAsync();
+        if (!token) {
+          alert("Captcha error. Please refresh the page & try again.");
+          setIsSubmitting(false);
+          return;
+        }
         // We purposefully do these one at a time. If the first one fails,
         // we don't want to submit the second one. This allows the user to
         // resubmit the form without causing duplicate emails to be sent.
@@ -107,6 +121,7 @@ export const Petition = () => {
             ...(data.zip && { zip: data.zip }),
             ...(data.city && { city: data.city }),
             message: data.message,
+            token,
           },
           headers: {
             "Content-Type": "application/json",
@@ -162,6 +177,8 @@ export const Petition = () => {
     },
     [dirtyFields.message, resetField],
   );
+
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
 
   return isSubmitted ? (
     <Alert className="self-center w-fit bg-slate-100">
@@ -335,6 +352,12 @@ export const Petition = () => {
             )}
             Submit
           </Button>
+          <ReCAPTCHA
+            ref={recaptchaRef}
+            sitekey={CAPTCHA_SITE_KEY}
+            badge="bottomright"
+            size="invisible"
+          />
           <p className="text-xs text-center">
             By signing, you agree to receive email messages from Direct Action
             Everywhere. You may unsubscribe at any time.

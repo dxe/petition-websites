@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"github.com/dxe/helptheducks.com/service/config"
 	"github.com/dxe/helptheducks.com/service/model"
 	"net/http"
 	"net/mail"
@@ -17,7 +18,7 @@ type CreateMessageInput struct {
 	Zip       string `json:"zip,omitempty"`
 	City      string `json:"city,omitempty"`
 	Message   string `json:"message"`
-	// TODO: add captcha.
+	Token     string `json:"token"`
 }
 
 func createMessageHandler(w http.ResponseWriter, r *http.Request) {
@@ -27,6 +28,21 @@ func createMessageHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(w, fmt.Sprintf("error parsing request body: %v", err), http.StatusBadRequest)
 		return
+	}
+
+	if config.RecaptchaSecret == "" {
+		fmt.Println("Recaptcha secret not set, skipping verification")
+	} else {
+		ok, err := verifyRecaptcha(body.Token)
+		if err != nil {
+			fmt.Printf("error verifying recaptcha: %v\n", err)
+			http.Error(w, "error verifying recaptcha", http.StatusInternalServerError)
+			return
+		}
+		if !ok {
+			http.Error(w, "invalid captcha", http.StatusForbidden)
+			return
+		}
 	}
 
 	_, err = mail.ParseAddress(body.Email)
