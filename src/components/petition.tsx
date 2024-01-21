@@ -357,6 +357,7 @@ export const Petition = () => {
             sitekey={CAPTCHA_SITE_KEY}
             badge="bottomright"
             size="invisible"
+            className="z-[60]"
           />
           <p className="text-xs text-center">
             By signing, you agree to receive email messages from Direct Action
