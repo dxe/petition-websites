@@ -1,7 +1,7 @@
 export const PlayIcon = ({ className }: { className?: string }) => (
   <svg
     className={className}
-    height="32px"
+    // height="32px"
     version="1.1"
     viewBox="0 0 32 32"
     xmlSpace="preserve"

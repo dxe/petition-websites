@@ -150,7 +150,7 @@ const Video1Section = () => {
       <Dialog>
         <DialogTrigger asChild>
           <button className="md:order-first max-w-[325px] relative">
-            <PlayIcon className="inset-0 absolute w-full h-full scale-[33%]" />
+            <PlayIcon className="absolute h-24 w-24 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
             <img
               src={video1Thumb}
               className="aspect-square rounded-md"
@@ -192,7 +192,7 @@ const Video2Section = () => {
       <Dialog>
         <DialogTrigger asChild>
           <button className="md:order-first max-w-[325px] relative">
-            <PlayIcon className="inset-0 absolute w-full h-full scale-[33%]" />
+            <PlayIcon className="absolute h-24 w-24 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
             <img
               src={video2Thumb}
               className="aspect-square rounded-md"
