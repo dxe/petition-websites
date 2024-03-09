@@ -23,6 +23,6 @@ var EmailSettings = map[string]struct {
 	Subject    string
 	To         string
 }{
-	"duck":   {FromDomain: "mail.helptheducks.com", Subject: "Prosecute Reichardt Duck Farm for Animal Abuse", To: "carla.rodriguez@sonoma-county.org"},
-	"sonoma": {FromDomain: "mail.righttorescue.com", Subject: "Prosecute animal cruelty, not animal rescuers", To: "carla.rodriguez@sonoma-county.org"},
+	"duck":   {FromDomain: "helptheducks.com", Subject: "Prosecute Reichardt Duck Farm for Animal Abuse", To: "carla.rodriguez@sonoma-county.org"},
+	"sonoma": {FromDomain: "righttorescue.com", Subject: "Prosecute animal cruelty, not animal rescuers", To: "carla.rodriguez@sonoma-county.org"},
 }
