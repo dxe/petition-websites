@@ -121,6 +121,7 @@ export const Petition = () => {
             ...(data.zip && { zip: data.zip }),
             ...(data.city && { city: data.city }),
             message: data.message,
+            campaign: "duck",
             token,
           },
           headers: {

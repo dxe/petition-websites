@@ -81,7 +81,7 @@ func processNewMessages() {
 
 		settings, ok := config.EmailSettings[message.Campaign.String]
 		if !ok {
-			settings = config.EmailSettings["duck"]
+			settings = config.EmailSettings["test"]
 		}
 
 		fromEmail := strings.Join(strings.Split(strings.ToLower(message.Name), " "), ".") + "@" + settings.FromDomain
