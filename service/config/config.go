@@ -17,3 +17,12 @@ func getEnvWithFallback(key string, fallback string) string {
 	}
 	return v
 }
+
+var EmailSettings = map[string]struct {
+	FromDomain string
+	Subject    string
+	To         string
+}{
+	"duck":   {FromDomain: "mail.helptheducks.com", Subject: "Prosecute Reichardt Duck Farm for Animal Abuse", To: "carla.rodriguez@sonoma-county.org"},
+	"sonoma": {FromDomain: "mail.righttorescue.com", Subject: "Prosecute animal cruelty, not animal rescuers", To: "carla.rodriguez@sonoma-county.org"},
+}

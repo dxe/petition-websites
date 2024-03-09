@@ -19,6 +19,7 @@ type CreateMessageInput struct {
 	City      string `json:"city,omitempty"`
 	Message   string `json:"message"`
 	Token     string `json:"token"`
+	Campaign  string `json:"campaign,omitempty"`
 }
 
 func createMessageHandler(w http.ResponseWriter, r *http.Request) {
@@ -76,6 +77,10 @@ func createMessageHandler(w http.ResponseWriter, r *http.Request) {
 		IPAddress: sql.NullString{
 			String: r.RemoteAddr,
 			Valid:  r.RemoteAddr != "",
+		},
+		Campaign: sql.NullString{
+			String: body.Campaign,
+			Valid:  body.Campaign != "",
 		},
 	}
 

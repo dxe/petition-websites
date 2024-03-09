@@ -30,7 +30,7 @@ func main() {
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.Timeout(30 * time.Second))
 	r.Use(cors.Handler(cors.Options{
-		AllowedOrigins:   []string{"http://localhost:5173", "https://helptheducks.com"},
+		AllowedOrigins:   []string{"http://localhost:5173", "https://helptheducks.com", "https://righttorescue.com"},
 		AllowedMethods:   []string{"GET", "POST", "OPTIONS"},
 		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type"},
 		AllowCredentials: false,
@@ -78,12 +78,18 @@ func processNewMessages() {
 
 	for _, message := range messages {
 		fmt.Printf("Processing message id: %v\n", message.ID)
-		fromEmail := strings.Join(strings.Split(strings.ToLower(message.Name), " "), ".") + "@mail.helptheducks.com"
+
+		settings, ok := config.EmailSettings[message.Campaign.String]
+		if !ok {
+			settings = config.EmailSettings["duck"]
+		}
+
+		fromEmail := strings.Join(strings.Split(strings.ToLower(message.Name), " "), ".") + "@" + settings.FromDomain
 		err := mailer.Send(mailClient, mailer.SendOptions{
 			From:    fmt.Sprintf("%s <%s>", message.Name, fromEmail),
 			ReplyTo: message.Email,
-			To:      "carla.rodriguez@sonoma-county.org",
-			Subject: "Prosecute Reichardt Duck Farm for Animal Abuse",
+			To:      settings.To,
+			Subject: settings.Subject,
 			Body:    message.Message,
 		})
 		if err != nil {

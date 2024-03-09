@@ -19,6 +19,7 @@ type Message struct {
 	Zip         sql.NullString `db:"zip"`
 	City        sql.NullString `db:"city"`
 	Message     string         `db:"message"`
+	Campaign    sql.NullString `db:"campaign"`
 	Status      string         `db:"status"`
 }
 
@@ -33,7 +34,8 @@ func InsertMessage(db *sqlx.DB, message Message) error {
                       			zip,
                       			city,
                       			message,
-                      			status	
+                      			campaign,
+                      			status,
 					  		) VALUES (
 								:ip_address,
 								:name,
@@ -43,6 +45,7 @@ func InsertMessage(db *sqlx.DB, message Message) error {
 								:zip,
 								:city,
 								:message,
+					  		    :campaign,
 								'PENDING'
 					  		)`,
 		message,
@@ -58,7 +61,7 @@ func GetMessagesToProcess(db *sqlx.DB) ([]Message, error) {
 	var messages []Message
 	err = tx.Select(
 		&messages,
-		`SELECT id, name, email, message FROM messages WHERE status = 'PENDING' LIMIT 50 FOR UPDATE`,
+		`SELECT id, name, email, message, campaign FROM messages WHERE status = 'PENDING' LIMIT 50 FOR UPDATE`,
 	)
 	if err != nil {
 		tx.Rollback()
