@@ -35,7 +35,7 @@ func InsertMessage(db *sqlx.DB, message Message) error {
                       			city,
                       			message,
                       			campaign,
-                      			status,
+                      			status
 					  		) VALUES (
 								:ip_address,
 								:name,
