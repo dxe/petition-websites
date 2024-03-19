@@ -25,5 +25,6 @@ var EmailSettings = map[string]struct {
 }{
 	"duck":   {FromDomain: "helptheducks.com", Subject: "Prosecute Reichardt Duck Farm for Animal Abuse", To: "carla.rodriguez@sonoma-county.org"},
 	"sonoma": {FromDomain: "righttorescue.com", Subject: "Prosecute animal cruelty, not animal rescuers", To: "carla.rodriguez@sonoma-county.org"},
+	"ridglan": {FromDomain: "righttorescue.com", Subject: "Prosecute animal abuse at Ridglan Farms", To: "ismael.ozanne@da.wi.gov"},
 	"test":   {FromDomain: "righttorescue.com", Subject: "Test", To: "tech@directactioneverywhere.com"},
 }
