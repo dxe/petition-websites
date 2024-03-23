@@ -14,6 +14,11 @@ import (
 	"net/http"
 	"strings"
 	"time"
+	"unicode"
+
+	"golang.org/x/text/runes"
+	"golang.org/x/text/transform"
+	"golang.org/x/text/unicode/norm"
 )
 
 var (
@@ -84,8 +89,14 @@ func processNewMessages() {
 			settings = config.EmailSettings["test"]
 		}
 
-		fromEmail := strings.Join(strings.Split(strings.ToLower(message.Name), " "), ".") + "@" + settings.FromDomain
-		err := mailer.Send(mailClient, mailer.SendOptions{
+		normalizedName, err := removeAccents(message.Name)
+		if err != nil {
+			fmt.Printf("Error normalizing name: %v\n", err)
+			fail = append(fail, message.ID)
+			continue
+		}
+		fromEmail := strings.Join(strings.Split(strings.ToLower(strings.Trim(normalizedName, " ")), " "), ".") + "@" + settings.FromDomain
+		err = mailer.Send(mailClient, mailer.SendOptions{
 			From:    fmt.Sprintf("%s <%s>", message.Name, fromEmail),
 			ReplyTo: message.Email,
 			To:      settings.To,
@@ -109,4 +120,13 @@ func processNewMessages() {
 	if err != nil {
 		fmt.Printf("Error updating message status: %v\n", err)
 	}
+}
+
+func removeAccents(s string) (string, error) {
+	t := transform.Chain(norm.NFD, runes.Remove(runes.In(unicode.Mn)), norm.NFC)
+	output, _, err := transform.String(t, s)
+	if err != nil {
+		return "", err
+	}
+	return output, nil
 }
