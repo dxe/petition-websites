@@ -6,7 +6,7 @@ func GetTally(db *sqlx.DB, campaign string) (int, error) {
 	var tally int
 	err := db.Get(
 		&tally,
-		`SELECT count(*) as total
+		`SELECT count(*)
 		FROM messages
 		WHERE campaign = ?`,
 		campaign,
