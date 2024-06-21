@@ -4,10 +4,12 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
-	"github.com/dxe/helptheducks.com/service/config"
-	"github.com/dxe/helptheducks.com/service/model"
 	"net/http"
 	"net/mail"
+
+	"github.com/dxe/helptheducks.com/service/config"
+	"github.com/dxe/helptheducks.com/service/model"
+	"github.com/go-chi/chi/v5"
 )
 
 type CreateMessageInput struct {
@@ -91,4 +93,31 @@ func createMessageHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Write([]byte("ok"))
+}
+
+type GetTallyResp struct {
+	Total int `json:"total"`
+}
+
+func getTallyHandler(w http.ResponseWriter, r *http.Request) {
+	campaign := chi.URLParam(r, "campaign")
+
+	tally, err := model.GetTally(db, campaign)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("error getting tally: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	resp := GetTallyResp{
+		Total: tally,
+	}
+	json, err := json.Marshal(resp)
+	if err != nil {
+		http.Error(w, "failed to marshal json", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(json)
 }
