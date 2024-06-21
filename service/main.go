@@ -2,6 +2,11 @@ package main
 
 import (
 	"fmt"
+	"net/http"
+	"strings"
+	"time"
+	"unicode"
+
 	"github.com/aws/aws-sdk-go/service/ses"
 	"github.com/dxe/helptheducks.com/service/config"
 	"github.com/dxe/helptheducks.com/service/mailer"
@@ -11,10 +16,6 @@ import (
 	"github.com/go-chi/cors"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
-	"net/http"
-	"strings"
-	"time"
-	"unicode"
 
 	"golang.org/x/text/runes"
 	"golang.org/x/text/transform"
@@ -52,6 +53,8 @@ func main() {
 	r.Route("/message", func(r chi.Router) {
 		r.Post("/create", createMessageHandler)
 	})
+
+	r.Get("/tally", getTallyHandler)
 
 	go worker()
 

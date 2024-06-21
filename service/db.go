@@ -1,9 +1,10 @@
 package main
 
 import (
+	"log"
+
 	"github.com/dxe/helptheducks.com/service/config"
 	"github.com/jmoiron/sqlx"
-	"log"
 )
 
 // TODO: make a separate script to init db b/c this is kinda sketch for prod.
