@@ -9,7 +9,6 @@ import (
 
 	"github.com/dxe/helptheducks.com/service/config"
 	"github.com/dxe/helptheducks.com/service/model"
-	"github.com/go-chi/chi/v5"
 )
 
 type CreateMessageInput struct {
@@ -100,7 +99,12 @@ type GetTallyResp struct {
 }
 
 func getTallyHandler(w http.ResponseWriter, r *http.Request) {
-	campaign := chi.URLParam(r, "campaign")
+	queryParams := r.URL.Query()
+	campaign := queryParams.Get("campaign")
+	if (campaign == "") {
+		http.Error(w, "missing campaign", http.StatusBadRequest)
+		return
+	}
 
 	tally, err := model.GetTally(db, campaign)
 	if err != nil {
