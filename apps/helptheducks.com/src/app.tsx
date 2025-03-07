@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 import { createRouter, RouterProvider } from "@tanstack/react-router";
 import { routeTree } from "./routeTree.gen";
 
-const router = createRouter({routeTree});
+const router = createRouter({ routeTree });
 
 // Registers the router instance for type safety.
 declare module "@tanstack/react-router" {
