@@ -4,8 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "packageManager": "pnpm@10.6.0",
+  "scripts-comment": "--host flag is necessary for vite to be reachable outside devcontainer; for details see https://vite.dev/guide/troubleshooting#dev-containers-vs-code-port-forwarding ",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host 127.0.0.1",
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "typecheck": "tsc --noEmit",
