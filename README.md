@@ -1,8 +1,15 @@
 # DxE Petitions Sites monorepo
 
+Monolithic (multi-project / multi-package) repository for petition websites.
+
+Note: some petition websites may still have their own repos.
+
 ## monorepo setup
 
 We use Turborepo to manage this monorepo of petition websites.
+
+Note Turbo currently ignores the Go project in apps/service since there is no
+package.json.
 
 ### Build
 

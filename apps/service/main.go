@@ -8,9 +8,9 @@ import (
 	"unicode"
 
 	"github.com/aws/aws-sdk-go/service/ses"
-	"github.com/dxe/helptheducks.com/service/config"
-	"github.com/dxe/helptheducks.com/service/mailer"
-	"github.com/dxe/helptheducks.com/service/model"
+	"github.com/dxe/service/config"
+	"github.com/dxe/service/mailer"
+	"github.com/dxe/service/model"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"

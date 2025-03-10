@@ -4,8 +4,8 @@ on:
   push:
     branches:
       - main
-    paths-ignore:
-      - apps/helptheducks.com/service/**
+    paths:
+      - apps/helptheducks.com/**
   workflow_dispatch:
 
 jobs:

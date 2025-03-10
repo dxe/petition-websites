@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - apps/helptheducks.com/service/**
+      - apps/service/**
   workflow_dispatch:
 
 jobs:
@@ -16,8 +16,8 @@ jobs:
       - name: Build image & push to ECR
         uses: kciter/aws-ecr-action@master
         with:
-          path: ./apps/helptheducks.com/service
-          dockerfile: ./apps/helptheducks.com/service/Dockerfile
+          path: ./apps/service
+          dockerfile: ./apps/service/Dockerfile
           access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           account_id: ${{ secrets.AWS_ACCOUNT_ID }}
