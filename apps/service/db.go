@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/dxe/helptheducks.com/service/config"
+	"github.com/dxe/service/config"
 	"github.com/jmoiron/sqlx"
 )
 

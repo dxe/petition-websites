@@ -1,4 +1,4 @@
-module github.com/dxe/helptheducks.com/service
+module github.com/dxe/service
 
 go 1.21.1
 

@@ -2,9 +2,10 @@ package main
 
 import (
 	"encoding/json"
-	"github.com/dxe/helptheducks.com/service/config"
 	"net/http"
 	"net/url"
+
+	"github.com/dxe/service/config"
 )
 
 type RecaptchaResponse struct {

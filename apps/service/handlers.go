@@ -7,8 +7,8 @@ import (
 	"net/http"
 	"net/mail"
 
-	"github.com/dxe/helptheducks.com/service/config"
-	"github.com/dxe/helptheducks.com/service/model"
+	"github.com/dxe/service/config"
+	"github.com/dxe/service/model"
 )
 
 type CreateMessageInput struct {
@@ -101,7 +101,7 @@ type GetTallyResp struct {
 func getTallyHandler(w http.ResponseWriter, r *http.Request) {
 	queryParams := r.URL.Query()
 	campaign := queryParams.Get("campaign")
-	if (campaign == "") {
+	if campaign == "" {
 		http.Error(w, "missing campaign", http.StatusBadRequest)
 		return
 	}

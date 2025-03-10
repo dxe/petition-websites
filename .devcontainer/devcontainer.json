@@ -1,0 +1,38 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/debian
+{
+  "name": "Debian",
+  // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+  "image": "mcr.microsoft.com/devcontainers/base:bullseye",
+  // Features to add to the dev container. More info: https://containers.dev/features.
+  "features": {
+    "ghcr.io/devcontainers/features/go:1": {
+      "version": "latest"
+    },
+    "ghcr.io/devcontainers/features/node:1": {
+      "nodeGypDependencies": true,
+      "version": "lts",
+      "nvmVersion": "latest"
+    },
+    // Shares a pnpm store between devcontainers.
+    // https://github.com/joshuanianji/devcontainer-features/tree/main/src/mount-pnpm-store
+    "ghcr.io/joshuanianji/devcontainer-features/mount-pnpm-store:1": {},
+    // Install turbo globally so it can be called from anywhere in the repo.
+    // TODO: if there is no pnpm-package feature, do it manually?
+    //   pnpm i -g turbo
+    "ghcr.io/devcontainers-extra/features/npm-package:1": {
+      "package": "turbo"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": ["github.vscode-github-actions"]
+    }
+  }
+  // Use 'forwardPorts' to make a list of ports inside the container available locally.
+  // "forwardPorts": [],
+  // Configure tool-specific properties.
+  // "customizations": {},
+  // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+  // "remoteUser": "root"
+}
