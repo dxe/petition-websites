@@ -2,12 +2,12 @@
 
 import { useScrollToId } from "@/hooks/useScrollToId";
 import heroDuckImg from "./assets/hero.jpeg";
-import { Button } from "@/ui/button";
+import { Button } from "@/shadcn/components/ui/button";
 import { Petition } from "./petition";
 import aboutImg1 from "./assets/about1.webp";
 import aboutImg2 from "./assets/about2.webp";
 import aboutImg3 from "./assets/about3.webp";
-import { Dialog, DialogContent, DialogTrigger } from "@/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger } from "@/shadcn/components/ui/dialog";
 import { PlayIcon } from "@/svg/play-icon";
 import video1Thumb from "./assets/video1.jpeg";
 import video2Thumb from "./assets/video2.jpeg";

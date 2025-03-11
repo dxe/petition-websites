@@ -1,5 +1,5 @@
 import { HTMLProps, ReactNode } from "react";
-import { cn } from "@/utils";
+import { cn } from "@/shadcn/utils";
 
 export const Section = ({
   children,
