@@ -1,8 +1,10 @@
+"use client";
+
 import {
   DEFAULT_MESSAGE,
   PetitionForm,
   PetitionFormSchema,
-} from "../data/petition.ts";
+} from "@/data/petition";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -14,34 +16,31 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "./ui/form.tsx";
-import { Input } from "./ui/input.tsx";
-import { Button } from "./ui/button.tsx";
-import { Textarea } from "./ui/textarea.tsx";
-import { Checkbox } from "./ui/checkbox.tsx";
-import { SonomaCities } from "../data/zipcodes.ts";
-import { cn } from "~/utils.ts";
+} from "@/ui/form";
+import { Input } from "@/ui/input";
+import { Button } from "@/ui/button";
+import { Textarea } from "@/ui/textarea";
+import { Checkbox } from "@/ui/checkbox";
+import { SonomaCities } from "@/data/zipcodes";
+import { cn } from "@/utils";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "./ui/select.tsx";
+} from "@/ui/select";
 import ky from "ky";
-import { Alert, AlertDescription, AlertTitle } from "./ui/alert.tsx";
+import { Alert, AlertDescription, AlertTitle } from "@/ui/alert";
 import { LoaderIcon, MailCheckIcon } from "lucide-react";
 import ReCAPTCHA from "react-google-recaptcha";
 
 const PETITION_API_URL = "https://petitions-229503.appspot.com/api/sign";
 
-const CAMPAIGN_MAILER_API_URL = `${import.meta.env.PROD ? "https://helptheducks.dxe.io" : "http://localhost:3333"}/message/create`;
-
-declare global {
-  interface Window {
-    dataLayer?: unknown[];
-  }
-}
+const CAMPAIGN_MAILER_API_URL = `${process.env.NEXT_PUBLIC_CAMPAIGN_MAILER_API_ROOT}/message/create`;
+const CAMPAIGN_NAME = process.env.NEXT_PUBLIC_CAMPAIGN_NAME;
+console.log("mailer url: " + CAMPAIGN_MAILER_API_URL);
+console.log("campaign: " + CAMPAIGN_NAME);
 
 const CAPTCHA_SITE_KEY = "6LdiglcpAAAAAM9XE_TNnAiZ22NR9nSRxHMOFn8E";
 
@@ -121,7 +120,7 @@ export const Petition = () => {
             ...(data.zip && { zip: data.zip }),
             ...(data.city && { city: data.city }),
             message: data.message,
-            campaign: import.meta.env.PROD ? "duck" : "test",
+            campaign: CAMPAIGN_NAME,
             token,
           },
           headers: {
