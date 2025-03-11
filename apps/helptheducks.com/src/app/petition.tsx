@@ -323,7 +323,7 @@ export const Petition = () => {
                     aria-label="Outside the United States?"
                   />
                 </FormControl>
-                <FormLabel className="!mt-0">
+                <FormLabel className="mt-0!">
                   Outside the United States
                 </FormLabel>
                 <FormDescription></FormDescription>
@@ -357,7 +357,7 @@ export const Petition = () => {
             sitekey={CAPTCHA_SITE_KEY}
             badge="bottomright"
             size="invisible"
-            className="z-[60]"
+            className="z-60"
           />
           <p className="text-xs text-center">
             By signing, you agree to receive email messages from Direct Action

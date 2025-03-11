@@ -13,7 +13,7 @@ export const Section = ({
     <section
       {...props}
       className={cn(
-        "flex flex-col gap-8 max-w-screen-xl w-full p-4",
+        "flex flex-col gap-8 max-w-(--breakpoint-xl) w-full p-4",
         className,
       )}
     >
