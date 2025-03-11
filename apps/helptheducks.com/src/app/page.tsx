@@ -7,12 +7,13 @@ import { Petition } from "./petition";
 import aboutImg1 from "./assets/about1.webp";
 import aboutImg2 from "./assets/about2.webp";
 import aboutImg3 from "./assets/about3.webp";
-import { Dialog, DialogContent, DialogTrigger } from "@/shadcn/components/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@/shadcn/components/ui/dialog";
 import { PlayIcon } from "@/svg/play-icon";
 import video1Thumb from "./assets/video1.jpeg";
 import video2Thumb from "./assets/video2.jpeg";
 import { Section } from "./section";
 import Image from "next/image";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 export default function HomePage() {
   return (
@@ -177,6 +178,9 @@ const Video1Section = () => {
           </button>
         </DialogTrigger>
         <DialogContent className="w-full flex justify-center bg-black">
+          <VisuallyHidden>
+            <DialogTitle>Watch video</DialogTitle>
+          </VisuallyHidden>
           <iframe
             src="https://player.vimeo.com/video/899045165?h=2603019680&autoplay=1&title=0&byline=0&portrait=0&badge=0"
             allow="autoplay; fullscreen"
