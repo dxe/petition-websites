@@ -90,7 +90,7 @@ export const Petition = () => {
         // We purposefully do these one at a time. If the first one fails,
         // we don't want to submit the second one. This allows the user to
         // resubmit the form without causing duplicate emails to be sent.
-        const petitionResp = await ky.post(PETITION_API_URL, {
+        await ky.post(PETITION_API_URL, {
           body: new URLSearchParams({
             id: "helptheducks",
             name: data.name,
@@ -104,14 +104,16 @@ export const Petition = () => {
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
           },
-          throwHttpErrors: false,
-        });
-        if (petitionResp.status !== 200) {
+        }).catch(error => {
+          console.error("Error submitting", error);
           setIsSubmitting(false);
+          // Resetting the captcha appears to be necessary to get another token
+          // when submitting is retried.
+          recaptchaRef.current?.reset();
           alert("Error submitting. Please try again.");
-          throw new Error("Error submitting petition");
-        }
-        const campaignMailerResp = await ky.post(CAMPAIGN_MAILER_API_URL, {
+          throw new Error("Error submitting message");
+        });
+        await ky.post(CAMPAIGN_MAILER_API_URL, {
           json: {
             name: data.name,
             email: data.email,
@@ -126,15 +128,16 @@ export const Petition = () => {
           headers: {
             "Content-Type": "application/json",
           },
-          throwHttpErrors: false,
-        });
-        if (campaignMailerResp.status !== 200) {
+        }).catch(error => {
+          console.error("Error submitting", error);
           setIsSubmitting(false);
+          recaptchaRef.current?.reset();
           alert("Error submitting. Please try again.");
           throw new Error("Error submitting message");
-        }
+        });
         setIsSubmitted(true);
         setIsSubmitting(false);
+        recaptchaRef.current?.reset();
       }),
     [handleSubmit],
   );
