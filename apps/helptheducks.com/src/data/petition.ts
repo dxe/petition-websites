@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { SonomaCities } from "./zipcodes.ts";
+import { SonomaCities } from "./zipcodes";
 
 const EmptyStringToUndefined = z.literal("").transform(() => undefined);
 

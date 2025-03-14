@@ -1,21 +1,20 @@
-import { useScrollToId } from "../hooks/useScrollToId.ts";
-import heroDuckImg from "../assets/hero.jpeg";
-import { Button } from "../components/ui/button.tsx";
-import { Petition } from "../components/petition.tsx";
-import aboutImg1 from "../assets/about1.webp";
-import aboutImg2 from "../assets/about2.webp";
-import aboutImg3 from "../assets/about3.webp";
-import {
-  Dialog,
-  DialogContent,
-  DialogTrigger,
-} from "../components/ui/dialog.tsx";
-import { PlayIcon } from "../components/svg/play-icon.tsx";
-import video1Thumb from "../assets/video1.jpeg";
-import video2Thumb from "../assets/video2.jpeg";
-import { Section } from "../components/section.tsx";
+"use client";
 
-const HomePage = () => {
+import { useScrollToId } from "@/hooks/useScrollToId";
+import heroDuckImg from "./assets/hero.jpeg";
+import { Button } from "@/ui/button";
+import { Petition } from "./petition";
+import aboutImg1 from "./assets/about1.webp";
+import aboutImg2 from "./assets/about2.webp";
+import aboutImg3 from "./assets/about3.webp";
+import { Dialog, DialogContent, DialogTrigger } from "@/ui/dialog";
+import { PlayIcon } from "@/svg/play-icon";
+import video1Thumb from "./assets/video1.jpeg";
+import video2Thumb from "./assets/video2.jpeg";
+import { Section } from "./section";
+import Image from "next/image";
+
+export default function HomePage() {
   return (
     <div className="flex flex-col gap-6 items-center">
       <Hero />
@@ -26,8 +25,7 @@ const HomePage = () => {
       <Footer />
     </div>
   );
-};
-export const component = HomePage;
+}
 
 const Hero = () => {
   const scrollToPetition = useScrollToId("petition-section");
@@ -36,7 +34,7 @@ const Hero = () => {
     <section
       className="md:min-h-[90vh] w-full text-white lg:bg-center md:bg-[40%] bg-[45%] bg-cover flex flex-col"
       style={{
-        backgroundImage: `url(${heroDuckImg})`,
+        backgroundImage: `url(${heroDuckImg.src})`,
       }}
     >
       <div className="bg-black w-full flex-grow bg-opacity-40 flex justify-center items-center md:px-12 py-12">
@@ -86,7 +84,13 @@ const AboutSection = () => {
       </h2>
       <div className="flex flex-col lg:flex-row items-center justify-evenly gap-12 text-center">
         <div className="flex flex-col gap-6 max-w-xs w-full">
-          <img src={aboutImg1} className="rounded-full" alt="Duck 1" />
+          <Image
+            src={aboutImg1.src}
+            className="rounded-full"
+            alt="Duck 1"
+            width={650}
+            height={650}
+          />
           <div className="flex flex-col gap-4">
             <div className="text-4xl uppercase font-semibold">Disease</div>
             <p>
@@ -99,7 +103,13 @@ const AboutSection = () => {
           </div>
         </div>
         <div className="flex flex-col gap-6 max-w-xs w-full">
-          <img src={aboutImg2} className="rounded-full" alt="Duck 2" />
+          <Image
+            src={aboutImg2.src}
+            className="rounded-full"
+            alt="Duck 2"
+            width={730}
+            height={730}
+          />
           <div className="flex flex-col gap-4">
             <div className="text-4xl uppercase font-semibold">Neglect</div>
             <p>
@@ -112,11 +122,17 @@ const AboutSection = () => {
           </div>
         </div>
         <div className="flex flex-col gap-6 max-w-xs w-full">
-          <img src={aboutImg3} className="rounded-full" alt="Duck 3" />
+          <Image
+            src={aboutImg3.src}
+            className="rounded-full"
+            alt="Duck 3"
+            width={680}
+            height={680}
+          />
           <div className="flex flex-col gap-4">
             <div className="text-4xl uppercase font-semibold">Abuse</div>
             <p>
-              Ducks at Reichardt are denied proper housing. They don't have
+              Ducks at Reichardt are denied proper housing. They don&apos;t have
               access to water to swim or float in or for cleaning their eyes and
               sinuses. They are crowded together in filthy barns, forced to
               spend every moment living on a wire floor that digs into their
@@ -151,10 +167,12 @@ const Video1Section = () => {
         <DialogTrigger asChild>
           <button className="md:order-first max-w-[325px] relative">
             <PlayIcon className="absolute h-24 w-24 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
-            <img
-              src={video1Thumb}
+            <Image
+              src={video1Thumb.src}
               className="aspect-square rounded-md"
               alt="Watch"
+              width={728}
+              height={728}
             />
           </button>
         </DialogTrigger>
@@ -183,7 +201,8 @@ const Video2Section = () => {
         <h4 className="text-3xl uppercase font-medium">Meet River</h4>
         <p className="max-w-md">
           River was on the verge of death at Reichardt Duck Farm. Investigators
-          knew they couldn't leave him behind so they rushed him to the vet.
+          knew they couldn&apos;t leave him behind so they rushed him to the
+          vet.
         </p>
         <Button size="lg" onClick={scrollToPetition} className="hidden md:flex">
           Tell the DA to prosecute Reichardt
@@ -193,10 +212,12 @@ const Video2Section = () => {
         <DialogTrigger asChild>
           <button className="md:order-first max-w-[325px] relative">
             <PlayIcon className="absolute h-24 w-24 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
-            <img
-              src={video2Thumb}
+            <Image
+              src={video2Thumb.src}
               className="aspect-square rounded-md"
               alt="Watch"
+              width={728}
+              height={728}
             />
           </button>
         </DialogTrigger>
