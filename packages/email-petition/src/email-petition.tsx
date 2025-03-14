@@ -48,15 +48,6 @@ export function EmailPetition(
     onSubmit?: () => void
   }) {
 
-  useEffect(() => {
-    console.dir({
-      "petition url": PETITION_API_URL,
-      "mailer url": CAMPAIGN_MAILER_API_URL,
-      "petition id": props.petitionId,
-      "campaign": props.campaignName,
-    });
-  });
-
   const form = useForm<PetitionForm>({
     resolver: zodResolver(PetitionFormSchema),
     defaultValues: {
@@ -84,7 +75,7 @@ export function EmailPetition(
   const onReactHookFormSubmit = useMemo(
     () =>
       handleSubmit(async (data) => {
-        if (props.onSubmit != null) { 
+        if (props.onSubmit != null) {
           props.onSubmit();
         }
         setIsSubmitting(true);
@@ -184,10 +175,9 @@ export function EmailPetition(
         return;
       }
       resetField("message", {
-        defaultValue: props.defaultMessage.replace(
-          "[Your name]",
-          name || "[Your name]",
-        ).replace("[Your city if you live in Sonoma County]", city || ""),
+        defaultValue: props.defaultMessage
+          .replace("[Your name]", name || "[Your name]")
+          .replace("[Your city]", city || ""),
       });
     },
     [dirtyFields.message, resetField],
