@@ -16,22 +16,22 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/shadcn/components/ui/form";
-import { Input } from "@/shadcn/components/ui/input";
-import { Button } from "@/shadcn/components/ui/button";
-import { Textarea } from "@/shadcn/components/ui/textarea";
-import { Checkbox } from "@/shadcn/components/ui/checkbox";
+} from "@dxe/petitions-components/form";
+import { Input } from "@dxe/petitions-components/input";
+import { Button } from "@dxe/petitions-components/button";
+import { Textarea } from "@dxe/petitions-components/textarea";
+import { Checkbox } from "@dxe/petitions-components/checkbox";
 import { SonomaCities } from "@/data/zipcodes";
-import { cn } from "@/shadcn/utils";
+import { cn } from "@dxe/petitions-components/utils";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/shadcn/components/ui/select";
+} from "@dxe/petitions-components/select";
 import ky from "ky";
-import { Alert, AlertDescription, AlertTitle } from "@/shadcn/components/ui/alert";
+import { Alert, AlertDescription, AlertTitle } from "@dxe/petitions-components/alert";
 import { LoaderIcon, MailCheckIcon } from "lucide-react";
 import ReCAPTCHA from "react-google-recaptcha";
 
@@ -285,7 +285,7 @@ export const Petition = () => {
               <FormItem className={cn({ hidden: !cities.length })}>
                 <FormLabel>City</FormLabel>
                 <Select
-                  onValueChange={(val) => {
+                  onValueChange={(val: string | undefined) => {
                     field.onChange(val);
                     injectValuesIntoMessage(getValues("name"), val);
                   }}
