@@ -1,16 +1,10 @@
 "use client";
 
 import { useScrollToId } from "@/hooks/useScrollToId";
-import heroDuckImg from "./assets/hero.jpeg";
 import { Button } from "@dxe/petitions-components/button";
 import { Petition } from "./petition";
-import aboutImg1 from "./assets/about1.webp";
-import aboutImg2 from "./assets/about2.webp";
-import aboutImg3 from "./assets/about3.webp";
 import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@dxe/petitions-components/dialog";
 import { PlayIcon } from "@/svg/play-icon";
-import video1Thumb from "./assets/video1.jpeg";
-import video2Thumb from "./assets/video2.jpeg";
 import { Section } from "./section";
 import Image from "next/image";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
@@ -35,7 +29,7 @@ const Hero = () => {
     <section
       className="md:min-h-[90vh] w-full text-white lg:bg-center md:bg-[40%] bg-[45%] bg-cover flex flex-col"
       style={{
-        backgroundImage: `url(${heroDuckImg.src})`,
+        backgroundImage: `url(/img/hero.jpeg)`,
       }}
     >
       <div className="bg-black/40 w-full grow flex justify-center items-center md:px-12 py-12">
@@ -86,7 +80,7 @@ const AboutSection = () => {
       <div className="flex flex-col lg:flex-row items-center justify-evenly gap-12 text-center">
         <div className="flex flex-col gap-6 max-w-xs w-full">
           <Image
-            src={aboutImg1.src}
+            src='/img/about1.webp'
             className="rounded-full"
             alt="Duck 1"
             width={650}
@@ -105,7 +99,7 @@ const AboutSection = () => {
         </div>
         <div className="flex flex-col gap-6 max-w-xs w-full">
           <Image
-            src={aboutImg2.src}
+            src='/img/about2.webp'
             className="rounded-full"
             alt="Duck 2"
             width={730}
@@ -124,7 +118,7 @@ const AboutSection = () => {
         </div>
         <div className="flex flex-col gap-6 max-w-xs w-full">
           <Image
-            src={aboutImg3.src}
+            src='/img/about3.webp'
             className="rounded-full"
             alt="Duck 3"
             width={680}
@@ -169,7 +163,7 @@ const Video1Section = () => {
           <button className="md:order-first max-w-[325px] relative">
             <PlayIcon className="absolute h-24 w-24 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
             <Image
-              src={video1Thumb.src}
+              src='/img/video1.jpeg'
               className="aspect-square rounded-md"
               alt="Watch"
               width={728}
@@ -217,7 +211,7 @@ const Video2Section = () => {
           <button className="md:order-first max-w-[325px] relative">
             <PlayIcon className="absolute h-24 w-24 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
             <Image
-              src={video2Thumb.src}
+              src='/img/video2.jpeg'
               className="aspect-square rounded-md"
               alt="Watch"
               width={728}
