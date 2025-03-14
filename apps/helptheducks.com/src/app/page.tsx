@@ -2,17 +2,18 @@
 
 import { useScrollToId } from "@/hooks/useScrollToId";
 import heroDuckImg from "./assets/hero.jpeg";
-import { Button } from "@/ui/button";
+import { Button } from "@/shadcn/components/ui/button";
 import { Petition } from "./petition";
 import aboutImg1 from "./assets/about1.webp";
 import aboutImg2 from "./assets/about2.webp";
 import aboutImg3 from "./assets/about3.webp";
-import { Dialog, DialogContent, DialogTrigger } from "@/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@/shadcn/components/ui/dialog";
 import { PlayIcon } from "@/svg/play-icon";
 import video1Thumb from "./assets/video1.jpeg";
 import video2Thumb from "./assets/video2.jpeg";
 import { Section } from "./section";
 import Image from "next/image";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 export default function HomePage() {
   return (
@@ -37,8 +38,8 @@ const Hero = () => {
         backgroundImage: `url(${heroDuckImg.src})`,
       }}
     >
-      <div className="bg-black w-full flex-grow bg-opacity-40 flex justify-center items-center md:px-12 py-12">
-        <div className="flex flex-col gap-9 max-w-screen-xl md:border-l-2 p-6 w-full">
+      <div className="bg-black/40 w-full grow flex justify-center items-center md:px-12 py-12">
+        <div className="flex flex-col gap-9 max-w-(--breakpoint-xl) md:border-l-2 p-6 w-full">
           <div className="flex flex-col gap-4">
             <h1 className="uppercase text-2xl md:text-5xl leading-[1.125] tracking-wide max-w-[16rem] md:max-w-md border-b-2 md:border-0 py-4 md:py-0">
               The Reichardt Factory Farm Leaves Diseased Ducks to Die
@@ -177,11 +178,14 @@ const Video1Section = () => {
           </button>
         </DialogTrigger>
         <DialogContent className="w-full flex justify-center bg-black">
+          <VisuallyHidden>
+            <DialogTitle>Watch video</DialogTitle>
+          </VisuallyHidden>
           <iframe
             src="https://player.vimeo.com/video/899045165?h=2603019680&autoplay=1&title=0&byline=0&portrait=0&badge=0"
             allow="autoplay; fullscreen"
             allowFullScreen
-            className="border-0 w-full h-full aspect-[9/16] md:order-first max-h-[80vh]"
+            className="border-0 w-full h-full aspect-9/16 md:order-first max-h-[80vh]"
           ></iframe>
         </DialogContent>
       </Dialog>
@@ -226,7 +230,7 @@ const Video2Section = () => {
             src="https://player.vimeo.com/video/899042025?h=d2d319d36b&autoplay=1&title=0&byline=0&portrait=0&badge=0"
             allow="autoplay; fullscreen"
             allowFullScreen
-            className="border-0 w-full h-full aspect-[9/16] md:order-first max-h-[80vh]"
+            className="border-0 w-full h-full aspect-9/16 md:order-first max-h-[80vh]"
           ></iframe>
         </DialogContent>
       </Dialog>

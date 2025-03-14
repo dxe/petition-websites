@@ -16,22 +16,22 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/ui/form";
-import { Input } from "@/ui/input";
-import { Button } from "@/ui/button";
-import { Textarea } from "@/ui/textarea";
-import { Checkbox } from "@/ui/checkbox";
+} from "@/shadcn/components/ui/form";
+import { Input } from "@/shadcn/components/ui/input";
+import { Button } from "@/shadcn/components/ui/button";
+import { Textarea } from "@/shadcn/components/ui/textarea";
+import { Checkbox } from "@/shadcn/components/ui/checkbox";
 import { SonomaCities } from "@/data/zipcodes";
-import { cn } from "@/utils";
+import { cn } from "@/shadcn/utils";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/ui/select";
+} from "@/shadcn/components/ui/select";
 import ky from "ky";
-import { Alert, AlertDescription, AlertTitle } from "@/ui/alert";
+import { Alert, AlertDescription, AlertTitle } from "@/shadcn/components/ui/alert";
 import { LoaderIcon, MailCheckIcon } from "lucide-react";
 import ReCAPTCHA from "react-google-recaptcha";
 
@@ -323,7 +323,7 @@ export const Petition = () => {
                     aria-label="Outside the United States?"
                   />
                 </FormControl>
-                <FormLabel className="!mt-0">
+                <FormLabel className="mt-0!">
                   Outside the United States
                 </FormLabel>
                 <FormDescription></FormDescription>
@@ -357,7 +357,7 @@ export const Petition = () => {
             sitekey={CAPTCHA_SITE_KEY}
             badge="bottomright"
             size="invisible"
-            className="z-[60]"
+            className="z-60"
           />
           <p className="text-xs text-center">
             By signing, you agree to receive email messages from Direct Action
