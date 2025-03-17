@@ -64,7 +64,7 @@ const Hero = () => {
   );
 };
 
-const PetitionSection = () => {
+function PetitionSection() {
   return (
     <Section
       className="gap-12 items-center bg-slate-200 xl:rounded-lg py-12 md:px-16"
@@ -82,7 +82,7 @@ const PetitionSection = () => {
   );
 };
 
-const AboutSection = () => {
+function AboutSection() {
   return (
     <Section>
       <h2 className="border-b border-slate-300 pb-2 uppercase text-lg tracking-wide text-slate-800">
@@ -152,7 +152,7 @@ const AboutSection = () => {
   );
 };
 
-const Video1Section = () => {
+function Video1Section() {
   const scrollToPetition = useScrollToId("petition-section");
 
   return (
@@ -201,7 +201,7 @@ const Video1Section = () => {
   );
 };
 
-const Video2Section = () => {
+function Video2Section() {
   const scrollToPetition = useScrollToId("petition-section");
 
   return (
@@ -249,7 +249,7 @@ const Video2Section = () => {
   );
 };
 
-const Footer = () => {
+function Footer() {
   return (
     <Section className="text-center pt-4 pb-12 text-sm md:border-t border-slate-300 text-slate-600">
       &copy; {new Date().getFullYear()} Help The Ducks
