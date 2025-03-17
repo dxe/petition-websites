@@ -1,9 +1,6 @@
 "use client";
 
-import {
-  PetitionForm,
-  PetitionFormSchema,
-} from "./data/petition";
+import { PetitionForm, PetitionFormSchema } from "./data/petition";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -30,7 +27,11 @@ import {
   SelectValue,
 } from "@dxe/petitions-components/select";
 import ky from "ky";
-import { Alert, AlertDescription, AlertTitle } from "@dxe/petitions-components/alert";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@dxe/petitions-components/alert";
 import { LoaderIcon, MailCheckIcon } from "lucide-react";
 import ReCAPTCHA from "react-google-recaptcha";
 
@@ -40,14 +41,12 @@ const CAMPAIGN_MAILER_API_URL = `${process.env.NEXT_PUBLIC_CAMPAIGN_MAILER_API_R
 
 const CAPTCHA_SITE_KEY = "6LdiglcpAAAAAM9XE_TNnAiZ22NR9nSRxHMOFn8E";
 
-export function EmailPetition(
-  props: {
-    petitionId: string,
-    campaignName: string,
-    defaultMessage: string,
-    onSubmit?: () => void
-  }) {
-
+export function EmailPetition(props: {
+  petitionId: string;
+  campaignName: string;
+  defaultMessage: string;
+  onSubmit?: () => void;
+}) {
   const form = useForm<PetitionForm>({
     resolver: zodResolver(PetitionFormSchema),
     defaultValues: {
@@ -93,51 +92,55 @@ export function EmailPetition(
         // We purposefully do these one at a time. If the first one fails,
         // we don't want to submit the second one. This allows the user to
         // resubmit the form without causing duplicate emails to be sent.
-        await ky.post(PETITION_API_URL, {
-          body: new URLSearchParams({
-            id: props.petitionId,
-            name: data.name,
-            email: data.email,
-            ...(data.phone && { phone: data.phone }),
-            ...(data.zip && { zip: data.zip }),
-            ...(data.city && { city: data.city }),
-            ...(!data.outsideUS && { country: "United States" }),
-            fullHref: window.location.href,
-          }),
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-        }).catch(error => {
-          console.error("Error submitting", error);
-          setIsSubmitting(false);
-          // Resetting the captcha appears to be necessary to get another token
-          // when submitting is retried.
-          recaptchaRef.current?.reset();
-          alert("Error submitting. Please try again.");
-          throw new Error("Error submitting message");
-        });
-        await ky.post(CAMPAIGN_MAILER_API_URL, {
-          json: {
-            name: data.name,
-            email: data.email,
-            ...(data.phone && { phone: data.phone }),
-            outside_us: data.outsideUS,
-            ...(data.zip && { zip: data.zip }),
-            ...(data.city && { city: data.city }),
-            message: data.message,
-            campaign: props.campaignName,
-            token,
-          },
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }).catch(error => {
-          console.error("Error submitting", error);
-          setIsSubmitting(false);
-          recaptchaRef.current?.reset();
-          alert("Error submitting. Please try again.");
-          throw new Error("Error submitting message");
-        });
+        await ky
+          .post(PETITION_API_URL, {
+            body: new URLSearchParams({
+              id: props.petitionId,
+              name: data.name,
+              email: data.email,
+              ...(data.phone && { phone: data.phone }),
+              ...(data.zip && { zip: data.zip }),
+              ...(data.city && { city: data.city }),
+              ...(!data.outsideUS && { country: "United States" }),
+              fullHref: window.location.href,
+            }),
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+          })
+          .catch((error) => {
+            console.error("Error submitting", error);
+            setIsSubmitting(false);
+            // Resetting the captcha appears to be necessary to get another token
+            // when submitting is retried.
+            recaptchaRef.current?.reset();
+            alert("Error submitting. Please try again.");
+            throw new Error("Error submitting message");
+          });
+        await ky
+          .post(CAMPAIGN_MAILER_API_URL, {
+            json: {
+              name: data.name,
+              email: data.email,
+              ...(data.phone && { phone: data.phone }),
+              outside_us: data.outsideUS,
+              ...(data.zip && { zip: data.zip }),
+              ...(data.city && { city: data.city }),
+              message: data.message,
+              campaign: props.campaignName,
+              token,
+            },
+            headers: {
+              "Content-Type": "application/json",
+            },
+          })
+          .catch((error) => {
+            console.error("Error submitting", error);
+            setIsSubmitting(false);
+            recaptchaRef.current?.reset();
+            alert("Error submitting. Please try again.");
+            throw new Error("Error submitting message");
+          });
         setIsSubmitted(true);
         setIsSubmitting(false);
         recaptchaRef.current?.reset();
@@ -284,7 +287,7 @@ export function EmailPetition(
             name="city"
             disabled={outsideUS || isSubmitting}
             render={({ field }) => (
-              <FormItem className={cn({ "hidden": !cities.length })}>
+              <FormItem className={cn({ hidden: !cities.length })}>
                 <FormLabel>City</FormLabel>
                 <Select
                   onValueChange={(val: string | undefined) => {
@@ -318,7 +321,7 @@ export function EmailPetition(
             render={({ field }) => (
               <FormItem
                 className={cn("flex gap-2 items-center", {
-                  "hidden": cities.length,
+                  hidden: cities.length,
                 })}
               >
                 <FormControl>
@@ -372,4 +375,4 @@ export function EmailPetition(
       </form>
     </Form>
   );
-};
+}

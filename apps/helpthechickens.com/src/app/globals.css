@@ -1,4 +1,4 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
 /* https://tailwindcss.com/docs/detecting-classes-in-source-files#explicitly-registering-sources */
 @source "../../node_modules/@dxe/petitions-components/";

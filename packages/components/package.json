@@ -1,48 +1,48 @@
 {
-    "name": "@dxe/petitions-components",
-    "type": "module",
-    "scripts": {
-        "dev": "tsc --watch && (concurrently \"tsc -w\" \"tsc-alias -w\")",
-        "build": "tsc && tsc-alias -p tsconfig.json"
-    },
-    "exports": {
-        "./alert": "./dist/shadcn/components/ui/alert.jsx",
-        "./button": "./dist/shadcn/components/ui/button.jsx",
-        "./checkbox": "./dist/shadcn/components/ui/checkbox.jsx",
-        "./dialog": "./dist/shadcn/components/ui/dialog.jsx",
-        "./form": "./dist/shadcn/components/ui/form.jsx",
-        "./input": "./dist/shadcn/components/ui/input.jsx",
-        "./label": "./dist/shadcn/components/ui/label.jsx",
-        "./radio-group": "./dist/shadcn/components/ui/radio-group.jsx",
-        "./select": "./dist/shadcn/components/ui/select.jsx",
-        "./textarea": "./dist/shadcn/components/ui/textarea.jsx",
-        "./utils": "./dist/shadcn/utils.js",
-        "./hooks/use-scroll-to-id": "./dist/hooks/useScrollToId.js",
-        "./section": "./dist/components/section.jsx"
-    },
-    "dependencies": {
-        "@radix-ui/react-checkbox": "^1.1.4",
-        "@radix-ui/react-dialog": "^1.1.6",
-        "@radix-ui/react-label": "^2.1.2",
-        "@radix-ui/react-radio-group": "^1.2.3",
-        "@radix-ui/react-select": "^2.1.6",
-        "@radix-ui/react-slot": "^1.1.2",
-        "@types/react": "^19.0.10",
-        "@types/react-dom": "^19.0.4",
-        "class-variance-authority": "^0.7.1",
-        "clsx": "^2.1.1",
-        "lucide-react": "^0.477.0",
-        "react": "19.0.0",
-        "react-hook-form": "^7.54.2",
-        "tailwind-merge": "^3.0.2"
-    },
+  "name": "@dxe/petitions-components",
+  "type": "module",
+  "scripts": {
+    "dev": "tsc --watch && (concurrently \"tsc -w\" \"tsc-alias -w\")",
+    "build": "tsc && tsc-alias -p tsconfig.json"
+  },
+  "exports": {
+    "./alert": "./dist/shadcn/components/ui/alert.jsx",
+    "./button": "./dist/shadcn/components/ui/button.jsx",
+    "./checkbox": "./dist/shadcn/components/ui/checkbox.jsx",
+    "./dialog": "./dist/shadcn/components/ui/dialog.jsx",
+    "./form": "./dist/shadcn/components/ui/form.jsx",
+    "./input": "./dist/shadcn/components/ui/input.jsx",
+    "./label": "./dist/shadcn/components/ui/label.jsx",
+    "./radio-group": "./dist/shadcn/components/ui/radio-group.jsx",
+    "./select": "./dist/shadcn/components/ui/select.jsx",
+    "./textarea": "./dist/shadcn/components/ui/textarea.jsx",
+    "./utils": "./dist/shadcn/utils.js",
+    "./hooks/use-scroll-to-id": "./dist/hooks/useScrollToId.js",
+    "./section": "./dist/components/section.jsx"
+  },
+  "dependencies": {
+    "@radix-ui/react-checkbox": "^1.1.4",
+    "@radix-ui/react-dialog": "^1.1.6",
+    "@radix-ui/react-label": "^2.1.2",
+    "@radix-ui/react-radio-group": "^1.2.3",
+    "@radix-ui/react-select": "^2.1.6",
+    "@radix-ui/react-slot": "^1.1.2",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.477.0",
+    "react": "19.0.0",
+    "react-hook-form": "^7.54.2",
+    "tailwind-merge": "^3.0.2"
+  },
+  "devDependencies": {
+    "tsc-alias": "^1.8.11",
+    "typescript": "latest"
+  },
+  "ignore-future-use-only": {
     "devDependencies": {
-        "tsc-alias": "^1.8.11",
-        "typescript": "latest"
-    },
-    "ignore-future-use-only": {
-        "devDependencies": {
-            "@dxe/typescript-config": "workspace:*"
-        }
+      "@dxe/typescript-config": "workspace:*"
     }
+  }
 }

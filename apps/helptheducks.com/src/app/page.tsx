@@ -3,7 +3,12 @@
 import { useScrollToId } from "@dxe/petitions-components/hooks/use-scroll-to-id";
 import { Button } from "@dxe/petitions-components/button";
 import { EmailPetition } from "@dxe/email-petition/email-petition";
-import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@dxe/petitions-components/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+  DialogTitle,
+} from "@dxe/petitions-components/dialog";
 import { PlayIcon } from "@/svg/play-icon";
 import { Section } from "@dxe/petitions-components/section";
 import Image from "next/image";
@@ -77,10 +82,11 @@ function PetitionSection() {
         petitionId="helptheducks"
         campaignName={process.env.NEXT_PUBLIC_CAMPAIGN_NAME!}
         defaultMessage={DEFAULT_MESSAGE}
-        onSubmit={onSubmit} />
+        onSubmit={onSubmit}
+      />
     </Section>
   );
-};
+}
 
 function AboutSection() {
   return (
@@ -91,7 +97,7 @@ function AboutSection() {
       <div className="flex flex-col lg:flex-row items-center justify-evenly gap-12 text-center">
         <div className="flex flex-col gap-6 max-w-xs w-full">
           <Image
-            src='/img/about1.webp'
+            src="/img/about1.webp"
             className="rounded-full"
             alt="Duck 1"
             width={650}
@@ -110,7 +116,7 @@ function AboutSection() {
         </div>
         <div className="flex flex-col gap-6 max-w-xs w-full">
           <Image
-            src='/img/about2.webp'
+            src="/img/about2.webp"
             className="rounded-full"
             alt="Duck 2"
             width={730}
@@ -129,7 +135,7 @@ function AboutSection() {
         </div>
         <div className="flex flex-col gap-6 max-w-xs w-full">
           <Image
-            src='/img/about3.webp'
+            src="/img/about3.webp"
             className="rounded-full"
             alt="Duck 3"
             width={680}
@@ -150,7 +156,7 @@ function AboutSection() {
       </div>
     </Section>
   );
-};
+}
 
 function Video1Section() {
   const scrollToPetition = useScrollToId("petition-section");
@@ -174,7 +180,7 @@ function Video1Section() {
           <button className="md:order-first max-w-[325px] relative">
             <PlayIcon className="absolute h-24 w-24 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
             <Image
-              src='/img/video1.jpeg'
+              src="/img/video1.jpeg"
               className="aspect-square rounded-md"
               alt="Watch"
               width={728}
@@ -199,7 +205,7 @@ function Video1Section() {
       </Button>
     </Section>
   );
-};
+}
 
 function Video2Section() {
   const scrollToPetition = useScrollToId("petition-section");
@@ -222,7 +228,7 @@ function Video2Section() {
           <button className="md:order-first max-w-[325px] relative">
             <PlayIcon className="absolute h-24 w-24 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
             <Image
-              src='/img/video2.jpeg'
+              src="/img/video2.jpeg"
               className="aspect-square rounded-md"
               alt="Watch"
               width={728}
@@ -247,7 +253,7 @@ function Video2Section() {
       </Button>
     </Section>
   );
-};
+}
 
 function Footer() {
   return (
@@ -255,4 +261,4 @@ function Footer() {
       &copy; {new Date().getFullYear()} Help The Ducks
     </Section>
   );
-};
+}

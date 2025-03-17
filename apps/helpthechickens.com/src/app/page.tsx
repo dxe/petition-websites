@@ -16,7 +16,7 @@ import falseMarketing2 from "./img/false-marketing-2.jpg";
 import sufferingChickenInFactoryFarm from "./img/suffering-chicken-in-factory-farm.jpg";
 import chickenCrowdingInFactoryFarm from "./img/chicken-crowding-in-factory-farm.jpg";
 import chickensBoiledAliveSlaughterhouse1 from "./img/chickens-boiled-alive-slaughterhouse-1.jpg";
-import investigatoryReportFadingScreenshot from "./img/investigatory-report-fading-screenshot.jpg"
+import investigatoryReportFadingScreenshot from "./img/investigatory-report-fading-screenshot.jpg";
 
 export default function HomePage() {
   return (
@@ -45,7 +45,6 @@ function Hero() {
   return (
     <section
       className="md:min-h-[90vh] w-full text-white lg:bg-center md:bg-[40%] bg-[45%] bg-cover flex flex-col"
-      
       style={{
         backgroundImage: `url(${hero.src})`,
       }}
@@ -73,7 +72,7 @@ function Hero() {
       </div>
     </section>
   );
-};
+}
 
 function PetitionSection() {
   return (
@@ -88,10 +87,11 @@ function PetitionSection() {
         petitionId="helpthechickens"
         campaignName={process.env.NEXT_PUBLIC_CAMPAIGN_NAME!}
         defaultMessage={DEFAULT_MESSAGE}
-        onSubmit={onSubmit} />
+        onSubmit={onSubmit}
+      />
     </Section>
   );
-};
+}
 
 function MoreBackgroundSection() {
   function ExposingPerdueYouTubeVideo() {
@@ -103,8 +103,8 @@ function MoreBackgroundSection() {
         frameBorder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         referrerPolicy="strict-origin-when-cross-origin"
-        allowFullScreen>
-      </iframe>
+        allowFullScreen
+      ></iframe>
     );
   }
 
@@ -114,16 +114,16 @@ function MoreBackgroundSection() {
         <p className="w-full lg:w-1/2">
           Petaluma Poultry is owned by Perdue Farms, the fourth largest poultry
           producer in the United States, and it supplies to major grocery
-          chains, including Safeway and Trader Joe&apos;s. Since 2018, investigators
-          with Direct Action Everywhere and Sonoma County Animal Services
-          Department have documented widespread violations of California&apos;s
-          animal cruelty laws at Petaluma Poultry facilities, including evidence
-          of birds being boiled alive at the slaughterhouse, as well as
-          infectious diseases that threaten public health. Yet, despite repeated
-          reports to the Sonoma County District Attorney and Sheriff&apos;s Office,
-          the authorities have failed to take action against the company.
-          Instead, they are prosecuting investigator and animal rescuer Zoe
-          Rosenberg. For more information please visit
+          chains, including Safeway and Trader Joe&apos;s. Since 2018,
+          investigators with Direct Action Everywhere and Sonoma County Animal
+          Services Department have documented widespread violations of
+          California&apos;s animal cruelty laws at Petaluma Poultry facilities,
+          including evidence of birds being boiled alive at the slaughterhouse,
+          as well as infectious diseases that threaten public health. Yet,
+          despite repeated reports to the Sonoma County District Attorney and
+          Sheriff&apos;s Office, the authorities have failed to take action
+          against the company. Instead, they are prosecuting investigator and
+          animal rescuer Zoe Rosenberg. For more information please visit
           <a href="https://righttorescue.com">righttorescue.com</a>
         </p>
         <div className="w-full lg:w-1/2 flex items:center justify-center">
@@ -148,14 +148,16 @@ function KeyFindingsSection() {
             alt="Neglect of chickens"
           />
           <div className="flex flex-col gap-4">
-            <div className="text-4xl uppercase font-semibold">Criminal Neglect</div>
+            <div className="text-4xl uppercase font-semibold">
+              Criminal Neglect
+            </div>
             <p>
               Sonoma County Animal Services examined birds from a Petaluma
               Poultry factory farm in Petaluma in 2018 and identified wing and
               joint injuries, open sores, and necrotic wounds so deep that
               muscle and bone were exposed. They referred the owner of the
-              facility as a suspect for animal cruelty to the Sheriff&apos;s Office,
-              but charges were never filed.
+              facility as a suspect for animal cruelty to the Sheriff&apos;s
+              Office, but charges were never filed.
             </p>
           </div>
         </div>
@@ -166,7 +168,9 @@ function KeyFindingsSection() {
             alt="Zoonotic Pathogens"
           />
           <div className="flex flex-col gap-4">
-            <div className="text-4xl uppercase font-semibold">Zoonotic Pathogens</div>
+            <div className="text-4xl uppercase font-semibold">
+              Zoonotic Pathogens
+            </div>
             <p>
               Lab testing has identified numerous infectious pathogens and
               diseases present at Petaluma Poultry factory farms in Sonoma
@@ -182,7 +186,9 @@ function KeyFindingsSection() {
             alt="Chickens boiled alive at slaughterhouse"
           />
           <div className="flex flex-col gap-4">
-            <div className="text-4xl uppercase font-semibold">Animals Boiled Alive</div>
+            <div className="text-4xl uppercase font-semibold">
+              Animals Boiled Alive
+            </div>
             <p>
               Chickens are stunned and slaughtered in the dark at high speeds,
               so many of them miss the stunning stage. This means they can enter
@@ -196,7 +202,7 @@ function KeyFindingsSection() {
       </div>
     </Section>
   );
-};
+}
 
 function FullInvestigatoryReport() {
   // Copied from righttorescue.com -> pages/petalumapoultry.tsx
@@ -247,11 +253,11 @@ function FullInvestigatoryReport() {
 }
 
 function PressHits() {
-  const [isClient, setIsClient] = useState(false)
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    setIsClient(true)
-  }, [])
+    setIsClient(true);
+  }, []);
 
   return (
     <Section>
@@ -263,24 +269,42 @@ function PressHits() {
         <div className="flex flex-col gap-6 max-w-96 w-full">
           {/* The Press Democrat: Perdue&apos;s Petaluma poultry plant struggles to eliminate bacteria that can make people sick */}
           <div className="iframely-embed">
-            <div className="iframely-responsive" style={{paddingBottom: "59.375%", paddingTop: "120px"}}>
-              <a href="https://www.pressdemocrat.com/article/news/perdues-petaluma-poultry-plant-struggles-to-limit-pathogens/" data-iframely-url="//iframely.net/iNsiACG"></a>
+            <div
+              className="iframely-responsive"
+              style={{ paddingBottom: "59.375%", paddingTop: "120px" }}
+            >
+              <a
+                href="https://www.pressdemocrat.com/article/news/perdues-petaluma-poultry-plant-struggles-to-limit-pathogens/"
+                data-iframely-url="//iframely.net/iNsiACG"
+              ></a>
             </div>
           </div>
         </div>
         <div className="flex flex-col gap-6 max-w-96 w-full">
           {/* The Intercept: Dangerous Pathogens and Cruelty Law Violations at Perdue Subsidiary, Animal Rights Report Alleges */}
           <div className="iframely-embed">
-            <div className="iframely-responsive" style={{paddingBottom: "59.375%", paddingTop: "120px"}}>
-              <a href="https://production.public.theintercept.com/2023/06/13/perdue-chicken-slaughterhouse-animal-cruelty-dxe/" data-iframely-url="//iframely.net/bA6f35V"></a>
+            <div
+              className="iframely-responsive"
+              style={{ paddingBottom: "59.375%", paddingTop: "120px" }}
+            >
+              <a
+                href="https://production.public.theintercept.com/2023/06/13/perdue-chicken-slaughterhouse-animal-cruelty-dxe/"
+                data-iframely-url="//iframely.net/bA6f35V"
+              ></a>
             </div>
           </div>
         </div>
         <div className="flex flex-col gap-6 max-w-96 w-full">
           {/* The San Francisco Examiner: Chef Tyler Florence distances from poultry farm and animal-rights heat */}
           <div className="iframely-embed">
-            <div className="iframely-responsive" style={{paddingBottom: "59.375%", paddingTop: "120px"}}>
-              <a href="https://www.sfexaminer.com/news/business/chef-tyler-florence-distances-from-poultry-farm-and-animal-rights-heat/article_64da5ab4-601a-11ef-a358-9774850aac1b.html" data-iframely-url="//iframely.net/qMrpLTW"></a>
+            <div
+              className="iframely-responsive"
+              style={{ paddingBottom: "59.375%", paddingTop: "120px" }}
+            >
+              <a
+                href="https://www.sfexaminer.com/news/business/chef-tyler-florence-distances-from-poultry-farm-and-animal-rights-heat/article_64da5ab4-601a-11ef-a358-9774850aac1b.html"
+                data-iframely-url="//iframely.net/qMrpLTW"
+              ></a>
             </div>
           </div>
         </div>
@@ -303,13 +327,29 @@ function MarketingVsReality() {
       <div className="flex flex-col lg:flex-row items-center lg:items-start justify-evenly">
         <div className="flex flex-col">
           <p className="text-xl">Marketing</p>
-          <Image src={falseMarketing1} className="size-96 p-6 object-cover" alt="Petaluma Poultry false marketing" />
-          <Image src={falseMarketing2} className="size-96 p-6 object-cover object-bottom" alt="Petaluma Poultry false marketing" />
+          <Image
+            src={falseMarketing1}
+            className="size-96 p-6 object-cover"
+            alt="Petaluma Poultry false marketing"
+          />
+          <Image
+            src={falseMarketing2}
+            className="size-96 p-6 object-cover object-bottom"
+            alt="Petaluma Poultry false marketing"
+          />
         </div>
         <div className="flex flex-col">
           <p className="text-xl">Reality</p>
-          <Image src={sufferingChickenInFactoryFarm} className="size-96 p-6 object-cover" alt="Petaluma Poultry chicken suffering" />
-          <Image src={chickenCrowdingInFactoryFarm} className="size-96 p-6 object-cover" alt="Petaluma Poultry crowding" />
+          <Image
+            src={sufferingChickenInFactoryFarm}
+            className="size-96 p-6 object-cover"
+            alt="Petaluma Poultry chicken suffering"
+          />
+          <Image
+            src={chickenCrowdingInFactoryFarm}
+            className="size-96 p-6 object-cover"
+            alt="Petaluma Poultry crowding"
+          />
         </div>
       </div>
     </Section>
@@ -322,4 +362,4 @@ function Footer() {
       &copy; {new Date().getFullYear()} Help The Chickens
     </Section>
   );
-};
+}
