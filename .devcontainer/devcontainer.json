@@ -28,7 +28,8 @@
     "vscode": {
       "extensions": [
         "github.vscode-github-actions",
-        "bradlc.vscode-tailwindcss"
+        "bradlc.vscode-tailwindcss",
+        "esbenp.prettier-vscode"
       ]
     }
   }

@@ -7,4 +7,9 @@
   "files.associations": {
     "*.css": "tailwindcss"
   },
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "prettier.prettierPath": "./node_modules/prettier",
+  // Ensures same settings are used by VS Code extension and CLI.
+  "prettier.requireConfig": true
 }
