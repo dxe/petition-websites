@@ -89,6 +89,14 @@ export function EmailPetition(props: {
           setIsSubmitting(false);
           return;
         }
+
+        const message = injectMessageValues(
+          data.message,
+          data.name,
+          data.city,
+          false,
+        );
+
         // We purposefully do these one at a time. If the first one fails,
         // we don't want to submit the second one. This allows the user to
         // resubmit the form without causing duplicate emails to be sent.
@@ -126,7 +134,7 @@ export function EmailPetition(props: {
               outside_us: data.outsideUS,
               ...(data.zip && { zip: data.zip }),
               ...(data.city && { city: data.city }),
-              message: data.message,
+              message: message,
               campaign: props.campaignName,
               token,
             },
@@ -169,8 +177,25 @@ export function EmailPetition(props: {
     }
   }, [cities, setValue]);
 
+  function injectMessageValues(
+    msg: string,
+    name: string | undefined,
+    city: string | undefined,
+    /**
+     * True to leave placeholder if no value is provided.
+     * False to replace value with empty string.
+     */
+    skipIfUndefined: boolean,
+  ) {
+    return msg
+      .replace("[Your name]", name || (skipIfUndefined ? "[Your name]" : ""))
+      .replace("[Your city]", city || (skipIfUndefined ? "[Your city]" : ""));
+  }
   const injectValuesIntoMessage = useCallback(
     (name: string | undefined, city: string | undefined) => {
+      // TODO: Why are all fields always set to true in dirtyFields?
+      // Does not seem to apply when using plain (non-Shadcn) input elements
+      // with direct props set from react-hook-form register() function.
       if (dirtyFields.message) {
         console.log(
           "Skipped updating message with name or city since it has been customized.",
@@ -178,9 +203,12 @@ export function EmailPetition(props: {
         return;
       }
       resetField("message", {
-        defaultValue: props.defaultMessage
-          .replace("[Your name]", name || "[Your name]")
-          .replace("[Your city]", city || ""),
+        defaultValue: injectMessageValues(
+          props.defaultMessage,
+          name,
+          city,
+          true,
+        ),
       });
     },
     [dirtyFields.message, resetField],
