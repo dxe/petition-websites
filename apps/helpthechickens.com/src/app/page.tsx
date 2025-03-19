@@ -325,29 +325,29 @@ function MarketingVsReality() {
         Petaluma Poultry Marketing vs. The reality
       </h2>
       <div className="flex flex-col lg:flex-row items-center lg:items-start justify-evenly">
-        <div className="flex flex-col">
+        <div className="flex flex-col lg:w-1/2 w-full items-center">
           <p className="text-xl">Marketing</p>
           <Image
             src={falseMarketing1}
-            className="size-96 p-6 object-cover"
+            className="p-6 object-cover w-full aspect-square max-w-xl"
             alt="Petaluma Poultry false marketing"
           />
           <Image
             src={falseMarketing2}
-            className="size-96 p-6 object-cover object-bottom"
+            className="p-6 object-cover object-bottom w-full aspect-square max-w-xl"
             alt="Petaluma Poultry false marketing"
           />
         </div>
-        <div className="flex flex-col">
+        <div className="flex flex-col lg:w-1/2 w-full items-center">
           <p className="text-xl">Reality</p>
           <Image
             src={sufferingChickenInFactoryFarm}
-            className="size-96 p-6 object-cover"
+            className="p-6 object-cover w-full aspect-square max-w-xl"
             alt="Petaluma Poultry chicken suffering"
           />
           <Image
             src={chickenCrowdingInFactoryFarm}
-            className="size-96 p-6 object-cover"
+            className="p-6 object-cover w-full aspect-square max-w-xl"
             alt="Petaluma Poultry crowding"
           />
         </div>
