@@ -27,6 +27,7 @@ on:
         required: true
 jobs:
   deploy_frontend:
+    name: "Deploy ${{inputs.package-name}}"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
