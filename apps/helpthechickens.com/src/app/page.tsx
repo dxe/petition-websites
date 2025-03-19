@@ -66,7 +66,7 @@ function Hero() {
             size="lg"
             onClick={scrollToPetition}
           >
-            Ask Petaluma City Council to Stop the Abuse
+            Help stop the abuse
           </Button>
         </div>
       </div>
@@ -164,7 +164,7 @@ function KeyFindingsSection() {
         <div className="flex flex-col gap-6 max-w-xs w-full">
           <Image
             src={chickenZoonoticPathogens}
-            className="rounded-full size-96 object-cover"
+            className="rounded-full size-96 object-cover object-[63%_50%] test"
             alt="Zoonotic Pathogens"
           />
           <div className="flex flex-col gap-4">
