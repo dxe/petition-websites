@@ -38,6 +38,42 @@ Learn more about Turborepo:
 - [Configuration Options](https://turbo.build/repo/docs/reference/configuration)
 - [CLI Usage](https://turbo.build/repo/docs/reference/command-line-reference)
 
+## Environment variables
+
+Each petition website has `.env.development` and `.env.production` environment
+variable files. The development file is used with `pnpm dev` and production with
+`pnpm build && pnpm start`.
+
+Below are variables used to configure the websites.
+
+`NEXT_PUBLIC_` prefix allows these variables to be substituted during build time
+into the static files served publicly to users' browsers.
+
+### `NEXT_PUBLIC_PETITIONS_API_ROOT`
+
+Base URL for the general petition service. This records tallys and then invokes
+the signup service to subscribe the user to emails.
+
+### `NEXT_PUBLIC_PETITION_ID`
+
+The petition ID used by the petition service.
+
+Prefix with `test:` to avoid contaminating the tally for the
+real petition. The prefix is removed
+
+### `NEXT_PUBLIC_CAMPAIGN_MAILER_API_ROOT`
+
+Base URL for the petition mail service. It sends the emails to our targets.
+It also records a tally of its own and records copies of messages sent.
+
+### `NEXT_PUBLIC_CAMPAIGN_NAME`
+
+The name of the campaign used by the petition mail service. Configured in
+`apps/service/config/config.go`.
+
+Points to configuration for emails such as sender and target emails, and subject
+line. For testing, use the value `test`.
+
 ## Creating a new petition site
 
 Start early on the AWS setup in case of any delays for domain verification for
@@ -55,6 +91,9 @@ Make a copy of an existing petition website, such as the most recently created
 one. Update the petition component props, Google Analytics tag, `.env` files,
 layout file and homepage files, images and any other references to the old
 petition.
+
+See [environment variables](#environment-variables) for details about the `.env`
+files.
 
 ### Image optimization
 
@@ -136,4 +175,4 @@ Run the workflow by pushing to the main branch or running it manually from here:
 
 ### TODO
 
-- forwarding `www.` domain with Cloudflare.
+- forwarding `www.` domain with S3/CloudFront or Cloudflare
