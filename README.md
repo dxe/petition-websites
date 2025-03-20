@@ -21,9 +21,26 @@ pnpm build
 
 ### Develop
 
-To develop all apps and packages, run the following command:
+Run the dev server for one website:
 
+```bash
+pnpm dev --filter helptheducks.com`
 ```
+
+Or: `cd apps/helptheducks.com` and `pnpm dev`.
+
+Run the dev server for one website and some dependencies:
+
+```bash
+pnpm dev --filter helptheducks.com --filter @dxe/email-petition --filter @dxe/petitions-components
+```
+
+The above command will make changes to the email-petition component become live
+immediately in the browser window for helptheducks website dev server.
+
+Develop all apps and packages together:
+
+```bash
 pnpm dev
 ```
 
