@@ -14,12 +14,15 @@ import { Section } from "@dxe/petitions-components/section";
 import Image from "next/image";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { DEFAULT_MESSAGE } from "@/data/petition-message";
+import { useSearchParams } from "next/navigation";
 
 export default function HomePage() {
+  const searchParams = useSearchParams();
+
   return (
     <div className="flex flex-col gap-6 items-center">
       <Hero />
-      <PetitionSection />
+      <PetitionSection debug={searchParams.get("debug") === "true"} />
       <AboutSection />
       <Video1Section />
       <Video2Section />
@@ -69,7 +72,7 @@ const Hero = () => {
   );
 };
 
-function PetitionSection() {
+function PetitionSection(props: { debug: boolean }) {
   return (
     <Section
       className="gap-12 items-center bg-slate-200 xl:rounded-lg py-12 md:px-16"
@@ -83,6 +86,7 @@ function PetitionSection() {
         campaignName={process.env.NEXT_PUBLIC_CAMPAIGN_NAME!}
         defaultMessage={DEFAULT_MESSAGE}
         onSubmit={onSubmit}
+        debug={props.debug}
       />
     </Section>
   );

@@ -7,6 +7,7 @@ import { Section } from "@dxe/petitions-components/section";
 import { DEFAULT_MESSAGE } from "@/data/petition-message";
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 
 import hero from "./img/hero.jpg";
 import criminalNeglectOfChicken from "./img/criminal-neglect-of-chicken.jpg";
@@ -19,10 +20,12 @@ import chickensBoiledAliveSlaughterhouse1 from "./img/chickens-boiled-alive-slau
 import investigatoryReportFadingScreenshot from "./img/investigatory-report-fading-screenshot.jpg";
 
 export default function HomePage() {
+  const searchParams = useSearchParams();
+
   return (
     <div className="flex flex-col gap-6 items-center">
       <Hero />
-      <PetitionSection />
+      <PetitionSection debug={searchParams.get("debug") === "true"} />
       <MoreBackgroundSection />
       <KeyFindingsSection />
       <FullInvestigatoryReport />
@@ -74,7 +77,7 @@ function Hero() {
   );
 }
 
-function PetitionSection() {
+function PetitionSection(props: {debug: boolean}) {
   return (
     <Section
       className="gap-12 items-center bg-slate-200 xl:rounded-lg py-12 md:px-16"
@@ -88,6 +91,7 @@ function PetitionSection() {
         campaignName={process.env.NEXT_PUBLIC_CAMPAIGN_NAME!}
         defaultMessage={DEFAULT_MESSAGE}
         onSubmit={onSubmit}
+        debug={props.debug}
       />
     </Section>
   );

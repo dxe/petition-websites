@@ -46,7 +46,19 @@ export function EmailPetition(props: {
   campaignName: string;
   defaultMessage: string;
   onSubmit?: () => void;
+  debug: boolean;
 }) {
+  useEffect(() => {
+    if (props.debug) {
+      console.dir({
+        "petition url": PETITION_API_URL,
+        "mailer url": CAMPAIGN_MAILER_API_URL,
+        "petition id": props.petitionId,
+        campaign: props.campaignName,
+      });
+    }
+  });
+
   const form = useForm<PetitionForm>({
     resolver: zodResolver(PetitionFormSchema),
     defaultValues: {
