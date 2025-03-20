@@ -15,14 +15,18 @@ import Image from "next/image";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { DEFAULT_MESSAGE } from "@/data/petition-message";
 import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
 export default function HomePage() {
-  const searchParams = useSearchParams();
-
   return (
     <div className="flex flex-col gap-6 items-center">
       <Hero />
-      <PetitionSection debug={searchParams.get("debug") === "true"} />
+      <Suspense>
+        {/* Suspense is Required for useSearchParams. Todo: Make server-side
+        component to get search params so it can be rendered server-side without
+        <Suspense> */}
+        <PetitionSection />
+      </Suspense>
       <AboutSection />
       <Video1Section />
       <Video2Section />
@@ -72,7 +76,9 @@ const Hero = () => {
   );
 };
 
-function PetitionSection(props: { debug: boolean }) {
+function PetitionSection() {
+  const searchParams = useSearchParams();
+
   return (
     <Section
       className="gap-12 items-center bg-slate-200 xl:rounded-lg py-12 md:px-16"
@@ -86,7 +92,8 @@ function PetitionSection(props: { debug: boolean }) {
         campaignName={process.env.NEXT_PUBLIC_CAMPAIGN_NAME!}
         defaultMessage={DEFAULT_MESSAGE}
         onSubmit={onSubmit}
-        debug={props.debug}
+        debug={searchParams.get("debug") === "true"}
+        test={searchParams.get("test") === "true"}
       />
     </Section>
   );

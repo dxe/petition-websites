@@ -47,13 +47,21 @@ export function EmailPetition(props: {
   defaultMessage: string;
   onSubmit?: () => void;
   debug: boolean;
+  test: boolean;
 }) {
+  let petitionId = props.petitionId;
+  if (props.test) {
+    if (!petitionId.startsWith("test:")) {
+      petitionId = "test:" + petitionId;
+    }
+  }
+
   useEffect(() => {
     if (props.debug) {
       console.dir({
         "petition url": PETITION_API_URL,
         "mailer url": CAMPAIGN_MAILER_API_URL,
-        "petition id": props.petitionId,
+        "petition id": petitionId,
         campaign: props.campaignName,
       });
     }
@@ -115,7 +123,7 @@ export function EmailPetition(props: {
         await ky
           .post(PETITION_API_URL, {
             body: new URLSearchParams({
-              id: props.petitionId,
+              id: petitionId,
               name: data.name,
               email: data.email,
               ...(data.phone && { phone: data.phone }),
