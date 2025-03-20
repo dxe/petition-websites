@@ -5,7 +5,7 @@ import { Button } from "@dxe/petitions-components/button";
 import { EmailPetition } from "@dxe/email-petition/email-petition";
 import { Section } from "@dxe/petitions-components/section";
 import { DEFAULT_MESSAGE } from "@/data/petition-message";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 
@@ -20,12 +20,14 @@ import chickensBoiledAliveSlaughterhouse1 from "./img/chickens-boiled-alive-slau
 import investigatoryReportFadingScreenshot from "./img/investigatory-report-fading-screenshot.jpg";
 
 export default function HomePage() {
-  const searchParams = useSearchParams();
-
   return (
     <div className="flex flex-col gap-6 items-center">
       <Hero />
-      <PetitionSection debug={searchParams.get("debug") === "true"} />
+      <Suspense>
+        {/* Suspense is Required for useSearchParams. Todo: use window.location
+        since query params are not needed for rendering.  */}
+        <PetitionSection />
+      </Suspense>
       <MoreBackgroundSection />
       <KeyFindingsSection />
       <FullInvestigatoryReport />
@@ -77,7 +79,9 @@ function Hero() {
   );
 }
 
-function PetitionSection(props: {debug: boolean}) {
+function PetitionSection() {
+  const searchParams = useSearchParams();
+
   return (
     <Section
       className="gap-12 items-center bg-slate-200 xl:rounded-lg py-12 md:px-16"
@@ -91,7 +95,8 @@ function PetitionSection(props: {debug: boolean}) {
         campaignName={process.env.NEXT_PUBLIC_CAMPAIGN_NAME!}
         defaultMessage={DEFAULT_MESSAGE}
         onSubmit={onSubmit}
-        debug={props.debug}
+        debug={searchParams.get("debug") === "true"}
+        test={searchParams.get("test") === "true"}
       />
     </Section>
   );
