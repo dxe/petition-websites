@@ -79,7 +79,7 @@ function PetitionSection() {
         Contact the District Attorney Now
       </h2>
       <EmailPetition
-        petitionId="helptheducks"
+        petitionId={process.env.NEXT_PUBLIC_PETITION_ID!}
         campaignName={process.env.NEXT_PUBLIC_CAMPAIGN_NAME!}
         defaultMessage={DEFAULT_MESSAGE}
         onSubmit={onSubmit}

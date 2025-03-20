@@ -84,7 +84,7 @@ function PetitionSection() {
         Ask Petaluma City Council to shut down Perdue&apos;s slaughterhouse
       </h2>
       <EmailPetition
-        petitionId="helpthechickens"
+        petitionId={process.env.NEXT_PUBLIC_PETITION_ID!}
         campaignName={process.env.NEXT_PUBLIC_CAMPAIGN_NAME!}
         defaultMessage={DEFAULT_MESSAGE}
         onSubmit={onSubmit}
