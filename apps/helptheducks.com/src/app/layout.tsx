@@ -4,7 +4,8 @@ import { GoogleAnalytics } from "@next/third-parties/google";
 
 const description =
   "Multiple investigations have exposed Reichardt Duck Farm for rampant disease and criminal animal cruelty.";
-const title = "Help the Ducks";
+// Note: title should be descriptive enough for sharing on Facebook.
+const title = "Help the Ducks at Reichardt";
 export const metadata: Metadata = {
   title,
   description,
