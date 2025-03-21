@@ -12,8 +12,10 @@ import { useSearchParams } from "next/navigation";
 import hero from "./img/hero.jpg";
 import criminalNeglectOfChicken from "./img/criminal-neglect-of-chicken.jpg";
 import chickenZoonoticPathogens from "./img/chicken-zoonotic-pathogens.jpg";
+import chickenStuckOnBackInFactoryFarm from "./img/chicken-stuck-on-back-in-factory-farm.jpg";
 import falseMarketing1 from "./img/false-marketing-1.jpg";
 import falseMarketing2 from "./img/false-marketing-2.jpg";
+import falseMarketing6 from "./img/false-marketing-6.jpg";
 import sufferingChickenInFactoryFarm from "./img/suffering-chicken-in-factory-farm.jpg";
 import chickenCrowdingInFactoryFarm from "./img/chicken-crowding-in-factory-farm.jpg";
 import chickensBoiledAliveSlaughterhouse1 from "./img/chickens-boiled-alive-slaughterhouse-1.jpg";
@@ -344,6 +346,11 @@ function MarketingVsReality() {
             alt="Petaluma Poultry false marketing"
           />
           <Image
+            src={falseMarketing6}
+            className="m-10 object-cover w-full aspect-square max-w-xl rounded-lg object-bottom"
+            alt="Petaluma Poultry false marketing"
+          />
+          <Image
             src={falseMarketing2}
             className="m-10 object-cover w-full aspect-square max-w-xl rounded-lg object-bottom"
             alt="Petaluma Poultry false marketing"
@@ -363,6 +370,11 @@ function MarketingVsReality() {
             src={chickenCrowdingInFactoryFarm}
             className="m-10 object-cover w-full aspect-square max-w-xl rounded-lg"
             alt="Petaluma Poultry crowding"
+          />
+          <Image
+            src={chickenStuckOnBackInFactoryFarm}
+            className="m-10 object-cover w-full aspect-square max-w-xl rounded-lg"
+            alt="Petaluma Poultry chicken stuck on back"
           />
         </div>
       </div>
