@@ -153,7 +153,7 @@ function KeyFindingsSection() {
         <div className="flex flex-col gap-6 max-w-xs w-full">
           <Image
             src={criminalNeglectOfChicken}
-            className="rounded-full size-96 object-cover object-top"
+            className="rounded-3xl size-96 mb-5 object-cover object-top"
             alt="Neglect of chickens"
           />
           <div className="flex flex-col gap-4">
@@ -173,7 +173,7 @@ function KeyFindingsSection() {
         <div className="flex flex-col gap-6 max-w-xs w-full">
           <Image
             src={chickenZoonoticPathogens}
-            className="rounded-full size-96 object-cover object-[63%_50%] test"
+            className="rounded-3xl size-96 mb-5 object-cover object-[63%_50%]"
             alt="Zoonotic Pathogens"
           />
           <div className="flex flex-col gap-4">
@@ -191,7 +191,7 @@ function KeyFindingsSection() {
         <div className="flex flex-col gap-6 max-w-xs w-full">
           <Image
             src={chickensBoiledAliveSlaughterhouse1}
-            className="rounded-full size-96 object-cover"
+            className="rounded-3xl size-96 mb-5 object-cover"
             alt="Chickens boiled alive at slaughterhouse"
           />
           <div className="flex flex-col gap-4">
