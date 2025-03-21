@@ -331,11 +331,11 @@ function MarketingVsReality() {
   return (
     <Section>
       <h2 className="border-b border-slate-300 pb-2 uppercase text-xl tracking-wide text-slate-800">
-        Petaluma Poultry Marketing vs. The reality
+        Marketing vs. The reality
       </h2>
       <div className="flex flex-col lg:flex-row items-center lg:items-start justify-evenly">
         <div className="flex flex-col lg:w-1/2 w-full items-center">
-          <p className="text-xl">Marketing</p>
+          <p className="text-xl self-start">Marketing</p>
           <Image
             src={falseMarketing1}
             className="p-6 object-cover w-full aspect-square max-w-xl"
@@ -348,7 +348,7 @@ function MarketingVsReality() {
           />
         </div>
         <div className="flex flex-col lg:w-1/2 w-full items-center">
-          <p className="text-xl">Reality</p>
+          <p className="text-xl self-start">Reality</p>
           <Image
             src={sufferingChickenInFactoryFarm}
             className="p-6 object-cover w-full aspect-square max-w-xl"
