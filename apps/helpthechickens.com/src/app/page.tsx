@@ -152,7 +152,7 @@ function KeyFindingsSection() {
         Years of evidence show a consistent pattern of extreme animal cruelty.
       </h2>
       <div className="flex flex-col lg:flex-row items-center lg:items-start justify-evenly gap-12 text-center">
-        <div className="flex flex-col gap-6 max-w-xs w-full">
+        <div className="flex flex-col gap-6 max-w-sm w-full">
           <Image
             src={criminalNeglectOfChicken}
             className="rounded-3xl size-96 mb-5 object-cover object-top"
@@ -172,7 +172,7 @@ function KeyFindingsSection() {
             </p>
           </div>
         </div>
-        <div className="flex flex-col gap-6 max-w-xs w-full">
+        <div className="flex flex-col gap-6 max-w-sm w-full">
           <Image
             src={chickenZoonoticPathogens}
             className="rounded-3xl size-96 mb-5 object-cover object-[63%_50%]"
@@ -190,7 +190,7 @@ function KeyFindingsSection() {
             </p>
           </div>
         </div>
-        <div className="flex flex-col gap-6 max-w-xs w-full">
+        <div className="flex flex-col gap-6 max-w-sm w-full">
           <Image
             src={chickensBoiledAliveSlaughterhouse1}
             className="rounded-3xl size-96 mb-5 object-cover"
@@ -331,49 +331,49 @@ function PressHits() {
 
 function MarketingVsReality() {
   return (
-    <Section>
-      <h2 className="border-b border-slate-300 pb-2 uppercase text-xl tracking-wide text-slate-800">
+    <Section className="p-0">
+      <h2 className="border-b border-slate-300 pb-2 pl-4 uppercase text-xl tracking-wide text-slate-800">
         Marketing vs. The reality
       </h2>
       <div className="flex flex-col lg:flex-row lg:items-stretch justify-evenly">
-        <div className="flex flex-col lg:w-1/2 w-full items-center bg-[#bcceeb] p-10">
+        <div className="flex flex-col lg:w-1/2 w-full items-center bg-[#bcceeb] p-3 lg:p-10 gap-10">
           <p className="text-3xl self-start p-6 bg-[#bcceeb] brightness-85 w-full rounded-lg">
             Marketing
           </p>
           <Image
             src={falseMarketing1}
-            className="m-10 object-cover w-full aspect-square max-w-xl rounded-lg"
+            className="object-cover w-full aspect-square max-w-xl rounded-lg"
             alt="Petaluma Poultry false marketing"
           />
           <Image
             src={falseMarketing6}
-            className="m-10 object-cover w-full aspect-square max-w-xl rounded-lg object-bottom"
+            className="object-cover w-full aspect-square max-w-xl rounded-lg object-bottom"
             alt="Petaluma Poultry false marketing"
           />
           <Image
             src={falseMarketing2}
-            className="m-10 object-cover w-full aspect-square max-w-xl rounded-lg object-bottom"
+            className="object-cover w-full aspect-square max-w-xl rounded-lg object-bottom"
             alt="Petaluma Poultry false marketing"
           />
         </div>
-        <div className="min-h-[20px] lg:min-w-[20px] bg-gradient-to-r from-[#bcceeb] to-[#e6b4ae]"></div>
-        <div className="flex flex-col lg:w-1/2 w-full items-center bg-[#e6b4ae] p-10">
+        <div className="min-h-[20px] lg:min-w-[20px] bg-gradient-to-b lg:bg-gradient-to-r from-[#bcceeb] to-[#e6b4ae]"></div>
+        <div className="flex flex-col lg:w-1/2 w-full items-center bg-[#e6b4ae] p-3 lg:p-10 gap-10">
           <p className="text-3xl self-start p-6 bg-[#e6b4ae] brightness-85 w-full rounded-lg">
             Reality
           </p>
           <Image
             src={sufferingChickenInFactoryFarm}
-            className="m-10 object-cover w-full aspect-square max-w-xl rounded-lg"
+            className="object-cover w-full aspect-square max-w-xl rounded-lg"
             alt="Petaluma Poultry chicken suffering"
           />
           <Image
             src={chickenCrowdingInFactoryFarm}
-            className="m-10 object-cover w-full aspect-square max-w-xl rounded-lg"
+            className="object-cover w-full aspect-square max-w-xl rounded-lg"
             alt="Petaluma Poultry crowding"
           />
           <Image
             src={chickenStuckOnBackInFactoryFarm}
-            className="m-10 object-cover w-full aspect-square max-w-xl rounded-lg"
+            className="object-cover w-full aspect-square max-w-xl rounded-lg"
             alt="Petaluma Poultry chicken stuck on back"
           />
         </div>
