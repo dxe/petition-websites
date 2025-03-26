@@ -1,0 +1,58 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Dev helpthechickens.com",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["dev", "--filter=helpthechickens.com"],
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Dev helptheducks.com",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["dev", "--filter=helptheducks.com"],
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Dev low-level components",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["dev", "--filter=@dxe/petitions-components"],
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Dev email petition component",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["dev", "--filter=@dxe/email-petition"],
+      "cwd": "${workspaceFolder}"
+    }
+  ],
+  // Use launch.json `compounds` instead of `turbo --filter` commands to keep
+  // outputs separated. (Turbo would combine all outputs into one screen unless
+  // launch.json configuration `console` is set to integrated terminal, but
+  // this would split some running debuggers between the debug console and
+  // integrated termianl.)
+  "compounds": [
+    {
+      "name": "Dev ALL websites",
+      "configurations": ["Dev helpthechickens.com", "Dev helptheducks.com"]
+    },
+    {
+      "name": "Dev ALL shared components",
+      "configurations": [
+        "Dev low-level components",
+        "Dev email petition component"
+      ]
+    }
+  ]
+}
