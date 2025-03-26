@@ -20,6 +20,7 @@ import sufferingChickenInFactoryFarm from "./img/suffering-chicken-in-factory-fa
 import chickenCrowdingInFactoryFarm from "./img/chicken-crowding-in-factory-farm.jpg";
 import chickensBoiledAliveSlaughterhouse1 from "./img/chickens-boiled-alive-slaughterhouse-1.jpg";
 import investigatoryReportFadingScreenshot from "./img/investigatory-report-fading-screenshot.jpg";
+import { cn } from "@dxe/petitions-components/utils";
 
 export default function HomePage() {
   return (
@@ -330,53 +331,89 @@ function PressHits() {
 }
 
 function MarketingVsReality() {
+  function Column(props: { className: string; children: React.ReactNode }) {
+    return (
+      <div
+        className={cn(
+          "flex flex-col w-full lg:w-1/2 items-center lg:gap-10",
+          props.className,
+        )}
+      >
+        {props.children}
+      </div>
+    );
+  }
+
+  function Header(props: { className: string; children: React.ReactNode }) {
+    return (
+      <p
+        className={cn(
+          "text-xl lg:text-3xl self-start p-6 brightness-85 w-full sticky top-0 text-center",
+          props.className,
+        )}
+      >
+        {props.children}
+      </p>
+    );
+  }
+
+  function Divider(props: { className: string }) {
+    return (
+      <div
+        className={cn(
+          "min-h-[20px] lg:min-w-[20px] bg-gradient-to-b lg:bg-gradient-to-r",
+          props.className,
+        )}
+      />
+    );
+  }
+
+  const imageClasses =
+    "object-cover w-full aspect-square max-w-xl lg:rounded-lg";
+
   return (
     <Section className="p-0">
       <h2 className="border-b border-slate-300 pb-2 pl-4 uppercase text-xl tracking-wide text-slate-800">
         Marketing vs. The reality
       </h2>
-      <div className="flex flex-col lg:flex-row lg:items-stretch justify-evenly">
-        <div className="flex flex-col lg:w-1/2 w-full items-center bg-[#bcceeb] p-3 lg:p-10 gap-10">
-          <p className="text-3xl self-start p-6 bg-[#bcceeb] brightness-85 w-full rounded-lg">
-            Marketing
-          </p>
+      <div className="flex flex-row items-stretch justify-evenly">
+        <Column className="bg-[#bcceeb]">
+          <Header className="bg-[#bcceeb]/80">Marketing</Header>
           <Image
             src={falseMarketing1}
-            className="object-cover w-full aspect-square max-w-xl rounded-lg"
+            className={imageClasses}
             alt="Petaluma Poultry false marketing"
           />
           <Image
             src={falseMarketing6}
-            className="object-cover w-full aspect-square max-w-xl rounded-lg object-bottom"
+            className={cn(imageClasses, "object-bottom")}
             alt="Petaluma Poultry false marketing"
           />
           <Image
             src={falseMarketing2}
-            className="object-cover w-full aspect-square max-w-xl rounded-lg object-bottom"
+            className={cn(imageClasses, "object-bottom")}
             alt="Petaluma Poultry false marketing"
           />
-        </div>
-        <div className="min-h-[20px] lg:min-w-[20px] bg-gradient-to-b lg:bg-gradient-to-r from-[#bcceeb] to-[#e6b4ae]"></div>
-        <div className="flex flex-col lg:w-1/2 w-full items-center bg-[#e6b4ae] p-3 lg:p-10 gap-10">
-          <p className="text-3xl self-start p-6 bg-[#e6b4ae] brightness-85 w-full rounded-lg">
-            Reality
-          </p>
+        </Column>
+        <Divider className="from-[#bcceeb] to-[#d4c1be]" />
+        <Column className="bg-[#d4c1be]">
+          <Header className="bg-[#d4c1be]/50">Reality</Header>
           <Image
             src={sufferingChickenInFactoryFarm}
-            className="object-cover w-full aspect-square max-w-xl rounded-lg"
+            className={imageClasses}
             alt="Petaluma Poultry chicken suffering"
           />
           <Image
             src={chickenCrowdingInFactoryFarm}
-            className="object-cover w-full aspect-square max-w-xl rounded-lg"
+            className={imageClasses}
             alt="Petaluma Poultry crowding"
           />
           <Image
             src={chickenStuckOnBackInFactoryFarm}
-            className="object-cover w-full aspect-square max-w-xl rounded-lg"
+            className={imageClasses}
             alt="Petaluma Poultry chicken stuck on back"
           />
-        </div>
+        </Column>
       </div>
     </Section>
   );
