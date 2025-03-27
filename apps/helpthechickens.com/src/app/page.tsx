@@ -21,6 +21,7 @@ import chickenCrowdingInFactoryFarm from "./img/chicken-crowding-in-factory-farm
 import chickensBoiledAliveSlaughterhouse1 from "./img/chickens-boiled-alive-slaughterhouse-1.jpg";
 import investigatoryReportFadingScreenshot from "./img/investigatory-report-fading-screenshot.jpg";
 import { cn } from "@dxe/petitions-components/utils";
+import { StaticImport } from "next/dist/shared/lib/get-img-props";
 
 export default function HomePage() {
   return (
@@ -135,8 +136,11 @@ function MoreBackgroundSection() {
           despite repeated reports to the Sonoma County District Attorney and
           Sheriff&apos;s Office, the authorities have failed to take action
           against the company. Instead, they are prosecuting investigator and
-          animal rescuer Zoe Rosenberg. For more information please visit
-          <a href="https://righttorescue.com">righttorescue.com</a>
+          animal rescuer Zoe Rosenberg. For more information please visit{" "}
+          <a href="https://righttorescue.com" className="underline">
+            righttorescue.com
+          </a>
+          .
         </p>
         <div className="w-full lg:w-1/2 flex items:center justify-center">
           <ExposingPerdueYouTubeVideo />
@@ -167,9 +171,12 @@ function KeyFindingsSection() {
               Sonoma County Animal Services examined birds from a Petaluma
               Poultry factory farm in Petaluma in 2018 and identified wing and
               joint injuries, open sores, and necrotic wounds so deep that
-              muscle and bone were exposed. They referred the owner of the
-              facility as a suspect for animal cruelty to the Sheriff&apos;s
-              Office, but charges were never filed.
+              muscle and bone were exposed. They{" "}
+              <a href="https://drive.google.com/file/d/1W1-z_MoRWzwtH293-hpJcfdsmHFx5riP/view?usp=sharing">
+                referred
+              </a>{" "}
+              the owner of the facility as a suspect for animal cruelty to the
+              Sheriff&apos;s Office, but charges were never filed.
             </p>
           </div>
         </div>
@@ -331,11 +338,11 @@ function PressHits() {
 }
 
 function MarketingVsReality() {
-  function Column(props: { className: string; children: React.ReactNode }) {
+  function Row(props: { className?: string; children: React.ReactNode }) {
     return (
       <div
         className={cn(
-          "flex flex-col w-full lg:w-1/2 items-center lg:gap-10",
+          "flex flex-row w-full items-start justify-evenly",
           props.className,
         )}
       >
@@ -344,11 +351,11 @@ function MarketingVsReality() {
     );
   }
 
-  function Header(props: { className: string; children: React.ReactNode }) {
+  function Header(props: { className?: string; children?: React.ReactNode }) {
     return (
       <p
         className={cn(
-          "text-xl lg:text-3xl self-start p-6 brightness-85 w-full sticky top-0 text-center",
+          "text-xl lg:text-3xl self-start p-6 w-full text-center",
           props.className,
         )}
       >
@@ -357,63 +364,108 @@ function MarketingVsReality() {
     );
   }
 
-  function Divider(props: { className: string }) {
+  function CaptionedImage(props: {
+    src: string | StaticImport;
+    alt: string;
+    className?: string;
+    children?: React.ReactNode;
+  }) {
     return (
-      <div
-        className={cn(
-          "min-h-[20px] lg:min-w-[20px] bg-gradient-to-b lg:bg-gradient-to-r",
-          props.className,
-        )}
-      />
+      <div className="flex flex-col w-full gap-5 items-center">
+        <Image
+          src={props.src}
+          className={cn(
+            "object-cover w-full aspect-square max-w-xl lg:rounded-lg",
+            props.className,
+          )}
+          alt={props.alt}
+        />
+        <div className="pl-3 pr-3 text-center">{props.children}</div>
+      </div>
     );
   }
 
-  const imageClasses =
-    "object-cover w-full aspect-square max-w-xl lg:rounded-lg";
+  const petalumaPoultryVideo2018 =
+    "https://www.dropbox.com/scl/fi/cjfycmxdl2exa6r0opc6z/B-ROLL-CONDENSED-FOOTAGE.mp4?rlkey=vki4hocvxo0depz7se7e0lb5c&e=1&dl=0";
 
   return (
     <Section className="p-0">
       <h2 className="border-b border-slate-300 pb-2 pl-4 uppercase text-xl tracking-wide text-slate-800">
         Marketing vs. The reality
       </h2>
-      <div className="flex flex-row items-stretch justify-evenly">
-        <Column className="bg-[#bcceeb]">
-          <Header className="bg-[#bcceeb]/80">Marketing</Header>
-          <Image
+      <div
+        className="flex flex-col items-stretch justify-evenly gap-10 pb-10"
+        style={{
+          background:
+            "linear-gradient(to right, #bcceeb 0%, #bcceeb calc(50% - 10px), #d4c1be calc(50% + 10px), #d4c1be 100%)",
+        }}
+      >
+        <Row className="sticky top-0 backdrop-brightness-75">
+          <Header className="bg-[#bcceeb]/75">Marketing</Header>
+          <Header className="bg-[#d4c1be]/75">Reality</Header>
+        </Row>
+        <Row>
+          <CaptionedImage
             src={falseMarketing1}
-            className={imageClasses}
             alt="Petaluma Poultry false marketing"
-          />
-          <Image
-            src={falseMarketing6}
-            className={cn(imageClasses, "object-bottom")}
-            alt="Petaluma Poultry false marketing"
-          />
-          <Image
-            src={falseMarketing2}
-            className={cn(imageClasses, "object-bottom")}
-            alt="Petaluma Poultry false marketing"
-          />
-        </Column>
-        <Divider className="from-[#bcceeb] to-[#d4c1be]" />
-        <Column className="bg-[#d4c1be]">
-          <Header className="bg-[#d4c1be]/50">Reality</Header>
-          <Image
+          >
+            Petaluma Poultry&apos;s ROSIE brand logo
+          </CaptionedImage>
+          <CaptionedImage
             src={sufferingChickenInFactoryFarm}
-            className={imageClasses}
             alt="Petaluma Poultry chicken suffering"
-          />
-          <Image
+          >
+            A baby chicken stuck on their back at a{" "}
+            <a href={petalumaPoultryVideo2018} className="underline">
+              Petaluma Poultry factory farm in 2018
+            </a>
+          </CaptionedImage>
+        </Row>
+        <Row>
+          <CaptionedImage
+            src={falseMarketing6}
+            className="object-bottom"
+            alt="Petaluma Poultry false marketing"
+          >
+            <a href="https://www.instagram.com/p/Cp-RKiptIju/">
+              A Petaluma Poultry ad
+            </a>{" "}
+            posted on their Instagram in 2023
+          </CaptionedImage>
+          <CaptionedImage
             src={chickenCrowdingInFactoryFarm}
-            className={imageClasses}
             alt="Petaluma Poultry crowding"
-          />
-          <Image
+          >
+            Crowded birds inside a{" "}
+            <a href={petalumaPoultryVideo2018} className="underline">
+              Petaluma Poultry factory farm in 2018
+            </a>
+          </CaptionedImage>
+        </Row>
+        <Row>
+          <CaptionedImage
+            src={falseMarketing2}
+            className="object-bottom"
+            alt="Petaluma Poultry false marketing"
+          >
+            <a
+              href="https://www.instagram.com/p/DBl5W1cKxXl/"
+              className="underline"
+            >
+              A Petaluma Poultry ad
+            </a>{" "}
+            posted on their Instagram in 2024
+          </CaptionedImage>
+          <CaptionedImage
             src={chickenStuckOnBackInFactoryFarm}
-            className={imageClasses}
             alt="Petaluma Poultry chicken stuck on back"
-          />
-        </Column>
+          >
+            A sick chicken stuck on her back at a{" "}
+            <a href={petalumaPoultryVideo2018} className="underline">
+              Petaluma Poultry factory farm in 2023
+            </a>
+          </CaptionedImage>
+        </Row>
       </div>
     </Section>
   );
