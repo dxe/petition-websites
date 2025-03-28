@@ -55,7 +55,9 @@ export function EmailPetition(props: {
     if (!petitionId.startsWith("test:")) {
       petitionId = "test:" + petitionId;
     }
-    campaignName = "test";
+    if (!campaignName.startsWith("test:")) {
+      campaignName = "test:" + campaignName;
+    }
   }
 
   useEffect(() => {

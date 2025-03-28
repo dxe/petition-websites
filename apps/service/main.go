@@ -87,7 +87,17 @@ func processNewMessages() {
 	for _, message := range messages {
 		fmt.Printf("Processing message id: %v\n", message.ID)
 
-		settings, ok := config.EmailSettings[message.Campaign.String]
+		campaignName := message.Campaign.String
+		settings, ok := config.EmailSettings[campaignName]
+		if !ok {
+			testCampaign := strings.TrimPrefix(campaignName, "test:")
+			if testCampaign != campaignName {
+				settings, ok = config.EmailSettings[testCampaign]
+				if ok {
+					settings.To = []string{"tech@directactioneverywhere.com"}
+				}
+			}
+		}
 		if !ok {
 			settings = config.EmailSettings["test"]
 		}
