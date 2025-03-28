@@ -50,10 +50,12 @@ export function EmailPetition(props: {
   test: boolean;
 }) {
   let petitionId = props.petitionId;
+  let campaignName = props.campaignName;
   if (props.test) {
     if (!petitionId.startsWith("test:")) {
       petitionId = "test:" + petitionId;
     }
+    campaignName = "test";
   }
 
   useEffect(() => {
@@ -62,7 +64,7 @@ export function EmailPetition(props: {
         "petition url": PETITION_API_URL,
         "mailer url": CAMPAIGN_MAILER_API_URL,
         "petition id": petitionId,
-        campaign: props.campaignName,
+        campaign: campaignName,
       });
     }
   });
@@ -155,7 +157,7 @@ export function EmailPetition(props: {
               ...(data.zip && { zip: data.zip }),
               ...(data.city && { city: data.city }),
               message: message,
-              campaign: props.campaignName,
+              campaign: campaignName,
               token,
             },
             headers: {
