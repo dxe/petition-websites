@@ -172,7 +172,10 @@ function KeyFindingsSection() {
               Poultry factory farm in Petaluma in 2018 and identified wing and
               joint injuries, open sores, and necrotic wounds so deep that
               muscle and bone were exposed. They{" "}
-              <a href="https://drive.google.com/file/d/1W1-z_MoRWzwtH293-hpJcfdsmHFx5riP/view?usp=sharing">
+              <a
+                href="https://drive.google.com/file/d/1W1-z_MoRWzwtH293-hpJcfdsmHFx5riP/view?usp=sharing"
+                className="underline"
+              >
                 referred
               </a>{" "}
               the owner of the facility as a suspect for animal cruelty to the
@@ -427,7 +430,10 @@ function MarketingVsReality() {
             className="object-bottom"
             alt="Petaluma Poultry false marketing"
           >
-            <a href="https://www.instagram.com/p/Cp-RKiptIju/">
+            <a
+              href="https://www.instagram.com/p/Cp-RKiptIju/"
+              className="underline"
+            >
               A Petaluma Poultry ad
             </a>{" "}
             posted on their Instagram in 2023
@@ -461,7 +467,10 @@ function MarketingVsReality() {
             alt="Petaluma Poultry chicken stuck on back"
           >
             A sick chicken stuck on her back at a{" "}
-            <a href={petalumaPoultryVideo2018} className="underline">
+            <a
+              href="https://media.dxe.io/wl/?id=Vrgs7DjwG4Zl9GCnzurcX5Jxkt5uj85I&fmode=open"
+              className="underline"
+            >
               Petaluma Poultry factory farm in 2023
             </a>
           </CaptionedImage>
