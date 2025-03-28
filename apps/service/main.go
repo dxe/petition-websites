@@ -36,7 +36,7 @@ func main() {
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.Timeout(30 * time.Second))
 	r.Use(cors.Handler(cors.Options{
-		AllowedOrigins:   []string{"http://localhost:5173", "https://helptheducks.com", "https://helpthechickens.com", "https://righttorescue.com"},
+		AllowedOrigins:   []string{"http://localhost:5173", "https://www.helptheducks.com", "https://www.helpthechickens.com", "https://righttorescue.com"},
 		AllowedMethods:   []string{"GET", "POST", "OPTIONS"},
 		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type"},
 		AllowCredentials: false,
