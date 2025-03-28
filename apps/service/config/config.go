@@ -18,14 +18,14 @@ func getEnvWithFallback(key string, fallback string) string {
 	return v
 }
 
-var helpTheChickensRecipients = []string{"ataylor@directactioneverywhere.com"} // []string{
-// 	"kmcdonnell@cityofpetaluma.org",
-// 	"knau@cityofpetaluma.org",
-// 	"jshribbs@cityofpetaluma.org",
-// 	"fquint@cityofpetaluma.org",
-// 	"Jcaderthompson@cityofpetaluma.org",
-// 	"adecarli@cityofpetaluma.org",
-// 	"bbarnacle@cityofpetaluma.org"}
+var helpTheChickensRecipients = []string{
+	"kmcdonnell@cityofpetaluma.org",
+	"knau@cityofpetaluma.org",
+	"jshribbs@cityofpetaluma.org",
+	"fquint@cityofpetaluma.org",
+	"Jcaderthompson@cityofpetaluma.org",
+	"adecarli@cityofpetaluma.org",
+	"bbarnacle@cityofpetaluma.org"}
 
 var EmailSettings = map[string]struct {
 	FromDomain string
