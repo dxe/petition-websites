@@ -110,6 +110,11 @@ func getTallyHandler(w http.ResponseWriter, r *http.Request) {
 	county := queryParams.Get("county")
 	zipCodes := countyZips[county]
 
+	if county != "" && len(zipCodes) == 0 {
+		http.Error(w, fmt.Sprintf("Unable to find county: %s", county), http.StatusBadRequest)
+		return
+	}
+
 	tally, err := model.GetTally(db, campaign, zipCodes)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("error getting tally: %v", err), http.StatusInternalServerError)

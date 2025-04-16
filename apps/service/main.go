@@ -52,7 +52,6 @@ func main() {
 	err := loadCountyZips()
 	if err != nil {
 		fmt.Printf("Error loading county zips: %v\n", err)
-		return
 	}
 
 	r.Get("/healthz", func(w http.ResponseWriter, r *http.Request) {
