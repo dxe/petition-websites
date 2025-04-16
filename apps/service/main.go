@@ -1,8 +1,10 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 	"unicode"
@@ -26,6 +28,7 @@ var (
 	r          *chi.Mux
 	db         *sqlx.DB
 	mailClient *ses.SES
+	countyZips map[string][]string
 )
 
 func main() {
@@ -45,6 +48,12 @@ func main() {
 
 	db = getDb()
 	defer db.Close()
+
+	err := loadCountyZips()
+	if err != nil {
+		fmt.Printf("Error loading county zips: %v\n", err)
+		return
+	}
 
 	r.Get("/healthz", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
@@ -142,4 +151,16 @@ func removeAccents(s string) (string, error) {
 		return "", err
 	}
 	return output, nil
+}
+
+func loadCountyZips() error {
+	filePath := "../../packages/email-petition/src/data/county_zips.json"
+	data, err := os.ReadFile(filePath)
+	if err != nil {
+		return fmt.Errorf("failed to read file %s: %w", filePath, err)
+	}
+	if err = json.Unmarshal(data, &countyZips); err != nil {
+		return fmt.Errorf("failed to unmarshal JSON from %s: %w", filePath, err)
+	}
+	return nil
 }

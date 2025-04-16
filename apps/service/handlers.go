@@ -106,7 +106,11 @@ func getTallyHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tally, err := model.GetTally(db, campaign)
+	// This is allowed to be empty
+	county := queryParams.Get("county")
+	zipCodes := countyZips[county]
+
+	tally, err := model.GetTally(db, campaign, zipCodes)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("error getting tally: %v", err), http.StatusInternalServerError)
 		return
