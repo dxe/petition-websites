@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
-import { GoogleAnalytics } from "@next/third-parties/google";
+import { GoogleTagManager } from "@next/third-parties/google";
 
 const description =
   "Multiple investigations have exposed Reichardt Duck Farm for rampant disease and criminal animal cruelty.";
@@ -33,11 +33,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head></head>
-      <body>
-        {children}
-        <GoogleAnalytics gaId="G-2WJVQ0EX4G" />
-      </body>
+      <head>
+        <GoogleTagManager gtmId="GTM-K68F95SH" />
+      </head>
+      <body>{children}</body>
     </html>
   );
 }

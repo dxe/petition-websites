@@ -124,6 +124,11 @@ Update the service with configuration to send mail from the petition domain.
 
 Add the petition domain to the captcha in Google reCAPTCHA Admin.
 
+### Google Analalytics
+
+Create a google analytics project and copy the GA4 Measurement ID from it.
+Add an entry in the Google Tag Manager's "Domain to GA4 Code" variable with your website domain and GA4 measurement ID
+
 ### Create new identity in AWS SES
 
 Set up MX records.

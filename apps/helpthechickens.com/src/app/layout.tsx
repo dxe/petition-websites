@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
-import { GoogleAnalytics } from "@next/third-parties/google";
+import { GoogleTagManager } from "@next/third-parties/google";
 
 const description =
   "Investigations since 2018 have exposed sick and injured animals languishing without care.";
@@ -26,6 +26,8 @@ export const viewport: Viewport = {
   initialScale: 1.0,
 };
 
+const GTM_CONFIG = "GTM-K68F95SH";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -33,11 +35,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head></head>
-      <body>
-        {children}
-        <GoogleAnalytics gaId="G-5ZVSGD02YN" />
-      </body>
+      <head>
+        <GoogleTagManager gtmId="GTM-K68F95SH" />
+      </head>
+      <body>{children}</body>
     </html>
   );
 }
