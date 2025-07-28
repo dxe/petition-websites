@@ -13,6 +13,12 @@ package.json.
 
 ### Build
 
+First install dependencies:
+
+```
+pnpm install
+```
+
 To build all apps and packages, run the following command:
 
 ```
