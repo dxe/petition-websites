@@ -1,4 +1,5 @@
 "use client";
+// TODO: convert to server component: https://github.com/dxe/petition-websites/issues/16
 
 import { useScrollToId } from "@dxe/petitions-components/hooks/use-scroll-to-id";
 import { Button } from "@dxe/petitions-components/button";
@@ -29,7 +30,8 @@ export default function HomePage() {
       <Hero />
       <Suspense>
         {/* Suspense is Required for useSearchParams. Todo: use window.location
-        since query params are not needed for rendering.  */}
+        since query params are not needed for rendering.
+        https://github.com/dxe/petition-websites/issues/16 */}
         <PetitionSection />
       </Suspense>
       <MoreBackgroundSection />
