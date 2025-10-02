@@ -110,10 +110,11 @@ Buy a domain for the petition in Namecheap.
 
 ### Copy existing site (for dedicated petition website only)
 
-Make a copy of an existing petition website, such as the most recently created
-one. Update the petition component props, Google Analytics tag, `.env` files,
-layout file and homepage files, images and any other references to the old
-petition.
+1. Make a copy of an existing petition website, such as the most recently created one.
+2. Choose an unused port number in package.json in the directory for the new website.
+3. Update the petition component props, Google Analytics tag, `.env` files,
+   layout file and homepage files, images and any other references to the old
+   petition.
 
 See [environment variables](#environment-variables) for details about the `.env`
 files.
