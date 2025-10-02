@@ -1,6 +1,3 @@
-"use server";
-// TODO: convert to server component: https://github.com/dxe/petition-websites/issues/16
-
 import { ScrollButton } from "@dxe/petitions-components/scroll-button";
 import { Section } from "@dxe/petitions-components/section";
 import Image from "next/image";
@@ -21,7 +18,7 @@ import { StaticImport } from "next/dist/shared/lib/get-img-props";
 import { PetitionWithSuspense } from "./petition";
 import { PressHits } from "./press-hits";
 
-export default async function HomePage() {
+export default function HomePage() {
   return (
     <div className="flex flex-col gap-6 items-center">
       <Hero />

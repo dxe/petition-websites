@@ -1,5 +1,3 @@
-"use server";
-
 import { ScrollButton } from "@dxe/petitions-components/scroll-button";
 import {
   Dialog,
@@ -24,12 +22,6 @@ export default async function HomePage() {
       <Footer />
     </div>
   );
-}
-
-function onSubmit() {
-  window.dataLayer?.push({
-    event: "form_submitted",
-  });
 }
 
 const Hero = () => {
