@@ -1,9 +1,6 @@
-"use client";
-// TODO: convert to server component: https://github.com/dxe/petition-websites/issues/16
+"use server";
 
-import { useScrollToId } from "@dxe/petitions-components/hooks/use-scroll-to-id";
-import { Button } from "@dxe/petitions-components/button";
-import { EmailPetition } from "@dxe/email-petition/email-petition";
+import { ScrollButton } from "@dxe/petitions-components/scroll-button";
 import {
   Dialog,
   DialogContent,
@@ -14,20 +11,13 @@ import { PlayIcon } from "@/svg/play-icon";
 import { Section } from "@dxe/petitions-components/section";
 import Image from "next/image";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { DEFAULT_MESSAGE } from "@/data/petition-message";
-import { useSearchParams } from "next/navigation";
-import { Suspense } from "react";
+import { PetitionWithSuspense } from "./petition";
 
-export default function HomePage() {
+export default async function HomePage() {
   return (
     <div className="flex flex-col gap-6 items-center">
       <Hero />
-      <Suspense>
-        {/* Suspense is Required for useSearchParams. Todo: use window.location
-        since query params are not needed for rendering.
-        https://github.com/dxe/petition-websites/issues/16 */}
-        <PetitionSection />
-      </Suspense>
+      <PetitionSection />
       <AboutSection />
       <Video1Section />
       <Video2Section />
@@ -43,8 +33,6 @@ function onSubmit() {
 }
 
 const Hero = () => {
-  const scrollToPetition = useScrollToId("petition-section");
-
   return (
     <section
       className="md:min-h-[90vh] w-full text-white lg:bg-center md:bg-[40%] bg-[45%] bg-cover flex flex-col"
@@ -63,14 +51,14 @@ const Hero = () => {
               rampant disease and criminal animal cruelty.
             </p>
           </div>
-          <Button
+          <ScrollButton
             className="self-start"
             variant="secondary"
             size="lg"
-            onClick={scrollToPetition}
+            scrollToId="petition-section"
           >
             Tell the DA to prosecute Reichardt
-          </Button>
+          </ScrollButton>
         </div>
       </div>
     </section>
@@ -78,8 +66,6 @@ const Hero = () => {
 };
 
 function PetitionSection() {
-  const searchParams = useSearchParams();
-
   return (
     <Section
       className="gap-12 items-center bg-slate-200 xl:rounded-lg py-12 md:px-16"
@@ -88,14 +74,8 @@ function PetitionSection() {
       <h2 className="font-semibold text-xl uppercase self-start text-center md:text-left w-full">
         Contact the District Attorney Now
       </h2>
-      <EmailPetition
-        petitionId={process.env.NEXT_PUBLIC_PETITION_ID!}
-        campaignName={process.env.NEXT_PUBLIC_CAMPAIGN_NAME!}
-        defaultMessage={DEFAULT_MESSAGE}
-        onSubmit={onSubmit}
-        debug={searchParams.get("debug") === "true"}
-        test={searchParams.get("test") === "true"}
-      />
+
+      <PetitionWithSuspense />
     </Section>
   );
 }
@@ -171,8 +151,6 @@ function AboutSection() {
 }
 
 function Video1Section() {
-  const scrollToPetition = useScrollToId("petition-section");
-
   return (
     <Section className="flex md:flex-row gap-8 text-center justify-evenly items-center bg-slate-200 xl:rounded-lg py-12 md:py-4">
       <div className="flex gap-6 flex-col items-center">
@@ -183,9 +161,13 @@ function Video1Section() {
           Investigators found dozens of ducklings trapped in wire on one night
           in October.
         </p>
-        <Button size="lg" onClick={scrollToPetition} className="hidden md:flex">
+        <ScrollButton
+          size="lg"
+          className="hidden md:flex"
+          scrollToId="petition-section"
+        >
           Tell the DA to prosecute Reichardt
-        </Button>
+        </ScrollButton>
       </div>
       <Dialog>
         <DialogTrigger asChild>
@@ -212,16 +194,18 @@ function Video1Section() {
           ></iframe>
         </DialogContent>
       </Dialog>
-      <Button size="lg" onClick={scrollToPetition} className="flex md:hidden">
+      <ScrollButton
+        size="lg"
+        className="flex md:hidden"
+        scrollToId="petition-section"
+      >
         Tell the DA to prosecute Reichardt
-      </Button>
+      </ScrollButton>
     </Section>
   );
 }
 
 function Video2Section() {
-  const scrollToPetition = useScrollToId("petition-section");
-
   return (
     <Section className="flex md:flex-row gap-8 text-center justify-evenly items-center bg-slate-200 xl:rounded-lg py-12 md:py-4">
       <div className="flex gap-6 flex-col items-center">
@@ -231,9 +215,13 @@ function Video2Section() {
           knew they couldn&apos;t leave him behind so they rushed him to the
           vet.
         </p>
-        <Button size="lg" onClick={scrollToPetition} className="hidden md:flex">
+        <ScrollButton
+          size="lg"
+          className="hidden md:flex"
+          scrollToId="petition-section"
+        >
           Tell the DA to prosecute Reichardt
-        </Button>
+        </ScrollButton>
       </div>
       <Dialog>
         <DialogTrigger asChild>
@@ -260,9 +248,13 @@ function Video2Section() {
           ></iframe>
         </DialogContent>
       </Dialog>
-      <Button size="lg" onClick={scrollToPetition} className="flex md:hidden">
+      <ScrollButton
+        size="lg"
+        className="flex md:hidden"
+        scrollToId="petition-section"
+      >
         Tell the DA to prosecute Reichardt
-      </Button>
+      </ScrollButton>
     </Section>
   );
 }

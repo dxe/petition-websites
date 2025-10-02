@@ -17,6 +17,7 @@
     "./select": "./dist/shadcn/components/ui/select.jsx",
     "./textarea": "./dist/shadcn/components/ui/textarea.jsx",
     "./utils": "./dist/shadcn/utils.js",
+    "./scroll-button": "./dist/components/scroll-button.jsx",
     "./hooks/use-scroll-to-id": "./dist/hooks/useScrollToId.js",
     "./section": "./dist/components/section.jsx"
   },

@@ -104,11 +104,11 @@ SES (email) or ACM (cert for CloudFront).
 
 Note in AWS the region we use is `us-west-2`.
 
-### Buy new domain
+### Buy new domain (for dedicated petition website only)
 
 Buy a domain for the petition in Namecheap.
 
-### Copy existing site
+### Copy existing site (for dedicated petition website only)
 
 Make a copy of an existing petition website, such as the most recently created
 one. Update the petition component props, Google Analytics tag, `.env` files,
@@ -132,23 +132,26 @@ Add the petition domain to the captcha in Google reCAPTCHA Admin.
 
 ### Create new identity in AWS SES
 
-Set up MX records.
+Go to AWS SES, go to the identities section and create a new "domain"-type idenity and set the MAIL FROM to
+`mail.<petition-domain>`.
+Verify using Easy DKIM and choose RSA_2048_BIT key length.
 
-Set up and verify DKIM.
+Check Namecheap to make sure the nameservers point to AWS so we can use Route 53 for DNS.
+SES will create the necessary records in Route 53 to verify the domain by default.
 
-Create and verify a custom MAIL FROM with domain `mail.<petition-domain>`.
-This is just for identifying the server that sends mail. No mail is actually
-sent from or received at this domain.
+Make sure SES finishes verifying the domain.
 
-### Create new bucket in AWS S3
+This is just for identifying the server that sends mail.
+No mail is actually sent from or received at this domain.
 
-Allow all public access unless you want to figure out permissions for deployment
-and CloudFront.
+### Create new bucket in AWS S3 (for dedicated petition website only)
+
+Allow all public access unless you want to figure out permissions for deployment and CloudFront.
 
 Under properties, enable static website hosting.
 Set the index document to `index.html`.
 
-### Create new distribution in CloudFront
+### Create new distribution in CloudFront (for dedicated petition website only)
 
 Target the S3 bucket's website endpoint. If turned on static website hosting
 in S3, AWS will prompt you to set it correctly when you update the "origin
@@ -176,13 +179,13 @@ Check the box to enable IPv6 support.
 
 All other settings left as default.
 
-### Point domain to CloudFront
+### Point domain to CloudFront (for dedicated petition website only)
 
 Go to namecheap advanced dns for the domain, create CNAME record `@` pointing
 to the domain name of the CloudFront distribution found in AWS Console on the
 "General" tab for the distribution.
 
-### Create and run GitHub workflow
+### Create and run GitHub workflow (for dedicated petition website only)
 
 Create a workflow file in .github/workflows and follow the other files as an
 example.
@@ -196,6 +199,6 @@ Run the workflow by pushing to the main branch or running it manually from here:
 
 - https://github.com/dxe/helptheducks.com/actions
 
-### TODO
+### TODO (for dedicated petition website only)
 
 - forwarding `www.` domain with S3/CloudFront or Cloudflare

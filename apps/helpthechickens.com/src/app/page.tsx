@@ -1,14 +1,9 @@
-"use client";
+"use server";
 // TODO: convert to server component: https://github.com/dxe/petition-websites/issues/16
 
-import { useScrollToId } from "@dxe/petitions-components/hooks/use-scroll-to-id";
-import { Button } from "@dxe/petitions-components/button";
-import { EmailPetition } from "@dxe/email-petition/email-petition";
+import { ScrollButton } from "@dxe/petitions-components/scroll-button";
 import { Section } from "@dxe/petitions-components/section";
-import { DEFAULT_MESSAGE } from "@/data/petition-message";
-import { Suspense, useEffect, useState } from "react";
 import Image from "next/image";
-import { useSearchParams } from "next/navigation";
 
 import hero from "./img/hero.jpg";
 import criminalNeglectOfChicken from "./img/criminal-neglect-of-chicken.jpg";
@@ -23,17 +18,14 @@ import chickensBoiledAliveSlaughterhouse1 from "./img/chickens-boiled-alive-slau
 import investigatoryReportFadingScreenshot from "./img/investigatory-report-fading-screenshot.jpg";
 import { cn } from "@dxe/petitions-components/utils";
 import { StaticImport } from "next/dist/shared/lib/get-img-props";
+import { PetitionWithSuspense } from "./petition";
+import { PressHits } from "./press-hits";
 
-export default function HomePage() {
+export default async function HomePage() {
   return (
     <div className="flex flex-col gap-6 items-center">
       <Hero />
-      <Suspense>
-        {/* Suspense is Required for useSearchParams. Todo: use window.location
-        since query params are not needed for rendering.
-        https://github.com/dxe/petition-websites/issues/16 */}
-        <PetitionSection />
-      </Suspense>
+      <PetitionSection />
       <MoreBackgroundSection />
       <KeyFindingsSection />
       <FullInvestigatoryReport />
@@ -44,15 +36,7 @@ export default function HomePage() {
   );
 }
 
-function onSubmit() {
-  window.dataLayer?.push({
-    event: "form_submitted",
-  });
-}
-
 function Hero() {
-  const scrollToPetition = useScrollToId("petition-section");
-
   return (
     <section
       className="md:min-h-[90vh] w-full text-white lg:bg-center md:bg-[40%] bg-[45%] bg-cover flex flex-col"
@@ -71,14 +55,14 @@ function Hero() {
               languishing without care.
             </p>
           </div>
-          <Button
+          <ScrollButton
             className="self-start"
             variant="secondary"
             size="lg"
-            onClick={scrollToPetition}
+            scrollToId="petition-section"
           >
             Help stop the abuse
-          </Button>
+          </ScrollButton>
         </div>
       </div>
     </section>
@@ -86,8 +70,6 @@ function Hero() {
 }
 
 function PetitionSection() {
-  const searchParams = useSearchParams();
-
   return (
     <Section
       className="gap-12 items-center bg-slate-200 xl:rounded-lg py-12 md:px-16"
@@ -96,14 +78,8 @@ function PetitionSection() {
       <h2 className="font-semibold text-xl uppercase self-start text-center md:text-left w-full">
         Ask Petaluma City Council to shut down Perdue&apos;s slaughterhouse
       </h2>
-      <EmailPetition
-        petitionId={process.env.NEXT_PUBLIC_PETITION_ID!}
-        campaignName={process.env.NEXT_PUBLIC_CAMPAIGN_NAME!}
-        defaultMessage={DEFAULT_MESSAGE}
-        onSubmit={onSubmit}
-        debug={searchParams.get("debug") === "true"}
-        test={searchParams.get("test") === "true"}
-      />
+
+      <PetitionWithSuspense />
     </Section>
   );
 }
@@ -273,72 +249,6 @@ function FullInvestigatoryReport() {
         </span>
       </div>
     </a>
-  );
-}
-
-function PressHits() {
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  return (
-    <Section>
-      <h2 className="border-b border-slate-300 pb-2 uppercase text-xl tracking-wide text-slate-800">
-        Perdue&apos;s Petaluma Poultry in the News
-      </h2>
-
-      <div className="flex flex-col lg:flex-row items-center lg:items-start justify-evenly gap-6">
-        <div className="flex flex-col gap-6 max-w-96 w-full">
-          {/* The Press Democrat: Perdue&apos;s Petaluma poultry plant struggles to eliminate bacteria that can make people sick */}
-          <div className="iframely-embed">
-            <div
-              className="iframely-responsive"
-              style={{ paddingBottom: "59.375%", paddingTop: "120px" }}
-            >
-              <a
-                href="https://www.pressdemocrat.com/article/news/perdues-petaluma-poultry-plant-struggles-to-limit-pathogens/"
-                data-iframely-url="//iframely.net/iNsiACG"
-              ></a>
-            </div>
-          </div>
-        </div>
-        <div className="flex flex-col gap-6 max-w-96 w-full">
-          {/* The Intercept: Dangerous Pathogens and Cruelty Law Violations at Perdue Subsidiary, Animal Rights Report Alleges */}
-          <div className="iframely-embed">
-            <div
-              className="iframely-responsive"
-              style={{ paddingBottom: "59.375%", paddingTop: "120px" }}
-            >
-              <a
-                href="https://production.public.theintercept.com/2023/06/13/perdue-chicken-slaughterhouse-animal-cruelty-dxe/"
-                data-iframely-url="//iframely.net/bA6f35V"
-              ></a>
-            </div>
-          </div>
-        </div>
-        <div className="flex flex-col gap-6 max-w-96 w-full">
-          {/* The San Francisco Examiner: Chef Tyler Florence distances from poultry farm and animal-rights heat */}
-          <div className="iframely-embed">
-            <div
-              className="iframely-responsive"
-              style={{ paddingBottom: "59.375%", paddingTop: "120px" }}
-            >
-              <a
-                href="https://www.sfexaminer.com/news/business/chef-tyler-florence-distances-from-poultry-farm-and-animal-rights-heat/article_64da5ab4-601a-11ef-a358-9774850aac1b.html"
-                data-iframely-url="//iframely.net/qMrpLTW"
-              ></a>
-            </div>
-          </div>
-        </div>
-      </div>
-      {
-        // Wait for hydration before loading of the Iframely embed script
-        // to avoid hydration errors.
-        isClient && <script async src="//iframely.net/embed.js"></script>
-      }
-    </Section>
   );
 }
 
