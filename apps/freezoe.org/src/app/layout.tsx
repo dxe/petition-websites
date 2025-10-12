@@ -5,7 +5,7 @@ import { GoogleAnalytics } from "@next/third-parties/google";
 const description =
   "Investigations since 2018 have exposed sick and injured animals languishing without care.";
 // Note: title should be descriptive enough for sharing on Facebook.
-const title = "Help Stop Perdue's Animal Abuse";
+const title = "Free Zoe Rosenberg";
 export const metadata: Metadata = {
   title,
   description,

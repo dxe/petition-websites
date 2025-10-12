@@ -3,18 +3,9 @@ import { Section } from "@dxe/petitions-components/section";
 import Image from "next/image";
 
 import hero from "./img/zoe-hero-2.jpg";
-import criminalNeglectOfChicken from "./img/criminal-neglect-of-chicken.jpg";
-import chickenZoonoticPathogens from "./img/chicken-zoonotic-pathogens.jpg";
-import chickenStuckOnBackInFactoryFarm from "./img/chicken-stuck-on-back-in-factory-farm.jpg";
-import falseMarketing1 from "./img/false-marketing-1.jpg";
-import falseMarketing2 from "./img/false-marketing-2.jpg";
-import falseMarketing6 from "./img/false-marketing-6.jpg";
-import sufferingChickenInFactoryFarm from "./img/suffering-chicken-in-factory-farm.jpg";
-import chickenCrowdingInFactoryFarm from "./img/chicken-crowding-in-factory-farm.jpg";
-import chickensBoiledAliveSlaughterhouse1 from "./img/chickens-boiled-alive-slaughterhouse-1.jpg";
-import investigatoryReportFadingScreenshot from "./img/investigatory-report-fading-screenshot.jpg";
-import { cn } from "@dxe/petitions-components/utils";
-import { StaticImport } from "next/dist/shared/lib/get-img-props";
+import zoeWithAnimal from "./img/zoe-with-animal.webp";
+import zoeHealthRisk from "./img/zoe-health-risk.jpg";
+import zoeRescuedChicken from "./img/zoe-rescued-chickens.webp";
 import { PetitionWithSuspense } from "./petition";
 import { PressHits } from "./press-hits";
 
@@ -24,10 +15,11 @@ export default function HomePage() {
       <Hero />
       <PetitionSection />
       <MoreBackgroundSection />
-      <KeyFindingsSection />
-      <FullInvestigatoryReport />
+      <WhoIsZoeSection />
+      <ZoesHealthSection />
+      <WhyIsZoeInJailSection />
+      <TakeActionSection />
       <PressHits />
-      <MarketingVsReality />
       <Footer />
     </div>
   );
@@ -39,7 +31,7 @@ function Hero() {
       className="md:min-h-[90vh] w-full text-white bg-cover flex flex-col"
       style={{
         backgroundImage: `url(${hero.src})`,
-        backgroundPosition: "center 30%",
+        backgroundPosition: "center 35%",
         backgroundSize: "cover",
       }}
     >
@@ -136,272 +128,221 @@ function MoreBackgroundSection() {
           </p>
         </div>
         <div className="w-full lg:w-1/2 flex items-center justify-center">
-          <ExposingPerdueYouTubeVideo />
+          <Image
+            src="https://worldanimalnews.com/wp-content/uploads/2025/09/IMG_5130.jpeg"
+            alt="Exposing Perdue factory farm conditions"
+            className="rounded-2xl w-full object-cover"
+            style={{
+              maxHeight: "500px",
+            }}
+            width={800}
+            height={600}
+          />
         </div>
       </div>
     </Section>
   );
 }
 
-function KeyFindingsSection() {
+function WhoIsZoeSection() {
   return (
     <Section>
       <h2 className="border-b border-slate-300 pb-2 uppercase text-xl tracking-wide text-slate-800">
-        Years of evidence show a consistent pattern of extreme animal cruelty.
+        Who is Zoe Rosenberg?
       </h2>
-      <div className="flex flex-col lg:flex-row items-center lg:items-start justify-evenly gap-12 text-center">
-        <div className="flex flex-col gap-6 max-w-sm w-full">
+      <div className="flex flex-col lg:flex-row items-center justify-evenly gap-12">
+        <div className="w-full lg:w-1/2 flex items-center justify-center">
           <Image
-            src={criminalNeglectOfChicken}
-            className="rounded-3xl size-96 mb-5 object-cover object-top"
-            alt="Neglect of chickens"
+            src={zoeWithAnimal}
+            alt="Zoe with two chickens"
+            className="rounded-2xl w-full object-cover"
+            style={{ maxHeight: "500px" }}
           />
-          <div className="flex flex-col gap-4">
-            <div className="text-4xl uppercase font-semibold">
-              Criminal Neglect
-            </div>
-            <p>
-              Sonoma County Animal Services examined birds from a Petaluma
-              Poultry factory farm in Petaluma in 2018 and identified wing and
-              joint injuries, open sores, and necrotic wounds so deep that
-              muscle and bone were exposed. They{" "}
-              <a
-                href="https://drive.google.com/file/d/1W1-z_MoRWzwtH293-hpJcfdsmHFx5riP/view?usp=sharing"
-                className="underline"
-              >
-                referred
-              </a>{" "}
-              the owner of the facility as a suspect for animal cruelty to the
-              Sheriff&apos;s Office, but charges were never filed.
-            </p>
-          </div>
         </div>
-        <div className="flex flex-col gap-6 max-w-sm w-full">
-          <Image
-            src={chickenZoonoticPathogens}
-            className="rounded-3xl size-96 mb-5 object-cover object-[63%_50%]"
-            alt="Zoonotic Pathogens"
-          />
-          <div className="flex flex-col gap-4">
-            <div className="text-4xl uppercase font-semibold">
-              Zoonotic Pathogens
-            </div>
-            <p>
-              Lab testing has identified numerous infectious pathogens and
-              diseases present at Petaluma Poultry factory farms in Sonoma
-              County, including Infectious Bursal Disease, Infectious Bronchitis
-              Virus, and a highly antibiotic-resistant Enterococcus bacteria.
-            </p>
-          </div>
-        </div>
-        <div className="flex flex-col gap-6 max-w-sm w-full">
-          <Image
-            src={chickensBoiledAliveSlaughterhouse1}
-            className="rounded-3xl size-96 mb-5 object-cover"
-            alt="Chickens boiled alive at slaughterhouse"
-          />
-          <div className="flex flex-col gap-4">
-            <div className="text-4xl uppercase font-semibold">
-              Animals Boiled Alive
-            </div>
-            <p>
-              Chickens are stunned and slaughtered in the dark at high speeds,
-              so many of them miss the stunning stage. This means they can enter
-              scalding hot water while still conscious. A whistleblower
-              documented bright red chicken parts that had been discarded inside
-              the Petaluma Poultry slaughterhouse, an indication that the birds
-              were scalded alive and subsequently condemned.
-            </p>
-          </div>
+        <div className="w-full lg:w-1/2 text-left space-y-8">
+          <p>
+            Zoe is a 23-year-old college graduate of UC Berkeley, an animal
+            sanctuary founder, and an animal cruelty investigator with Direct
+            Action Everywhere. She is an incredible human being who has spent
+            most of her young life working to protect animals.
+          </p>
+          <p>
+            When she was just 11, Zoe founded Happy Hen Animal Sanctuary, a
+            nonprofit that has saved more than 1,000 neglected or abandoned
+            animals. Zoe has worked with law enforcement to rescue animals from
+            neglect and abuse.
+          </p>
+          <p>
+            She has bravely documented cruelty inside factory farms and rescued
+            animals who would otherwise have died. And even throughout this
+            unjust prosecution, she has continued to speak up boldly for
+            animals.
+          </p>
         </div>
       </div>
     </Section>
   );
 }
 
-function FullInvestigatoryReport() {
-  // Copied from righttorescue.com -> pages/petalumapoultry.tsx
+function ZoesHealthSection() {
   return (
-    <a
-      href="https://www.righttorescue.com/cases/petalumapoultry/Petaluma Poultry Investigatory Report 2023.pdf"
-      target="_blank"
-    >
-      <div
-        style={{
-          position: "relative",
-          maxWidth: "1440px",
-          marginLeft: "auto",
-          marginRight: "auto",
-        }}
-      >
-        <Image
-          src={investigatoryReportFadingScreenshot}
-          alt="Investigatory report screenshot"
-          style={{
-            width: "100%",
-            aspectRatio: "1920/860",
-          }}
-        />
-        <span
-          style={{
-            position: "absolute",
-            bottom: "10%",
-            left: "50%",
-            transform: "translateX(-50%)",
-            fontSize: "clamp(18px, 3vw, 48px)",
-            // Prevent unnecessary wrapping. I'm not sure why it's wrapping
-            // without this on some smaller screen sizes, especially when
-            // padding is applied which would've been useful for a
-            // semi opaque background for improved visibility.
-            width: "90%",
-            textShadow: "#FC0 1px 0 10px",
-            boxSizing: "border-box",
-            color: "black",
-            textAlign: "center",
-          }}
-        >
-          Read the full investigatory report
-        </span>
+    <Section className="bg-red-50">
+      <h2 className="border-b border-slate-300 pb-2 uppercase text-xl tracking-wide text-slate-800">
+        Zoe&apos;s Health is at Immediate Risk
+      </h2>
+      <div className="flex flex-col lg:flex-row items-center justify-evenly gap-12">
+        <div className="w-full lg:w-1/2 text-left space-y-8">
+          <p>
+            Zoe lives with Type 1 Diabetes, meaning she is insulin dependent. If
+            she goes off insulin for even just several hours, she could go into
+            diabetic ketoacidosis which is life-threatening and requires
+            immediate hospitalization.{" "}
+            <b>
+              Despite this, the Sonoma County jail will not allow Zoe to keep
+              her insulin pump.
+            </b>
+          </p>
+          <p>
+            If her blood sugar drops without prompt treatment with glucose, she
+            could have a seizure, go into a coma, or die. Zoe also suffers from
+            serious complications from her diabetes, including gastroparesis –
+            partial stomach paralysis that prevents her from eating or drinking
+            enough, leading to dehydration, weight loss, and malnutrition.
+          </p>
+          <p>
+            <b>
+              Without constant access to her medical supplies and regular care,
+              Zoe could die in custody.
+            </b>{" "}
+            Her incarceration is not only unjust—it is a direct threat to her
+            life.
+          </p>
+          <p className="text-slate-700">
+            Tragically, it is not uncommon for people with diabetes to die
+            preventable deaths in custody due to lack of medical care.
+          </p>
+        </div>
+        <div className="w-full lg:w-1/2 flex items-center justify-center">
+          <Image
+            src={zoeHealthRisk}
+            alt="Zoe Rosenberg"
+            className="rounded-2xl w-full object-cover"
+            style={{
+              maxHeight: "500px",
+              objectPosition: "center 40%",
+            }}
+          />
+        </div>
       </div>
-    </a>
+    </Section>
   );
 }
 
-function MarketingVsReality() {
-  function Row(props: { className?: string; children: React.ReactNode }) {
-    return (
-      <div
-        className={cn(
-          "flex flex-row w-full items-start justify-evenly",
-          props.className,
-        )}
-      >
-        {props.children}
-      </div>
-    );
-  }
-
-  function Header(props: { className?: string; children?: React.ReactNode }) {
-    return (
-      <p
-        className={cn(
-          "text-xl lg:text-3xl self-start p-6 w-full text-center",
-          props.className,
-        )}
-      >
-        {props.children}
-      </p>
-    );
-  }
-
-  function CaptionedImage(props: {
-    src: string | StaticImport;
-    alt: string;
-    className?: string;
-    children?: React.ReactNode;
-  }) {
-    return (
-      <div className="flex flex-col w-full gap-5 items-center">
-        <Image
-          src={props.src}
-          className={cn(
-            "object-cover w-full aspect-square max-w-xl lg:rounded-lg",
-            props.className,
-          )}
-          alt={props.alt}
-        />
-        <div className="pl-3 pr-3 text-center">{props.children}</div>
-      </div>
-    );
-  }
-
-  const petalumaPoultryVideo2018 =
-    "https://www.dropbox.com/scl/fi/cjfycmxdl2exa6r0opc6z/B-ROLL-CONDENSED-FOOTAGE.mp4?rlkey=vki4hocvxo0depz7se7e0lb5c&e=1&dl=0";
-
+function WhyIsZoeInJailSection() {
   return (
-    <Section className="p-0">
-      <h2 className="border-b border-slate-300 pb-2 pl-4 uppercase text-xl tracking-wide text-slate-800">
-        Marketing vs. The reality
+    <Section>
+      <h2 className="border-b border-slate-300 pb-2 uppercase text-xl tracking-wide text-slate-800">
+        Why is Zoe in Jail?
       </h2>
-      <div
-        className="flex flex-col items-stretch justify-evenly gap-10 pb-10"
-        style={{
-          background:
-            "linear-gradient(to right, #bcceeb 0%, #bcceeb calc(50% - 10px), #d4c1be calc(50% + 10px), #d4c1be 100%)",
-        }}
-      >
-        <Row className="sticky top-0 backdrop-brightness-75">
-          <Header className="bg-[#bcceeb]/75">Marketing</Header>
-          <Header className="bg-[#d4c1be]/75">Reality</Header>
-        </Row>
-        <Row>
-          <CaptionedImage
-            src={falseMarketing1}
-            alt="Petaluma Poultry false marketing"
-          >
-            Petaluma Poultry&apos;s ROSIE brand logo
-          </CaptionedImage>
-          <CaptionedImage
-            src={sufferingChickenInFactoryFarm}
-            alt="Petaluma Poultry chicken suffering"
-          >
-            A baby chicken stuck on their back at a{" "}
-            <a href={petalumaPoultryVideo2018} className="underline">
-              Petaluma Poultry factory farm in 2018
-            </a>
-          </CaptionedImage>
-        </Row>
-        <Row>
-          <CaptionedImage
-            src={falseMarketing6}
-            className="object-bottom"
-            alt="Petaluma Poultry false marketing"
-          >
-            <a
-              href="https://www.instagram.com/p/Cp-RKiptIju/"
-              className="underline"
-            >
-              A Petaluma Poultry ad
-            </a>{" "}
-            posted on their Instagram in 2023
-          </CaptionedImage>
-          <CaptionedImage
-            src={chickenCrowdingInFactoryFarm}
-            alt="Petaluma Poultry crowding"
-          >
-            Crowded birds inside a{" "}
-            <a href={petalumaPoultryVideo2018} className="underline">
-              Petaluma Poultry factory farm in 2018
-            </a>
-          </CaptionedImage>
-        </Row>
-        <Row>
-          <CaptionedImage
-            src={falseMarketing2}
-            className="object-bottom"
-            alt="Petaluma Poultry false marketing"
-          >
-            <a
-              href="https://www.instagram.com/p/DBl5W1cKxXl/"
-              className="underline"
-            >
-              A Petaluma Poultry ad
-            </a>{" "}
-            posted on their Instagram in 2024
-          </CaptionedImage>
-          <CaptionedImage
-            src={chickenStuckOnBackInFactoryFarm}
-            alt="Petaluma Poultry chicken stuck on back"
-          >
-            A sick chicken stuck on her back at a{" "}
-            <a
-              href="https://media.dxe.io/wl/?id=Vrgs7DjwG4Zl9GCnzurcX5Jxkt5uj85I&fmode=open"
-              className="underline"
-            >
-              Petaluma Poultry factory farm in 2023
-            </a>
-          </CaptionedImage>
-        </Row>
+      <div className="flex flex-col lg:flex-row items-center justify-evenly gap-12">
+        <div className="w-full lg:w-1/2 flex items-center justify-center">
+          <Image
+            src={zoeRescuedChicken}
+            alt="Rescued chicken outdoors"
+            className="rounded-2xl w-full object-cover"
+            style={{
+              maxHeight: "800px",
+              objectPosition: "center 100%",
+            }}
+          />
+        </div>
+        <div className="w-full lg:w-1/2 text-left space-y-8">
+          <p>
+            In June 2023, Zoe and other animal cruelty investigators with Direct
+            Action Everywhere (DxE) openly rescued four ailing chickens from
+            Petaluma Poultry, a Perdue-owned slaughterhouse in Petaluma, CA.
+          </p>
+          <p>
+            Those birds—<b>Poppy, Aster, Ivy, and Azalea</b>—were rushed to
+            veterinary care. Poppy was treated with antibiotics for a
+            respiratory infection, and Aster&apos;s infected feet were cleaned,
+            treated, and bandaged. All four birds got the care they needed to
+            recover, and today, they are thriving at an animal sanctuary.
+          </p>
+          <p>
+            Before this rescue, Zoe and others had repeatedly reported unlawful
+            animal cruelty at Petaluma Poultry, but authorities failed to act.
+            Going all the way back to 2018, DxE investigations have documented
+            routine violations of California&apos;s animal cruelty laws at
+            Petaluma Poultry, including:
+          </p>
+          <ul className="list-disc pl-8 space-y-2">
+            <li>
+              Sick and injured birds collapsed on the factory farm floor, unable
+              to reach food or water
+            </li>
+            <li>
+              Open sores, wing and joint injuries, and necrotic wounds exposing
+              muscle and bone
+            </li>
+            <li>
+              Evidence of animals being scalded alive inside the slaughterhouse
+            </li>
+          </ul>
+          <p>
+            Petaluma Poultry, a subsidiary of national poultry giant Perdue
+            Foods, supplies to major grocery chains like Safeway and Trader
+            Joe&apos;s. The company&apos;s money and power has shielded it from
+            facing consequences for clear crimes against animals, even when
+            Sonoma County&apos;s Animal Services Department concurred with DxE
+            and encouraged the Sheriff&apos;s Office to prosecute a Petaluma
+            Poultry factory farm for animal cruelty. No prosecution ever
+            happened.
+          </p>
+          <p>
+            <b>
+              Zoe took action to protect animals from cruelty when the
+              authorities failed to do so.
+            </b>{" "}
+            She does not regret her actions. She knows that every suffering
+            animal deserves to be rescued, and she will continue fighting for
+            them.
+          </p>
+        </div>
+      </div>
+    </Section>
+  );
+}
+
+function TakeActionSection() {
+  return (
+    <Section className="bg-slate-100">
+      <h2 className="border-b border-slate-300 pb-2 uppercase text-xl tracking-wide text-slate-800 text-center">
+        Take Action
+      </h2>
+      <div className="w-full text-left space-y-8">
+        <p className="text-center text-2xl font-bold">
+          Will you fight with her?
+        </p>
+        <ul className="list-disc pl-8 space-y-3 text-lg">
+          <li>
+            Ask your friends and family to sign the petition to free Zoe now
+          </li>
+          <li>
+            Share Zoe&apos;s story on social media with{" "}
+            <span className="font-semibold">#FreeZoe</span> and{" "}
+            <span className="font-semibold">#RightToRescue</span>
+          </li>
+          <li>
+            Join the animal rights movement. By locking Zoe up, prosecutors and
+            industry are hoping to scare us into silence. Don&apos;t let them.
+            Let&apos;s speak out louder than ever before.
+          </li>
+        </ul>
+        <p className="text-center text-xl font-bold pt-4 pb-0">
+          Every day Zoe spends behind bars is another day that her life is in
+          jeopardy.
+        </p>
       </div>
     </Section>
   );
