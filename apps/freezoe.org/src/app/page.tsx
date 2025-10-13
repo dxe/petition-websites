@@ -92,7 +92,7 @@ function MoreBackgroundSection() {
   return (
     <Section>
       <div className="flex flex-col lg:flex-row items-center justify-evenly gap-12">
-        <div className="w-full lg:w-1/2 text-left space-y-8">
+        <div className="w-full lg:w-1/2 text-left space-y-8 order-2 lg:order-1">
           <p>
             Zoe is incarcerated in Sonoma County, CA for the "crime" of rescuing
             animals from abuse at a Perdue-owned slaughterhouse.{" "}
@@ -127,7 +127,7 @@ function MoreBackgroundSection() {
             </b>
           </p>
         </div>
-        <div className="w-full lg:w-1/2 flex items-center justify-center">
+        <div className="w-full lg:w-1/2 flex items-center justify-center order-1 lg:order-2">
           <Image
             src="https://worldanimalnews.com/wp-content/uploads/2025/09/IMG_5130.jpeg"
             alt="Exposing Perdue factory farm conditions"
@@ -151,7 +151,7 @@ function WhoIsZoeSection() {
         Who is Zoe Rosenberg?
       </h2>
       <div className="flex flex-col lg:flex-row items-center justify-evenly gap-12">
-        <div className="w-full lg:w-1/2 flex items-center justify-center">
+        <div className="w-full lg:w-1/2 flex items-center justify-center order-1 lg:order-1">
           <Image
             src={zoeWithAnimal}
             alt="Zoe with two chickens"
@@ -159,7 +159,7 @@ function WhoIsZoeSection() {
             style={{ maxHeight: "500px" }}
           />
         </div>
-        <div className="w-full lg:w-1/2 text-left space-y-8">
+        <div className="w-full lg:w-1/2 text-left space-y-8 order-2 lg:order-2">
           <p>
             Zoe is a 23-year-old college graduate of UC Berkeley, an animal
             sanctuary founder, and an animal cruelty investigator with Direct
@@ -191,7 +191,7 @@ function ZoesHealthSection() {
         Zoe&apos;s Health is at Immediate Risk
       </h2>
       <div className="flex flex-col lg:flex-row items-center justify-evenly gap-12">
-        <div className="w-full lg:w-1/2 text-left space-y-8">
+        <div className="w-full lg:w-1/2 text-left space-y-8 order-2 lg:order-1">
           <p>
             Zoe lives with Type 1 Diabetes, meaning she is insulin dependent. If
             she goes off insulin for even just several hours, she could go into
@@ -222,7 +222,7 @@ function ZoesHealthSection() {
             preventable deaths in custody due to lack of medical care.
           </p>
         </div>
-        <div className="w-full lg:w-1/2 flex items-center justify-center">
+        <div className="w-full lg:w-1/2 flex items-center justify-center order-1 lg:order-2">
           <Image
             src={zoeHealthRisk}
             alt="Zoe Rosenberg"
@@ -245,18 +245,18 @@ function WhyIsZoeInJailSection() {
         Why is Zoe in Jail?
       </h2>
       <div className="flex flex-col lg:flex-row items-center justify-evenly gap-12">
-        <div className="w-full lg:w-1/2 flex items-center justify-center">
+        <div className="w-full lg:w-1/2 flex items-center justify-center order-1 lg:order-1">
           <Image
             src={zoeRescuedChicken}
             alt="Rescued chicken outdoors"
             className="rounded-2xl w-full object-cover"
             style={{
-              maxHeight: "800px",
+              maxHeight: "700px",
               objectPosition: "center 100%",
             }}
           />
         </div>
-        <div className="w-full lg:w-1/2 text-left space-y-8">
+        <div className="w-full lg:w-1/2 text-left space-y-8 order-2 lg:order-2">
           <p>
             In June 2023, Zoe and other animal cruelty investigators with Direct
             Action Everywhere (DxE) openly rescued four ailing chickens from
