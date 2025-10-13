@@ -75,19 +75,19 @@ function PetitionSection() {
 }
 
 function MoreBackgroundSection() {
-  function ExposingPerdueYouTubeVideo() {
-    return (
-      <iframe
-        className="relative aspect-video h-min w-full lg:w-full max-w-3xl self-center rounded-2xl"
-        src="https://www.youtube.com/embed/3r4xjelwY0U?si=ksKf8aU7aArUnWkr"
-        title="YouTube video player"
-        frameBorder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        referrerPolicy="strict-origin-when-cross-origin"
-        allowFullScreen
-      ></iframe>
-    );
-  }
+  // function ExposingPerdueYouTubeVideo() {
+  //   return (
+  //     <iframe
+  //       className="relative aspect-video h-min w-full lg:w-full max-w-3xl self-center rounded-2xl"
+  //       src="https://www.youtube.com/embed/3r4xjelwY0U?si=ksKf8aU7aArUnWkr"
+  //       title="YouTube video player"
+  //       frameBorder="0"
+  //       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+  //       referrerPolicy="strict-origin-when-cross-origin"
+  //       allowFullScreen
+  //     ></iframe>
+  //   );
+  // }
 
   return (
     <Section>
