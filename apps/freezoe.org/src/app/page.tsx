@@ -250,10 +250,7 @@ function WhyIsZoeInJailSection() {
           <Image
             src={zoeRescuedChicken}
             alt="Rescued chicken outdoors"
-            className="rounded-2xl w-full object-cover max-h-80 lg:max-h-[700px]"
-            style={{
-              objectPosition: "center 100%",
-            }}
+            className="rounded-2xl w-full object-cover max-h-80 lg:max-h-[700px] object-[center_60%] lg:object-[center_100%]"
           />
         </div>
         <div className="w-full lg:w-1/2 text-left space-y-8 order-2 lg:order-2">
