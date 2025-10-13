@@ -94,8 +94,8 @@ function MoreBackgroundSection() {
       <div className="flex flex-col lg:flex-row items-center justify-evenly gap-12">
         <div className="w-full lg:w-1/2 text-left space-y-8 order-2 lg:order-1">
           <p>
-            Zoe is incarcerated in Sonoma County, CA for the &quot;crime&quot; of rescuing
-            animals from abuse at a Perdue-owned slaughterhouse.{" "}
+            Zoe is incarcerated in Sonoma County, CA for the &quot;crime&quot;
+            of rescuing animals from abuse at a Perdue-owned slaughterhouse.{" "}
             <b>All along, this was a political prosecution</b>; instead of
             prosecuting Perdue for documented animal cruelty, the District
             Attorney punished Zoe for exposing it.
@@ -111,7 +111,9 @@ function MoreBackgroundSection() {
             immediately into custody.
           </p>
           <p>
-            <b>Her incarceration isn&apos;t just unjust; it is life-threatening.</b>{" "}
+            <b>
+              Her incarceration isn&apos;t just unjust; it is life-threatening.
+            </b>{" "}
             Zoe has a serious chronic illness that requires constant medical
             attention.{" "}
             <b>
@@ -122,8 +124,8 @@ function MoreBackgroundSection() {
           <p>
             We demand her immediate release.{" "}
             <b>
-              Compassion should not be criminalized, and it certainly shouldn&apos;t
-              be a death sentence.
+              Compassion should not be criminalized, and it certainly
+              shouldn&apos;t be a death sentence.
             </b>
           </p>
         </div>
@@ -226,9 +228,8 @@ function ZoesHealthSection() {
           <Image
             src={zoeHealthRisk}
             alt="Zoe Rosenberg"
-            className="rounded-2xl w-full object-cover"
+            className="rounded-2xl w-full object-cover max-h-80 lg:max-h-[500px]"
             style={{
-              maxHeight: "500px",
               objectPosition: "center 40%",
             }}
           />
@@ -249,9 +250,8 @@ function WhyIsZoeInJailSection() {
           <Image
             src={zoeRescuedChicken}
             alt="Rescued chicken outdoors"
-            className="rounded-2xl w-full object-cover"
+            className="rounded-2xl w-full object-cover max-h-80 lg:max-h-[700px]"
             style={{
-              maxHeight: "700px",
               objectPosition: "center 100%",
             }}
           />
