@@ -104,14 +104,14 @@ function MoreBackgroundSection() {
             The District Attorney charged Zoe with a ramped-up felony conspiracy
             charge to increase her maximum sentence and forced her to wear a GPS
             ankle monitor for over 20 months while awaiting trial. When trial
-            finally arrived, the court severely restricted Zoe's ability to
+            finally arrived, the court severely restricted Zoe&apos;s ability to
             present evidence of the animal cruelty she had documented at Perdue
             and reported to authorities before the rescue. The jury only heard a
             small sliver of the story and Zoe was ultimately convicted and taken
             immediately into custody.
           </p>
           <p>
-            <b>Her incarceration isn't just unjust; it is life-threatening.</b>{" "}
+            <b>Her incarceration isn&apos;t just unjust; it is life-threatening.</b>{" "}
             Zoe has a serious chronic illness that requires constant medical
             attention.{" "}
             <b>
@@ -122,7 +122,7 @@ function MoreBackgroundSection() {
           <p>
             We demand her immediate release.{" "}
             <b>
-              Compassion should not be criminalized, and it certainly shouldn't
+              Compassion should not be criminalized, and it certainly shouldn&apos;t
               be a death sentence.
             </b>
           </p>
