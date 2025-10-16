@@ -1,3 +1,5 @@
+"use client"; // remove when password protection is no longer needed
+
 import { ScrollButton } from "@dxe/petitions-components/scroll-button";
 import { Section } from "@dxe/petitions-components/section";
 import Image from "next/image";
@@ -8,8 +10,17 @@ import zoeHealthRisk from "./img/zoe-health-risk.jpg";
 import zoeRescuedChicken from "./img/zoe-rescued-chickens.webp";
 import { PetitionWithSuspense } from "./petition";
 import { PressHits } from "./press-hits";
+import { useSearchParams } from "next/navigation";
 
 export default function HomePage() {
+  const searchParams = useSearchParams();
+  if (
+    (searchParams.get("password") || "") !==
+    (process.env.NEXT_PUBLIC_SITE_PASSWORD || "")
+  ) {
+    return <p>Invalid password</p>;
+  }
+
   return (
     <div className="flex flex-col gap-6 items-center">
       <Hero />
