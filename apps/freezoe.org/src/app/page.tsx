@@ -11,8 +11,15 @@ import zoeRescuedChicken from "./img/zoe-rescued-chickens.webp";
 import { PetitionWithSuspense } from "./petition";
 import { PressHits } from "./press-hits";
 import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
-export default function HomePage() {
+export default function PwProtectedHomePageWSuspense() {
+  <Suspense>
+    <PwProtectedHomePage />
+  </Suspense>;
+}
+
+function PwProtectedHomePage() {
   const searchParams = useSearchParams();
   if (
     (searchParams.get("password") || "") !==
@@ -21,6 +28,10 @@ export default function HomePage() {
     return <p>Invalid password</p>;
   }
 
+  return <HomePage />;
+}
+
+function HomePage() {
   return (
     <div className="flex flex-col gap-6 items-center">
       <Hero />
