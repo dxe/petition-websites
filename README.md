@@ -119,6 +119,10 @@ Buy a domain for the petition in Namecheap.
 See [environment variables](#environment-variables) for details about the `.env`
 files.
 
+### Update launch.json
+
+Update .vscode/launch.json file for easier dubugging in VS Code.
+
 ### Image optimization
 
 Convert any new PNGs to JPGs. Make sure JPGs are a reasonable size.

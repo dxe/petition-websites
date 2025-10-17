@@ -14,9 +14,11 @@ import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 
 export default function PwProtectedHomePageWSuspense() {
-  <Suspense>
-    <PwProtectedHomePage />
-  </Suspense>;
+  return (
+    <Suspense>
+      <PwProtectedHomePage />
+    </Suspense>
+  );
 }
 
 function PwProtectedHomePage() {
