@@ -153,24 +153,17 @@ No mail is actually sent from or received at this domain.
 
 ### Create new bucket in AWS S3 (for dedicated petition website only)
 
-During creation, allow all public access unless you want to figure out permissions for deployment and CloudFront.
+Create a bucket in S3 named after the petition domain
 
-After creation, under properties, enable static website hosting and set the index document to `index.html`.
+Leave all the default settings. It's ok to leave "Block all public access" checked, and do NOT enable static website
+hosting as it will be hosted via CloudFront instead.
 
 ### Create new distribution in CloudFront (for dedicated petition website only)
 
-Set the domain name to the petition domain (without www), verify, and add a subdomain for "www".
+Set the domain name to the petition domain (without www), verify, click "Check" and add a subdomain for "www".
 
-Target the S3 bucket's website endpoint. If turned on static website hosting
-in S3, AWS will prompt you to set it correctly when you update the "origin
-domain" field.
-
-Example:
-
-- Incorrect:
-  - `helpthechickens.com.s3.us-west-2.amazonaws.com`
-- Correct:
-  - `helpthechickens.com.s3-website-us-west-2.amazonaws.com`
+Target the S3 bucket. Follow its instructions to create and attach an Origin Access Control, and copy the policy it
+gives you to the S3 bucket's permissions page.
 
 No need for Web Application Firewall (WAF) at this time.
 
@@ -180,6 +173,8 @@ click "Create Certificate".
 After creation:
 
 Make sure both www.@ and @ are listed under "alternative domain names", then click "Route domains to CloudFront".
+
+Edit the "Default root object" to be `index.html`.
 
 Edit the preexisting "behavior":
 
