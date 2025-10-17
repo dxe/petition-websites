@@ -5,6 +5,7 @@ import { Section } from "@dxe/petitions-components/section";
 import Image from "next/image";
 
 import hero from "./img/zoe-hero-2.jpg";
+import zoePrisonBillboard from "./img/worldanimalnews.com.IMG_5130.jpeg";
 import zoeWithAnimal from "./img/zoe-with-animal.webp";
 import zoeHealthRisk from "./img/zoe-health-risk.jpg";
 import zoeRescuedChicken from "./img/zoe-rescued-chickens.webp";
@@ -155,7 +156,7 @@ function MoreBackgroundSection() {
         </div>
         <div className="w-full lg:w-1/2 flex items-center justify-center order-1 lg:order-2">
           <Image
-            src="https://worldanimalnews.com/wp-content/uploads/2025/09/IMG_5130.jpeg"
+            src={zoePrisonBillboard}
             alt="Exposing Perdue factory farm conditions"
             className="rounded-2xl w-full object-cover"
             style={{
