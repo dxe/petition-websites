@@ -32,10 +32,10 @@ var EmailSettings = map[string]struct {
 	Subject    string
 	To         []string
 }{
-	"duck":        {FromDomain: "helptheducks.com", Subject: "Prosecute Reichardt Duck Farm for Animal Abuse", To: []string{"carla.rodriguez@sonoma-county.org"}},
-	"chicken":     {FromDomain: "helpthechickens.com", Subject: "Shut Down Perdue's Petaluma Poultry Slaughterhouse to End Animal Abuse and Protect Public Health", To: helpTheChickensRecipients},
-	"sonoma":      {FromDomain: "righttorescue.com", Subject: "Prosecute animal cruelty, not animal rescuers", To: []string{"carla.rodriguez@sonoma-county.org"}},
-	"ridglan":     {FromDomain: "righttorescue.com", Subject: "Prosecute animal abuse at Ridglan Farms", To: []string{"ismael.ozanne@da.wi.gov"}},
-	"freezoe.org": {FromDomain: "freezoe.org", Subject: "Pardon Zoe Rosenberg", To: []string{"gavin.newsom@gov.ca.gov"}},
-	"test":        {FromDomain: "righttorescue.com", Subject: "Test", To: []string{"tech@directactioneverywhere.com"}},
+	"duck":    {FromDomain: "helptheducks.com", Subject: "Prosecute Reichardt Duck Farm for Animal Abuse", To: []string{"carla.rodriguez@sonoma-county.org"}},
+	"chicken": {FromDomain: "helpthechickens.com", Subject: "Shut Down Perdue's Petaluma Poultry Slaughterhouse to End Animal Abuse and Protect Public Health", To: helpTheChickensRecipients},
+	"sonoma":  {FromDomain: "righttorescue.com", Subject: "Prosecute animal cruelty, not animal rescuers", To: []string{"carla.rodriguez@sonoma-county.org"}},
+	"ridglan": {FromDomain: "righttorescue.com", Subject: "Prosecute animal abuse at Ridglan Farms", To: []string{"ismael.ozanne@da.wi.gov"}},
+	"freezoe": {FromDomain: "freezoe.org", Subject: "Pardon Zoe Rosenberg", To: []string{"gavin.newsom@gov.ca.gov"}},
+	"test":    {FromDomain: "righttorescue.com", Subject: "Test", To: []string{"tech@directactioneverywhere.com"}},
 }
