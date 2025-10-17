@@ -1,0 +1,22 @@
+name: Deploy freezoe.org
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - apps/freezoe.org/**
+      - packages/**
+  workflow_dispatch:
+
+jobs:
+  deploy_frontend:
+    uses: ./.github/workflows/frontend.yml
+    with:
+      package-name: freezoe.org
+      package-path: apps/freezoe.org
+      aws-s3-bucket: ${{ vars.FREE_ZOE_S3_BUCKET }}
+      aws-cloudfront-distribution: ${{ vars.FREE_ZOE_CLOUDFRONT_DISTRIBUTION }}
+    secrets:
+      aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

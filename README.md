@@ -125,11 +125,18 @@ Convert any new PNGs to JPGs. Make sure JPGs are a reasonable size.
 
 ### Mail petition service
 
-Update the service with configuration to send mail from the petition domain.
+Update the service with configuration to send mail from the petition domain. Look for `AllowedOrigins` in `main.go` and
+`EmailSettings` in `config/config.go`.
 
 ### Captcha
 
-Add the petition domain to the captcha in Google reCAPTCHA Admin.
+Add the petition domain to the captcha in Google reCAPTCHA Admin at https://www.google.com/recaptcha/admin/
+
+### Point domain nameservers to Route 53
+
+Check Namecheap to make sure the nameservers point to AWS so we can use Route 53 for DNS.
+
+Go to Route 53 and create a "hosted zone" for the petition domain. Put the provided NS records into Namecheap.
 
 ### Create new identity in AWS SES
 
@@ -137,7 +144,6 @@ Go to AWS SES, go to the identities section and create a new "domain"-type ideni
 `mail.<petition-domain>`.
 Verify using Easy DKIM and choose RSA_2048_BIT key length.
 
-Check Namecheap to make sure the nameservers point to AWS so we can use Route 53 for DNS.
 SES will create the necessary records in Route 53 to verify the domain by default.
 
 Make sure SES finishes verifying the domain.
@@ -147,12 +153,13 @@ No mail is actually sent from or received at this domain.
 
 ### Create new bucket in AWS S3 (for dedicated petition website only)
 
-Allow all public access unless you want to figure out permissions for deployment and CloudFront.
+During creation, allow all public access unless you want to figure out permissions for deployment and CloudFront.
 
-Under properties, enable static website hosting.
-Set the index document to `index.html`.
+After creation, under properties, enable static website hosting and set the index document to `index.html`.
 
 ### Create new distribution in CloudFront (for dedicated petition website only)
+
+Set the domain name to the petition domain (without www), verify, and add a subdomain for "www".
 
 Target the S3 bucket's website endpoint. If turned on static website hosting
 in S3, AWS will prompt you to set it correctly when you update the "origin
@@ -165,26 +172,27 @@ Example:
 - Correct:
   - `helpthechickens.com.s3-website-us-west-2.amazonaws.com`
 
-Set the alternate domain name to the petition domain (without any www).
+No need for Web Application Firewall (WAF) at this time.
 
-For "Custom SSL certificate" certificate, click "Request certificate", and
-create a certificate for www. and @ domains, and verify ownership with DNS
-records.
+In the "Get TLS certificate" section, check both boxes to include the apex domain and all subdomains (wildcard) and
+click "Create Certificate".
 
-Set the price class to "Use only North America and Europe" (do not use all edge
-locations).
+After creation:
 
-Set behavior -> viewer protocol policy: "Redirect HTTP to HTTPS".
+Make sure both www.@ and @ are listed under "alternative domain names", then click "Route domains to CloudFront".
 
-Check the box to enable IPv6 support.
+Edit the preexisting "behavior":
+
+- Ensure it has viewer protocol policy: "Redirect HTTP to HTTPS".
+- Set "viewer request" to "CloudFront Functions" -> "redirect-to-www" or "redirect-from-www".
 
 All other settings left as default.
 
-### Point domain to CloudFront (for dedicated petition website only)
+No longer applicable, or maybe only applicable if not using Route 53?
 
-Go to namecheap advanced dns for the domain, create CNAME record `@` pointing
-to the domain name of the CloudFront distribution found in AWS Console on the
-"General" tab for the distribution.
+- Set the price class to "Use only North America and Europe" (do not use all edge
+  locations).
+- Check the box to enable IPv6 support.
 
 ### Create and run GitHub workflow (for dedicated petition website only)
 
@@ -193,8 +201,13 @@ example.
 
 Add variables and secrets in the GitHub repo settings:
 
-- https://github.com/dxe/helptheducks.com/settings/variables/actions
-- https://github.com/dxe/helptheducks.com/settings/secrets/actions
+- https://github.com/dxe/petition-websites/settings/variables/actions
+- https://github.com/dxe/petition-websites/settings/secrets/actions
+
+You'll need to add variables that follow the pattern below and use them in the workflow file:
+
+- `*_CLOUDFRONT_DISTRIBUTION`
+- `*_S3_BUCKET`
 
 Run the workflow by pushing to the main branch or running it manually from here:
 
