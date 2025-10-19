@@ -148,6 +148,7 @@ Go to AWS SES, go to the identities section and create a new "domain"-type ideni
 `mail.<petition-domain>`.
 Verify using Easy DKIM and choose RSA_2048_BIT key length.
 
+After creation, under "DomainKeys Identified Mail (DKIM)" section, click the "Publish records to Route 53" button.
 SES will create the necessary records in Route 53 to verify the domain by default.
 
 Make sure SES finishes verifying the domain.
