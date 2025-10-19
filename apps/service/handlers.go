@@ -4,12 +4,16 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"net/mail"
+	"os"
 
 	"github.com/dxe/service/config"
 	"github.com/dxe/service/model"
 )
+
+var logger = slog.New(slog.NewJSONHandler(os.Stdout, nil))
 
 type CreateMessageInput struct {
 	Name      string `json:"name"`
@@ -33,11 +37,11 @@ func createMessageHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if config.RecaptchaSecret == "" {
-		fmt.Println("Recaptcha secret not set, skipping verification")
+		logger.Info("Recaptcha secret not set, skipping verification")
 	} else {
 		ok, err := verifyRecaptcha(body.Token)
 		if err != nil {
-			fmt.Printf("error verifying recaptcha: %v\n", err)
+			logger.Error("error verifying recaptcha", "error", err)
 			http.Error(w, "error verifying recaptcha", http.StatusInternalServerError)
 			return
 		}
