@@ -158,10 +158,8 @@ function MoreBackgroundSection() {
           <Image
             src={zoeArrested}
             alt="Zoe Rosenberg arrested on felony warrants in Santa Rosa, CA on Nov. 30 2023"
-            className="rounded-2xl object-cover object-center"
+            className="rounded-2xl object-cover object-center h-80 lg:h-[500px]"
             style={{
-              maxHeight: "500px",
-              height: "500px",
               objectPosition: "center 30%",
             }}
           />
