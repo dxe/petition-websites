@@ -13,48 +13,48 @@ export function PressHits() {
   return (
     <Section>
       <h2 className="border-b border-slate-300 pb-2 uppercase text-xl tracking-wide text-slate-800">
-        Perdue&apos;s Petaluma Poultry in the News
+        Zoe&apos;s Case in the News
       </h2>
 
       <div className="flex flex-col lg:flex-row items-center lg:items-start justify-evenly gap-6">
         <div className="flex flex-col gap-6 max-w-96 w-full">
-          {/* The Press Democrat: Perdue&apos;s Petaluma poultry plant struggles to eliminate bacteria that can make people sick */}
+          {/* Berkeleyside */}
           <div className="iframely-embed">
             <div
               className="iframely-responsive"
               style={{ paddingBottom: "59.375%", paddingTop: "120px" }}
             >
               <a
-                href="https://www.pressdemocrat.com/article/news/perdues-petaluma-poultry-plant-struggles-to-limit-pathogens/"
-                data-iframely-url="//iframely.net/iNsiACG"
+                href="https://www.berkeleyside.org/2025/09/18/berkeley-animal-activist-faces-prison-in-sonoma-county-chicken-theft-case"
+                data-iframely-url="//iframely.net/pVR6OyP5?theme=dark"
               ></a>
             </div>
           </div>
         </div>
         <div className="flex flex-col gap-6 max-w-96 w-full">
-          {/* The Intercept: Dangerous Pathogens and Cruelty Law Violations at Perdue Subsidiary, Animal Rights Report Alleges */}
+          {/* The New York Times */}
           <div className="iframely-embed">
             <div
               className="iframely-responsive"
               style={{ paddingBottom: "59.375%", paddingTop: "120px" }}
             >
               <a
-                href="https://production.public.theintercept.com/2023/06/13/perdue-chicken-slaughterhouse-animal-cruelty-dxe/"
-                data-iframely-url="//iframely.net/bA6f35V"
+                href="https://www.nytimes.com/2025/09/02/us/california-farmers-animal-activists-bay-area-sonoma.html"
+                data-iframely-url="//iframely.net/iYn4Mo0n?media=0&theme=dark"
               ></a>
             </div>
           </div>
         </div>
         <div className="flex flex-col gap-6 max-w-96 w-full">
-          {/* The San Francisco Examiner: Chef Tyler Florence distances from poultry farm and animal-rights heat */}
+          {/* The Mercury News */}
           <div className="iframely-embed">
             <div
               className="iframely-responsive"
               style={{ paddingBottom: "59.375%", paddingTop: "120px" }}
             >
               <a
-                href="https://www.sfexaminer.com/news/business/chef-tyler-florence-distances-from-poultry-farm-and-animal-rights-heat/article_64da5ab4-601a-11ef-a358-9774850aac1b.html"
-                data-iframely-url="//iframely.net/qMrpLTW"
+                href="https://www.mercurynews.com/2025/10/20/zoe-rosenberg-testifies-she-rescued-chickens-not-committed-crimes-in-petaluma-poultry-case/"
+                data-iframely-url="//iframely.net/LYAZKSo9?theme=dark "
               ></a>
             </div>
           </div>

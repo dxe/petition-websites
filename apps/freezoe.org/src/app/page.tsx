@@ -5,10 +5,10 @@ import { Section } from "@dxe/petitions-components/section";
 import Image from "next/image";
 
 import hero from "./img/zoe-hero-2.jpg";
-import zoePrisonBillboard from "./img/worldanimalnews.com.IMG_5130.jpeg";
-import zoeWithAnimal from "./img/zoe-with-animal.webp";
+import zoeArrested from "./img/zoe-arrested-nov-30-2023.jpeg";
+import zoeWithAnimal from "./img/zoe-with-two-rescued-hens.jpg";
 import zoeHealthRisk from "./img/zoe-health-risk.jpg";
-import zoeRescuedChicken from "./img/zoe-rescued-chickens.webp";
+import zoeRescuedChicken from "./img/zoe-rescued-chicken-hi-res.jpg";
 import { PetitionWithSuspense } from "./petition";
 import { PressHits } from "./press-hits";
 import { useSearchParams } from "next/navigation";
@@ -156,14 +156,12 @@ function MoreBackgroundSection() {
         </div>
         <div className="w-full lg:w-1/2 flex items-center justify-center order-1 lg:order-2">
           <Image
-            src={zoePrisonBillboard}
-            alt="Exposing Perdue factory farm conditions"
-            className="rounded-2xl w-full object-cover"
+            src={zoeArrested}
+            alt="Zoe Rosenberg arrested on felony warrants in Santa Rosa, CA on Nov. 30 2023"
+            className="rounded-2xl object-cover object-center h-80 lg:h-[500px]"
             style={{
-              maxHeight: "500px",
+              objectPosition: "center 30%",
             }}
-            width={800}
-            height={600}
           />
         </div>
       </div>
@@ -188,10 +186,10 @@ function WhoIsZoeSection() {
         </div>
         <div className="w-full lg:w-1/2 text-left space-y-8 order-2 lg:order-2">
           <p>
-            Zoe is a 23-year-old college graduate of UC Berkeley, an animal
-            sanctuary founder, and an animal cruelty investigator with Direct
-            Action Everywhere. She is an incredible human being who has spent
-            most of her young life working to protect animals.
+            Zoe is a 23-year-old UC Berkeley student, an animal sanctuary
+            founder, and an animal cruelty investigator with Direct Action
+            Everywhere. She is an incredible human being who has spent most of
+            her young life working to protect animals.
           </p>
           <p>
             When she was just 11, Zoe founded Happy Hen Animal Sanctuary, a
