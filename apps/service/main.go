@@ -9,6 +9,7 @@ import (
 
 	"github.com/aws/aws-sdk-go/service/ses"
 	"github.com/dxe/service/config"
+	"github.com/dxe/service/data"
 	"github.com/dxe/service/mailer"
 	"github.com/dxe/service/model"
 	"github.com/go-chi/chi/v5"
@@ -99,18 +100,18 @@ func processNewMessages(db *sqlx.DB) {
 		fmt.Printf("Processing message id: %v\n", message.ID)
 
 		campaignName := message.Campaign.String
-		settings, ok := config.EmailSettings[campaignName]
+		settings, ok := config.CampaignEmailSettings[campaignName]
 		if !ok {
 			testCampaign := strings.TrimPrefix(campaignName, "test:")
 			if testCampaign != campaignName {
-				settings, ok = config.EmailSettings[testCampaign]
+				settings, ok = config.CampaignEmailSettings[testCampaign]
 				if ok {
-					settings.To = []string{"tech@directactioneverywhere.com"}
+					settings.To = config.StaticRecipientList("tech@directactioneverywhere.com")
 				}
 			}
 		}
 		if !ok {
-			settings = config.EmailSettings["test"]
+			settings = config.CampaignEmailSettings["test"]
 		}
 
 		normalizedName, err := removeAccents(message.Name)
@@ -123,7 +124,7 @@ func processNewMessages(db *sqlx.DB) {
 		err = mailer.Send(mailClient, mailer.SendOptions{
 			From:    fmt.Sprintf("%s <%s>", message.Name, fromEmail),
 			ReplyTo: message.Email,
-			To:      settings.To,
+			To:      settings.To(data.Municipality(message.City.String), data.Zip(message.Zip.String)),
 			Subject: settings.Subject,
 			Body:    message.Message,
 		})

@@ -2,6 +2,8 @@ package config
 
 import (
 	"os"
+
+	"github.com/dxe/service/data"
 )
 
 var (
@@ -27,15 +29,23 @@ var helpTheChickensRecipients = []string{
 	"adecarli@cityofpetaluma.org",
 	"bbarnacle@cityofpetaluma.org"}
 
-var EmailSettings = map[string]struct {
+type EmailSettings struct {
 	FromDomain string
 	Subject    string
-	To         []string
-}{
-	"duck":    {FromDomain: "helptheducks.com", Subject: "Prosecute Reichardt Duck Farm for Animal Abuse", To: []string{"carla.rodriguez@sonoma-county.org"}},
-	"chicken": {FromDomain: "helpthechickens.com", Subject: "Shut Down Perdue's Petaluma Poultry Slaughterhouse to End Animal Abuse and Protect Public Health", To: helpTheChickensRecipients},
-	"sonoma":  {FromDomain: "righttorescue.com", Subject: "Prosecute animal cruelty, not animal rescuers", To: []string{"carla.rodriguez@sonoma-county.org"}},
-	"ridglan": {FromDomain: "righttorescue.com", Subject: "Prosecute animal abuse at Ridglan Farms", To: []string{"ismael.ozanne@da.wi.gov"}},
-	"freezoe": {FromDomain: "freezoe.org", Subject: "Pardon Zoe Rosenberg", To: []string{"gavin.newsom@gov.ca.gov"}},
-	"test":    {FromDomain: "righttorescue.com", Subject: "Test", To: []string{"tech@directactioneverywhere.com"}},
+	To         func(city data.Municipality, zip data.Zip) []string
+}
+
+var CampaignEmailSettings = map[string]EmailSettings{
+	"duck":    {FromDomain: "helptheducks.com", Subject: "Prosecute Reichardt Duck Farm for Animal Abuse", To: StaticRecipientList("carla.rodriguez@sonoma-county.org")},
+	"chicken": {FromDomain: "helpthechickens.com", Subject: "Shut Down Perdue's Petaluma Poultry Slaughterhouse to End Animal Abuse and Protect Public Health", To: StaticRecipientList(helpTheChickensRecipients...)},
+	"sonoma":  {FromDomain: "righttorescue.com", Subject: "Prosecute animal cruelty, not animal rescuers", To: StaticRecipientList("carla.rodriguez@sonoma-county.org")},
+	"ridglan": {FromDomain: "righttorescue.com", Subject: "Prosecute animal abuse at Ridglan Farms", To: StaticRecipientList("ismael.ozanne@da.wi.gov")},
+	"freezoe": {FromDomain: "freezoe.org", Subject: "Pardon Zoe Rosenberg", To: StaticRecipientList("gavin.newsom@gov.ca.gov")},
+	"test":    {FromDomain: "righttorescue.com", Subject: "Test", To: StaticRecipientList("tech@directactioneverywhere.com")},
+}
+
+func StaticRecipientList(to ...string) func(city data.Municipality, zip data.Zip) []string {
+	return func(city data.Municipality, zip data.Zip) []string {
+		return to
+	}
 }
