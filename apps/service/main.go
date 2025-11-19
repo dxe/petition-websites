@@ -24,11 +24,27 @@ import (
 
 var (
 	r          *chi.Mux
-	db         *sqlx.DB
 	mailClient *ses.SES
 )
 
 func main() {
+	db := getDb()
+	defer db.Close()
+	s := NewServer(db)
+
+	go worker(db)
+	s.runServer()
+}
+
+type server struct {
+	db *sqlx.DB
+}
+
+func NewServer(db *sqlx.DB) *server {
+	return &server{db: db}
+}
+
+func (s *server) runServer() {
 	r = chi.NewRouter()
 	r.Use(middleware.RequestID)
 	r.Use(middleware.RealIP)
@@ -43,26 +59,21 @@ func main() {
 		MaxAge:           300, // Maximum value not ignored by any of major browsers.
 	}))
 
-	db = getDb()
-	defer db.Close()
-
 	r.Get("/healthz", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 	})
 
 	r.Route("/message", func(r chi.Router) {
-		r.Post("/create", createMessageHandler)
+		r.Post("/create", s.createMessageHandler)
 	})
 
-	r.Get("/tally", getTallyHandler)
-
-	go worker()
+	r.Get("/tally", s.getTallyHandler)
 
 	fmt.Printf("Listening on port %v\n", config.Port)
 	http.ListenAndServe(":"+config.Port, r)
 }
 
-func worker() {
+func worker(db *sqlx.DB) {
 	var err error
 	mailClient, err = mailer.CreateClient()
 	if err != nil {
@@ -70,12 +81,12 @@ func worker() {
 		return
 	}
 	for {
-		processNewMessages()
+		processNewMessages(db)
 		time.Sleep(60 * time.Second)
 	}
 }
 
-func processNewMessages() {
+func processNewMessages(db *sqlx.DB) {
 	messages, err := model.GetMessagesToProcess(db)
 	if err != nil {
 		fmt.Printf("Error getting messages to process: %v\n", err)
