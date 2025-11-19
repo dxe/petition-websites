@@ -23,7 +23,7 @@ type CreateMessageInput struct {
 	Campaign  string `json:"campaign,omitempty"`
 }
 
-func createMessageHandler(w http.ResponseWriter, r *http.Request) {
+func (s *server) createMessageHandler(w http.ResponseWriter, r *http.Request) {
 	var body CreateMessageInput
 
 	err := json.NewDecoder(r.Body).Decode(&body)
@@ -85,7 +85,7 @@ func createMessageHandler(w http.ResponseWriter, r *http.Request) {
 		},
 	}
 
-	err = model.InsertMessage(db, message)
+	err = model.InsertMessage(s.db, message)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("error saving message: %v", err), http.StatusInternalServerError)
 		return
@@ -98,7 +98,7 @@ type GetTallyResp struct {
 	Total int `json:"total"`
 }
 
-func getTallyHandler(w http.ResponseWriter, r *http.Request) {
+func (s *server) getTallyHandler(w http.ResponseWriter, r *http.Request) {
 	queryParams := r.URL.Query()
 	campaign := queryParams.Get("campaign")
 	if campaign == "" {
@@ -106,7 +106,7 @@ func getTallyHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tally, err := model.GetTally(db, campaign)
+	tally, err := model.GetTally(s.db, campaign)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("error getting tally: %v", err), http.StatusInternalServerError)
 		return
