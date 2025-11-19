@@ -70,6 +70,8 @@ func (s *server) runServer() {
 
 	r.Get("/tally", s.getTallyHandler)
 
+	r.Get("/assemblyMembers", s.getAssemblyMembersHandler)
+
 	fmt.Printf("Listening on port %v\n", config.Port)
 	http.ListenAndServe(":"+config.Port, r)
 }

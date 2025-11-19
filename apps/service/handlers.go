@@ -8,6 +8,7 @@ import (
 	"net/mail"
 
 	"github.com/dxe/service/config"
+	"github.com/dxe/service/data"
 	"github.com/dxe/service/model"
 )
 
@@ -114,6 +115,45 @@ func (s *server) getTallyHandler(w http.ResponseWriter, r *http.Request) {
 
 	resp := GetTallyResp{
 		Total: tally,
+	}
+	json, err := json.Marshal(resp)
+	if err != nil {
+		http.Error(w, "failed to marshal json", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(json)
+}
+
+type GetAssemblyMembersReq struct {
+	City string `json:"city"`
+	Zip  string `json:"zip"`
+}
+
+type GetAssemblyMembersResp struct {
+	Members []data.AssemblyMember `json:"members"`
+}
+
+func (s *server) getAssemblyMembersHandler(w http.ResponseWriter, r *http.Request) {
+	queryParams := r.URL.Query()
+	city := queryParams.Get("city")
+	zipcode := queryParams.Get("zip")
+
+	if city == "" || zipcode == "" {
+		http.Error(w, "city and zipcode parameters are required", http.StatusBadRequest)
+		return
+	}
+
+	membersMap := config.GetAssemblyMembers(data.Municipality(city), data.Zip(zipcode))
+	members := make([]data.AssemblyMember, 0, len(membersMap))
+	for _, member := range membersMap {
+		members = append(members, member)
+	}
+
+	resp := GetAssemblyMembersResp{
+		Members: members,
 	}
 	json, err := json.Marshal(resp)
 	if err != nil {
