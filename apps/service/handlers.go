@@ -12,7 +12,7 @@ import (
 	"github.com/dxe/service/model"
 )
 
-type CreateMessageInput struct {
+type CreateMessageReq struct {
 	Name      string `json:"name"`
 	Email     string `json:"email"`
 	Phone     string `json:"phone,omitempty"`
@@ -25,7 +25,7 @@ type CreateMessageInput struct {
 }
 
 func (s *server) createMessageHandler(w http.ResponseWriter, r *http.Request) {
-	var body CreateMessageInput
+	var body CreateMessageReq
 
 	err := json.NewDecoder(r.Body).Decode(&body)
 	if err != nil {
