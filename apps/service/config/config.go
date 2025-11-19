@@ -49,3 +49,29 @@ func StaticRecipientList(to ...string) func(city data.Municipality, zip data.Zip
 		return to
 	}
 }
+
+// Returns all possible assembly members for a given city and zip code.
+// Returns only assembly members that match to both the city and zip code.
+func GetAssemblyMembers(city data.Municipality, zip data.Zip) map[data.District]data.AssemblyMember {
+	potentialDistricts := make(map[data.District]bool)
+
+	assemblyMembersForCity := data.MunicipalityDistrictPercent[city]
+	assemblyMembersForZip := data.ZipDistrictPercent[zip]
+
+	// Find districts that are present in both city and zip code mappings
+	// where a nonzero percentage of the population lives in that district
+	for district, percent := range assemblyMembersForZip {
+		if percent > 0 && assemblyMembersForCity[district] > 0 {
+			potentialDistricts[district] = true
+		}
+	}
+
+	members := make(map[data.District]data.AssemblyMember)
+	for district := range potentialDistricts {
+		member, ok := data.AssemblyMemberData[district]
+		if ok {
+			members[district] = member
+		}
+	}
+	return members
+}
