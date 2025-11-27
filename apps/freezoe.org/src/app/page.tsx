@@ -371,7 +371,7 @@ function TakeActionSection() {
 function Footer() {
   return (
     <Section className="text-center pt-4 pb-12 text-sm md:border-t border-slate-300 text-slate-600">
-      &copy; {new Date().getFullYear()} Help The Chickens
+      &copy; {new Date().getFullYear()} Free Zoe
     </Section>
   );
 }
