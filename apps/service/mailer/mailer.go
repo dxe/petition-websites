@@ -2,12 +2,15 @@ package mailer
 
 import (
 	"fmt"
+	"log/slog"
 	"os"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ses"
 )
+
+var logger = slog.New(slog.NewJSONHandler(os.Stdout, nil))
 
 func CreateClient() (*ses.SES, error) {
 	accessKey := os.Getenv("AWS_ACCESS_KEY_ID")
@@ -64,6 +67,6 @@ func Send(client *ses.SES, options SendOptions) error {
 		return fmt.Errorf("error sending email: %v", err)
 	}
 
-	fmt.Println("Email sent! Message ID:", *result.MessageId)
+	logger.Info("Email sent!", "message_id", *result.MessageId)
 	return nil
 }

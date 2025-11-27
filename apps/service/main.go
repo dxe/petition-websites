@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log/slog"
 	"net/http"
 	"strings"
 	"time"
@@ -58,7 +59,7 @@ func main() {
 
 	go worker()
 
-	fmt.Printf("Listening on port %v\n", config.Port)
+	slog.Info("Listening on port", "port", config.Port)
 	http.ListenAndServe(":"+config.Port, r)
 }
 
@@ -66,7 +67,7 @@ func worker() {
 	var err error
 	mailClient, err = mailer.CreateClient()
 	if err != nil {
-		fmt.Printf("Could not create mail client: %v\n", err)
+		slog.Error("Could not create mail client", "error", err)
 		return
 	}
 	for {
@@ -78,14 +79,14 @@ func worker() {
 func processNewMessages() {
 	messages, err := model.GetMessagesToProcess(db)
 	if err != nil {
-		fmt.Printf("Error getting messages to process: %v\n", err)
+		slog.Error("Error getting messages to process", "error", err)
 		return
 	}
 
 	var success, fail []int
 
 	for _, message := range messages {
-		fmt.Printf("Processing message id: %v\n", message.ID)
+		slog.Info("Processing message", "id", message.ID)
 
 		campaignName := message.Campaign.String
 		settings, ok := config.EmailSettings[campaignName]
@@ -104,7 +105,7 @@ func processNewMessages() {
 
 		normalizedName, err := removeAccents(message.Name)
 		if err != nil {
-			fmt.Printf("Error normalizing name: %v\n", err)
+			slog.Error("Error normalizing name", "error", err)
 			fail = append(fail, message.ID)
 			continue
 		}
@@ -117,7 +118,7 @@ func processNewMessages() {
 			Body:    message.Message,
 		})
 		if err != nil {
-			fmt.Printf("Error sending email: %v", err)
+			slog.Error("Error sending email", "error", err)
 			fail = append(fail, message.ID)
 		} else {
 			success = append(success, message.ID)
@@ -126,12 +127,12 @@ func processNewMessages() {
 
 	err = model.UpdateMessageStatus(db, success, "SENT")
 	if err != nil {
-		fmt.Printf("Error updating message status: %v\n", err)
+		slog.Error("Error updating message status", "error", err)
 	}
 
 	err = model.UpdateMessageStatus(db, fail, "FAILED")
 	if err != nil {
-		fmt.Printf("Error updating message status: %v\n", err)
+		slog.Error("Error updating message status", "error", err)
 	}
 }
 
