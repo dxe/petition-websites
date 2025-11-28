@@ -43,6 +43,13 @@
       "runtimeExecutable": "pnpm",
       "runtimeArgs": ["dev", "--filter=@dxe/email-petition"],
       "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "Debug Petition Mailer Service",
+      "type": "go",
+      "request": "launch",
+      "mode": "debug",
+      "program": "${workspaceFolder}/apps/service/"
     }
   ],
   // Use launch.json `compounds` instead of `turbo --filter` commands to keep

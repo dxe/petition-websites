@@ -9,6 +9,7 @@ import (
 
 	"github.com/aws/aws-sdk-go/service/ses"
 	"github.com/dxe/service/config"
+	"github.com/dxe/service/data"
 	"github.com/dxe/service/mailer"
 	"github.com/dxe/service/model"
 	"github.com/go-chi/chi/v5"
@@ -24,11 +25,27 @@ import (
 
 var (
 	r          *chi.Mux
-	db         *sqlx.DB
 	mailClient *ses.SES
 )
 
 func main() {
+	db := getDb()
+	defer db.Close()
+	s := NewServer(db)
+
+	go worker(db)
+	s.runServer()
+}
+
+type server struct {
+	db *sqlx.DB
+}
+
+func NewServer(db *sqlx.DB) *server {
+	return &server{db: db}
+}
+
+func (s *server) runServer() {
 	r = chi.NewRouter()
 	r.Use(middleware.RequestID)
 	r.Use(middleware.RealIP)
@@ -36,33 +53,30 @@ func main() {
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.Timeout(30 * time.Second))
 	r.Use(cors.Handler(cors.Options{
-		AllowedOrigins:   []string{"http://localhost:5173", "https://www.helptheducks.com", "https://www.helpthechickens.com", "https://righttorescue.com", "https://www.freezoe.org"},
+		AllowedOrigins:   []string{"http://localhost:5173", "http://localhost:3000", "https://www.helptheducks.com", "https://www.helpthechickens.com", "https://righttorescue.com", "https://www.freezoe.org", "https://factoryfarmwatch.org"},
 		AllowedMethods:   []string{"GET", "POST", "OPTIONS"},
 		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type"},
 		AllowCredentials: false,
 		MaxAge:           300, // Maximum value not ignored by any of major browsers.
 	}))
 
-	db = getDb()
-	defer db.Close()
-
 	r.Get("/healthz", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 	})
 
 	r.Route("/message", func(r chi.Router) {
-		r.Post("/create", createMessageHandler)
+		r.Post("/create", s.createMessageHandler)
 	})
 
-	r.Get("/tally", getTallyHandler)
+	r.Get("/tally", s.getTallyHandler)
 
-	go worker()
+	r.Get("/assemblyMembers", s.getAssemblyMembersHandler)
 
 	fmt.Printf("Listening on port %v\n", config.Port)
 	http.ListenAndServe(":"+config.Port, r)
 }
 
-func worker() {
+func worker(db *sqlx.DB) {
 	var err error
 	mailClient, err = mailer.CreateClient()
 	if err != nil {
@@ -70,12 +84,12 @@ func worker() {
 		return
 	}
 	for {
-		processNewMessages()
+		processNewMessages(db)
 		time.Sleep(60 * time.Second)
 	}
 }
 
-func processNewMessages() {
+func processNewMessages(db *sqlx.DB) {
 	messages, err := model.GetMessagesToProcess(db)
 	if err != nil {
 		fmt.Printf("Error getting messages to process: %v\n", err)
@@ -88,18 +102,18 @@ func processNewMessages() {
 		fmt.Printf("Processing message id: %v\n", message.ID)
 
 		campaignName := message.Campaign.String
-		settings, ok := config.EmailSettings[campaignName]
+		settings, ok := config.CampaignEmailSettings[campaignName]
 		if !ok {
 			testCampaign := strings.TrimPrefix(campaignName, "test:")
 			if testCampaign != campaignName {
-				settings, ok = config.EmailSettings[testCampaign]
+				settings, ok = config.CampaignEmailSettings[testCampaign]
 				if ok {
-					settings.To = []string{"tech@directactioneverywhere.com"}
+					settings.To = config.StaticRecipientList("tech@directactioneverywhere.com")
 				}
 			}
 		}
 		if !ok {
-			settings = config.EmailSettings["test"]
+			settings = config.CampaignEmailSettings["test"]
 		}
 
 		normalizedName, err := removeAccents(message.Name)
@@ -112,7 +126,7 @@ func processNewMessages() {
 		err = mailer.Send(mailClient, mailer.SendOptions{
 			From:    fmt.Sprintf("%s <%s>", message.Name, fromEmail),
 			ReplyTo: message.Email,
-			To:      settings.To,
+			To:      settings.To(data.Municipality(message.City.String), data.Zip(message.Zip.String)),
 			Subject: settings.Subject,
 			Body:    message.Message,
 		})

@@ -8,10 +8,11 @@ import (
 	"net/mail"
 
 	"github.com/dxe/service/config"
+	"github.com/dxe/service/data"
 	"github.com/dxe/service/model"
 )
 
-type CreateMessageInput struct {
+type CreateMessageReq struct {
 	Name      string `json:"name"`
 	Email     string `json:"email"`
 	Phone     string `json:"phone,omitempty"`
@@ -23,8 +24,8 @@ type CreateMessageInput struct {
 	Campaign  string `json:"campaign,omitempty"`
 }
 
-func createMessageHandler(w http.ResponseWriter, r *http.Request) {
-	var body CreateMessageInput
+func (s *server) createMessageHandler(w http.ResponseWriter, r *http.Request) {
+	var body CreateMessageReq
 
 	err := json.NewDecoder(r.Body).Decode(&body)
 	if err != nil {
@@ -85,7 +86,7 @@ func createMessageHandler(w http.ResponseWriter, r *http.Request) {
 		},
 	}
 
-	err = model.InsertMessage(db, message)
+	err = model.InsertMessage(s.db, message)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("error saving message: %v", err), http.StatusInternalServerError)
 		return
@@ -98,7 +99,7 @@ type GetTallyResp struct {
 	Total int `json:"total"`
 }
 
-func getTallyHandler(w http.ResponseWriter, r *http.Request) {
+func (s *server) getTallyHandler(w http.ResponseWriter, r *http.Request) {
 	queryParams := r.URL.Query()
 	campaign := queryParams.Get("campaign")
 	if campaign == "" {
@@ -106,7 +107,7 @@ func getTallyHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tally, err := model.GetTally(db, campaign)
+	tally, err := model.GetTally(s.db, campaign)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("error getting tally: %v", err), http.StatusInternalServerError)
 		return
@@ -114,6 +115,45 @@ func getTallyHandler(w http.ResponseWriter, r *http.Request) {
 
 	resp := GetTallyResp{
 		Total: tally,
+	}
+	json, err := json.Marshal(resp)
+	if err != nil {
+		http.Error(w, "failed to marshal json", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(json)
+}
+
+type GetAssemblyMembersReq struct {
+	City string `json:"city"`
+	Zip  string `json:"zip"`
+}
+
+type GetAssemblyMembersResp struct {
+	Members []data.AssemblyMember `json:"members"`
+}
+
+func (s *server) getAssemblyMembersHandler(w http.ResponseWriter, r *http.Request) {
+	queryParams := r.URL.Query()
+	city := queryParams.Get("city")
+	zipcode := queryParams.Get("zip")
+
+	if city == "" || zipcode == "" {
+		http.Error(w, "city and zipcode parameters are required", http.StatusBadRequest)
+		return
+	}
+
+	membersMap := config.GetAssemblyMembers(data.Municipality(city), data.Zip(zipcode))
+	members := make([]data.AssemblyMember, 0, len(membersMap))
+	for _, member := range membersMap {
+		members = append(members, member)
+	}
+
+	resp := GetAssemblyMembersResp{
+		Members: members,
 	}
 	json, err := json.Marshal(resp)
 	if err != nil {
