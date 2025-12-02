@@ -25,8 +25,8 @@ export function PressHits() {
               style={{ paddingBottom: "59.375%", paddingTop: "120px" }}
             >
               <a
-                href="https://www.berkeleyside.org/2025/09/18/berkeley-animal-activist-faces-prison-in-sonoma-county-chicken-theft-case"
-                data-iframely-url="//iframely.net/pVR6OyP5?theme=dark"
+                href="https://www.theguardian.com/us-news/2025/oct/24/chicken-rescue-factory-farm"
+                data-iframely-url="//iframely.net/9KbWKeY9?theme=dark"
               ></a>
             </div>
           </div>
