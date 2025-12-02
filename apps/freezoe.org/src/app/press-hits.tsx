@@ -53,8 +53,8 @@ export function PressHits() {
               style={{ paddingBottom: "59.375%", paddingTop: "120px" }}
             >
               <a
-                href="https://www.mercurynews.com/2025/10/20/zoe-rosenberg-testifies-she-rescued-chickens-not-committed-crimes-in-petaluma-poultry-case/"
-                data-iframely-url="//iframely.net/LYAZKSo9?theme=dark "
+                href="https://www.kron4.com/news/bay-area/joaquin-phoenix-leaps-to-defense-of-student-convicted-in-chicken-rescue-case/"
+                data-iframely-url="//iframely.net/b5sHtxhu?theme=dark "
               ></a>
             </div>
           </div>
