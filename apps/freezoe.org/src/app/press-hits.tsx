@@ -39,8 +39,8 @@ export function PressHits() {
               style={{ paddingBottom: "59.375%", paddingTop: "120px" }}
             >
               <a
-                href="https://www.nytimes.com/2025/09/02/us/california-farmers-animal-activists-bay-area-sonoma.html"
-                data-iframely-url="//iframely.net/iYn4Mo0n?media=0&theme=dark"
+                href="https://www.nytimes.com/2025/10/29/us/animal-rights-activist-convicted-sonoma-chickens.html"
+                data-iframely-url="//iframely.net/lb0hCtNx?media=0&theme=dark"
               ></a>
             </div>
           </div>
