@@ -222,7 +222,7 @@ function ZoesHealthSection() {
             diabetic ketoacidosis which is life-threatening and requires
             immediate hospitalization.{" "}
             <b>
-              Despite this, the Sonoma County jail threatened to take away Zoe's insulin pump when she was initially arrested in this case.
+              Despite this, the Sonoma County jail threatened to take away Zoe&apos;s insulin pump when she was initially arrested in this case.
             </b>
           </p>
           <p>
