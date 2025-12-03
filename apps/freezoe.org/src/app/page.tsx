@@ -119,11 +119,11 @@ function MoreBackgroundSection() {
       <div className="flex flex-col lg:flex-row items-center justify-evenly gap-12">
         <div className="w-full lg:w-1/2 text-left space-y-8 order-2 lg:order-1">
           <p>
-            Zoe is incarcerated in Sonoma County, CA for the &quot;crime&quot;
-            of rescuing animals from abuse at a Perdue-owned slaughterhouse.{" "}
-            <b>All along, this was a political prosecution</b>; instead of
-            prosecuting Perdue for documented animal cruelty, the District
-            Attorney punished Zoe for exposing it.
+            Zoe will soon be incarcerated in Sonoma County, CA for the
+            &quot;crime&quot; of rescuing animals from abuse at a Perdue-owned
+            slaughterhouse. <b>All along, this was a political prosecution</b>;
+            instead of prosecuting Perdue for documented animal cruelty, the
+            District Attorney punished Zoe for exposing it.
           </p>
           <p>
             The District Attorney charged Zoe with a ramped-up felony conspiracy
@@ -137,7 +137,8 @@ function MoreBackgroundSection() {
           </p>
           <p>
             <b>
-              Her incarceration isn&apos;t just unjust; it is life-threatening.
+              Her imminent incarceration isn&apos;t just unjust; it is
+              life-threatening.
             </b>{" "}
             Zoe has a serious chronic illness that requires constant medical
             attention.{" "}
