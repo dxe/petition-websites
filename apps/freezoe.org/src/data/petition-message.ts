@@ -14,7 +14,7 @@ Governor Newsom, you have the power to intervene. We call on you to pardon Zoe R
 
 Sincerely,
 
-[Name]
+[Your name]
 
-[City]
+[Your city]
 `;
