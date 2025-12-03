@@ -2,7 +2,7 @@
 
 export const DEFAULT_MESSAGE = `Dear Governor Newsom,
 
-I am writing to urge you to immediately pardon and release Zoe Rosenberg, a 23-year-old UC Berkeley student and lifelong animal advocate, who will shortly be incarcerated in Sonoma County's Main Adult Detention Facility for an act of compassion. 
+I am writing to urge you to immediately pardon and release Zoe Rosenberg, a 23-year-old UC Berkeley student and lifelong animal advocate, who will soon be incarcerated in Sonoma County's Main Adult Detention Facility for an act of compassion. 
 
 Zoe rescued four sick and suffering chickens, who she named Poppy, Aster, Ivy, and Azalea, from Petaluma Poultry, a Perdue-owned slaughterhouse in Petaluma, California. The hens were provided with urgent veterinary care and are now living safe and happy at an animal sanctuary. Instead of addressing the well-documented animal cruelty at Petaluma Poultry, authorities have chosen to punish Zoe for exposing the truth.
 
