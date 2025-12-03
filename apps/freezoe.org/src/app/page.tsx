@@ -132,8 +132,7 @@ function MoreBackgroundSection() {
             finally arrived, the court severely restricted Zoe&apos;s ability to
             present evidence of the animal cruelty she had documented at Perdue
             and reported to authorities before the rescue. The jury only heard a
-            small sliver of the story and Zoe was ultimately convicted and taken
-            immediately into custody.
+            small sliver of the story and Zoe was ultimately convicted and sentenced to jail.
           </p>
           <p>
             <b>
@@ -218,13 +217,12 @@ function ZoesHealthSection() {
       <div className="flex flex-col lg:flex-row items-center justify-evenly gap-12">
         <div className="w-full lg:w-1/2 text-left space-y-8 order-2 lg:order-1">
           <p>
-            Zoe lives with Type 1 Diabetes, meaning she is insulin dependent. If
+            Zoe lives with Type 1 Diabetes, meaning she is insulin-dependent. If
             she goes off insulin for even just several hours, she could go into
             diabetic ketoacidosis which is life-threatening and requires
             immediate hospitalization.{" "}
             <b>
-              Despite this, the Sonoma County jail will not allow Zoe to keep
-              her insulin pump.
+              Despite this, the Sonoma County jail threatened to take away Zoe's insulin pump when she was initially arrested in this case.
             </b>
           </p>
           <p>
@@ -354,15 +352,14 @@ function TakeActionSection() {
             <span className="font-semibold">#RightToRescue</span>
           </li>
           <li>
+            Join a Free Zoe march or rally near you, or organize your own. Free Zoe marches are planned for this Saturday, December 6th in San Francisco and Los Angeles. You can organize your own Free Zoe protest or outreach event with this simple campaign guide: dxe.io/guide.
+          </li>
+          <li>
             Join the animal rights movement. By locking Zoe up, prosecutors and
             industry are hoping to scare us into silence. Don&apos;t let them.
             Let&apos;s speak out louder than ever before.
           </li>
         </ul>
-        <p className="text-center text-xl font-bold pt-4 pb-0">
-          Every day Zoe spends behind bars is another day that her life is in
-          jeopardy.
-        </p>
       </div>
     </Section>
   );
