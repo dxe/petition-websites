@@ -8,7 +8,7 @@ import hero from "./img/zoe-hero-2.jpg";
 import zoeArrested from "./img/zoe-arrested-nov-30-2023.jpeg";
 import zoeWithAnimal from "./img/zoe-with-two-rescued-hens.jpg";
 import zoeHealthRisk from "./img/zoe-health-risk.jpg";
-import zoeRescuedChicken from "./img/zoe-rescued-chicken-hi-res.jpg";
+import zoeRescuedChicken from "./img/zoe-rescued-chicken.jpg";
 import { PetitionWithSuspense } from "./petition";
 import { PressHits } from "./press-hits";
 import { useSearchParams } from "next/navigation";
