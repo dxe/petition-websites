@@ -132,7 +132,8 @@ function MoreBackgroundSection() {
             finally arrived, the court severely restricted Zoe&apos;s ability to
             present evidence of the animal cruelty she had documented at Perdue
             and reported to authorities before the rescue. The jury only heard a
-            small sliver of the story and Zoe was ultimately convicted and sentenced to jail.
+            small sliver of the story and Zoe was ultimately convicted and
+            sentenced to jail.
           </p>
           <p>
             <b>
@@ -222,7 +223,9 @@ function ZoesHealthSection() {
             diabetic ketoacidosis which is life-threatening and requires
             immediate hospitalization.{" "}
             <b>
-              Despite this, the Sonoma County jail threatened to take away Zoe&apos;s insulin pump when she was initially arrested in this case.
+              Despite this, the Sonoma County jail threatened to take away
+              Zoe&apos;s insulin pump when she was initially arrested in this
+              case.
             </b>
           </p>
           <p>
@@ -352,7 +355,11 @@ function TakeActionSection() {
             <span className="font-semibold">#RightToRescue</span>
           </li>
           <li>
-            Join a Free Zoe march or rally near you, or organize your own. Free Zoe marches are planned for this Saturday, December 6th in San Francisco and Los Angeles. You can organize your own Free Zoe protest or outreach event with this simple campaign guide: dxe.io/guide.
+            Join a Free Zoe march or rally near you, or organize your own. Free
+            Zoe marches are planned for this Saturday, December 6th in San
+            Francisco and Los Angeles. You can organize your own Free Zoe
+            protest or outreach event with this simple campaign guide:
+            dxe.io/guide.
           </li>
           <li>
             Join the animal rights movement. By locking Zoe up, prosecutors and
