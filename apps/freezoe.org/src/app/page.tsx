@@ -357,10 +357,11 @@ function TakeActionSection() {
           </li>
           <li>
             Join a Free Zoe march or rally near you, or organize your own. Free
-            Zoe marches are planned for this Saturday, December 6th in San
-            Francisco and Los Angeles. You can organize your own Free Zoe
-            protest or outreach event with this simple campaign guide:
-            dxe.io/guide.
+            Zoe marches are planned for Saturday, December 13th in San Francisco
+            and New York City, and Sunday, December 14th in Los Angeles. You can
+            organize your own Free Zoe protest or outreach event with this
+            simple campaign guide:{" "}
+            <a href="https://dxe.io/guide">dxe.io/guide</a>.
           </li>
           <li>
             Join the animal rights movement. By locking Zoe up, prosecutors and
