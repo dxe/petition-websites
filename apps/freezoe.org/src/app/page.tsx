@@ -358,10 +358,18 @@ function TakeActionSection() {
           <li>
             Join a Free Zoe march or rally near you, or organize your own. Free
             Zoe marches are planned for Saturday, December 13th in{" "}
-            <a href="https://dxe.io/marchsf">San Francisco</a>
-            and <a href="https://dxe.io/marchnyc">New York City</a>, and Sunday,
-            December 14th in <a href="https://dxe.io/marchla">Los Angeles</a>.
-            You can organize your own Free Zoe protest or outreach event with
+            <a href="https://dxe.io/marchsf" className="underline">
+              San Francisco
+            </a>{" "}
+            and{" "}
+            <a href="https://dxe.io/marchnyc" className="underline">
+              New York City
+            </a>
+            , and Sunday, December 14th in{" "}
+            <a href="https://dxe.io/marchla" className="underline">
+              Los Angeles
+            </a>
+            . You can organize your own Free Zoe protest or outreach event with
             this simple campaign guide:{" "}
             <a href="https://dxe.io/guide">dxe.io/guide</a>.
           </li>
