@@ -357,21 +357,41 @@ function TakeActionSection() {
           </li>
           <li>
             Join a Free Zoe march or rally near you, or organize your own. Free
-            Zoe marches are planned for Saturday, December 13th in{" "}
-            <a href="https://dxe.io/marchsf" className="underline">
-              San Francisco
-            </a>{" "}
-            and{" "}
-            <a href="https://dxe.io/marchnyc" className="underline">
-              New York City
-            </a>
-            , and Sunday, December 14th in{" "}
-            <a href="https://dxe.io/marchla" className="underline">
-              Los Angeles
-            </a>
-            . The SF march is Saturday, Dec. 13th at 12 PM PT meeting at Dolores Park at the intersection of Dolores Street and 19th Street in SF. The NYC march is Saturday, Dec. 13th at 1 PM ET meeting at Union Square Station. The LA march is Sunday, Dec. 14th at 12 PM PT meeting at Media Park, 9091 Culver Blvd, Culver City, CA 90232. You can organize your own Free Zoe protest or outreach event with
+            Zoe marches are planned in the following cities:
+            <ul className="list-disc pl-6 mt-3 space-y-2 text-base">
+              <li>
+                <span className="font-semibold">San Francisco</span> — Saturday,
+                Dec. 13 at 12 PM PT. Meet at Dolores Park (Dolores St &amp; 19th
+                St).{" "}
+                <a href="https://dxe.io/marchsf" className="underline">
+                  RSVP here
+                </a>
+                .
+              </li>
+              <li>
+                <span className="font-semibold">New York City</span> — Saturday,
+                Dec. 13 at 1 PM ET. Meet at Union Square Station.{" "}
+                <a href="https://dxe.io/marchnyc" className="underline">
+                  RSVP here
+                </a>
+                .
+              </li>
+              <li>
+                <span className="font-semibold">Los Angeles</span> — Sunday,
+                Dec. 14 at 12 PM PT. Meet at Media Park, 9091 Culver Blvd,
+                Culver City, CA 90232.{" "}
+                <a href="https://dxe.io/marchla" className="underline">
+                  RSVP here
+                </a>
+                .
+              </li>
+            </ul>
+            You can organize your own Free Zoe protest or outreach event with
             this simple campaign guide:{" "}
-            <a href="https://dxe.io/guide">dxe.io/guide</a>.
+            <a href="https://dxe.io/guide" className="underline">
+              dxe.io/guide
+            </a>
+            .
           </li>
           <li>
             Join the animal rights movement. By locking Zoe up, prosecutors and
