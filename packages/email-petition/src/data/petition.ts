@@ -23,7 +23,10 @@ export const PetitionFormSchema = z
     zip: z
       .string()
       .regex(/^[0-9]*$/, { message: "Zip code may only contain numbers" })
-      .length(5, { message: "Zip code must be 5 digits or empty" })
+      .length(5, {
+        message:
+          "Zip code must be 5 digits, or empty if 'Outside the United States' is checked.",
+      })
       .or(EmptyStringToUndefined)
       .optional(),
     city: z
@@ -45,7 +48,7 @@ export const PetitionFormSchema = z
       if (!data.zip) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "Zip code is required",
+          message: "Zip code is required if in the United States",
           path: ["zip"],
         });
       }

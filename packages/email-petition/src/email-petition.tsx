@@ -192,6 +192,13 @@ export function EmailPetition(props: {
     return SonomaCities[zip as keyof typeof SonomaCities];
   }, [isInSonomaCounty, zip]);
 
+  // Clear zip code if not in US to avoid validation errors when this field must be blank anyway.
+  useEffect(() => {
+    if (outsideUS) {
+      setValue("zip", "");
+    }
+  }, [outsideUS, setValue]);
+
   // When cities change, just select it if there's only one. Else, reset the city.
   useEffect(() => {
     if (cities.length === 1) {
@@ -315,11 +322,15 @@ export function EmailPetition(props: {
             disabled={outsideUS || isSubmitting}
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Zip Code</FormLabel>
+                <FormLabel>
+                  Zip Code <span className="font-normal">(US only)</span>
+                </FormLabel>
                 <FormControl>
                   <Input
                     type="text"
-                    placeholder="95401"
+                    placeholder={
+                      outsideUS ? "United States zip codes only" : "95401"
+                    }
                     {...field}
                     onBlur={() => {
                       field.onBlur();
