@@ -395,9 +395,14 @@ function TakeActionSection() {
           </li>
           <li>
             {" "}
-            <a href="https://drive.google.com/file/d/1W1VbO-mV5eDQkDxA6_iCsbUZI_2ccKGY/view" className="underline">
-              Download our "I stand with Zoe" social media graphic
-            </a>and post it on your social media accounts to show you stand with Zoe and the right to rescue animals from abuse.
+            <a
+              href="https://drive.google.com/file/d/1W1VbO-mV5eDQkDxA6_iCsbUZI_2ccKGY/view"
+              className="underline"
+            >
+              Download our &quot;I stand with Zoe&quot; social media graphic
+            </a>
+            and post it on your social media accounts to show you stand with Zoe
+            and the right to rescue animals from abuse.
           </li>
           <li>
             Join the animal rights movement. By locking Zoe up, prosecutors and
