@@ -369,7 +369,7 @@ function TakeActionSection() {
             <a href="https://dxe.io/marchla" className="underline">
               Los Angeles
             </a>
-            . You can organize your own Free Zoe protest or outreach event with
+            . The SF march is Saturday, Dec. 13th at 12 PM PT meeting at Dolores Park at the intersection of Dolores Street and 19th Street in SF. The NYC march is Saturday, Dec. 13th at 1 PM ET meeting at Union Square Station. The LA march is Sunday, Dec. 14th at 12 PM PT meeting at Media Park, 9091 Culver Blvd, Culver City, CA 90232. You can organize your own Free Zoe protest or outreach event with
             this simple campaign guide:{" "}
             <a href="https://dxe.io/guide">dxe.io/guide</a>.
           </li>
