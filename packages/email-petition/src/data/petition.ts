@@ -22,7 +22,10 @@ export const PetitionFormSchema = z
     outsideUS: z.boolean(),
     zip: z
       .string()
-      .regex(/^[0-9]*$/, { message: "Zip code may only contain numbers" })
+      .regex(/^[0-9]*$/, {
+        message:
+          "Zip code must only contain numbers, or be empty if 'Outside the United States' is checked.",
+      })
       .length(5, {
         message:
           "Zip code must be 5 digits, or empty if 'Outside the United States' is checked.",
