@@ -400,8 +400,8 @@ function TakeActionSection() {
               className="underline"
             >
               Download our &quot;I stand with Zoe&quot; social media graphic
-            </a>
-             and post it on your social media accounts to show you stand with Zoe
+            </a>{" "}
+            and post it on your social media accounts to show you stand with Zoe
             and the right to rescue animals from abuse.
           </li>
           <li>
