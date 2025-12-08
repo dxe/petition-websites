@@ -91,6 +91,7 @@ export function EmailPetition(props: {
     handleSubmit,
     control,
     resetField,
+    clearErrors,
   } = form;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -196,8 +197,9 @@ export function EmailPetition(props: {
   useEffect(() => {
     if (outsideUS) {
       setValue("zip", "");
+      clearErrors(["zip", "city"]);
     }
-  }, [outsideUS, setValue]);
+  }, [outsideUS, setValue, clearErrors]);
 
   // When cities change, just select it if there's only one. Else, reset the city.
   useEffect(() => {
