@@ -48,7 +48,7 @@ var CampaignEmailSettings = map[string]EmailSettings{
 	"chicken": {FromDomain: "helpthechickens.com", Subject: "Shut Down Perdue's Petaluma Poultry Slaughterhouse to End Animal Abuse and Protect Public Health", To: StaticRecipientList(helpTheChickensRecipients...)},
 	"sonoma":  {FromDomain: "righttorescue.com", Subject: "Prosecute animal cruelty, not animal rescuers", To: StaticRecipientList("carla.rodriguez@sonoma-county.org")},
 	"ridglan": {FromDomain: "righttorescue.com", Subject: "Prosecute animal abuse at Ridglan Farms", To: StaticRecipientList("ismael.ozanne@da.wi.gov")},
-	"freezoe": {FromDomain: "freezoe.org", Subject: "Pardon Zoe Rosenberg", To: StaticRecipientList("gavin.newsom@gov.ca.gov")},
+	"freezoe": {FromDomain: "freezoe.org", Subject: "Pardon Zoe Rosenberg", To: StaticRecipientList("gavin.newsom@gov.ca.gov", "pardons@gov.ca.gov")},
 	"factoryfarmwatch": {FromDomain: "petition.factoryfarmwatch.org", Subject: "Regulate Factory Farms", To: func(city data.Municipality, zip data.Zip) []string {
 		return mergeSliceWtihDeduplication(factoryFarmWatchRecipients, getEmailsForAssemblyMembers(GetAssemblyMembers(city, zip)))
 	}},
