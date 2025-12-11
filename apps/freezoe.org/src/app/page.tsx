@@ -377,6 +377,14 @@ function TakeActionSection() {
                 .
               </li>
               <li>
+                <span className="font-semibold">Boston</span> — Saturday,
+                Dec. 13 at 1:30 PM ET. Meet at Brewer Fountain, Boston Common, Boston, MA.{" "}
+                <a href="https://www.mobilize.us/newenglandanimalactivism/event/876408/" className="underline">
+                  RSVP here
+                </a>
+                .
+              </li>
+              <li>
                 <span className="font-semibold">Los Angeles</span> — Sunday,
                 Dec. 14 at 12 PM PT. Meet at Media Park, 9091 Culver Blvd,
                 Culver City, CA 90232.{" "}
