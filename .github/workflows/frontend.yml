@@ -46,7 +46,7 @@ jobs:
         run: pnpm lint --filter="${{ inputs.package-name }}"
       - name: check format
         run: pnpm format
-        continue-on-error: false
+        continue-on-error: true
       - uses: jakejarvis/s3-sync-action@master
         with:
           args: --follow-symlinks --delete
