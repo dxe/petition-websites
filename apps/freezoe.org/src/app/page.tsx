@@ -119,7 +119,7 @@ function MoreBackgroundSection() {
       <div className="flex flex-col lg:flex-row items-center justify-evenly gap-12">
         <div className="w-full lg:w-1/2 text-left space-y-8 order-2 lg:order-1">
           <p>
-            Zoe will soon be incarcerated in Sonoma County, CA for the
+            Zoe is incarcerated in Sonoma County, CA for the
             &quot;crime&quot; of rescuing animals from abuse at a Perdue-owned
             slaughterhouse. <b>All along, this was a political prosecution</b>;
             instead of prosecuting Perdue for documented animal cruelty, the
@@ -137,7 +137,7 @@ function MoreBackgroundSection() {
           </p>
           <p>
             <b>
-              Her imminent incarceration isn&apos;t just unjust; it is
+              Her incarceration isn&apos;t just unjust; it is
               life-threatening.
             </b>{" "}
             Zoe has a serious chronic illness that requires constant medical
