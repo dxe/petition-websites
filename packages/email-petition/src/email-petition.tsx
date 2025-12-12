@@ -1,6 +1,6 @@
 "use client";
 
-import { PetitionForm, PetitionFormSchema } from "./data/petition";
+import { makePetitionFormSchema, PetitionForm } from "./data/petition";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -17,7 +17,6 @@ import { Input } from "@dxe/petitions-components/input";
 import { Button } from "@dxe/petitions-components/button";
 import { Textarea } from "@dxe/petitions-components/textarea";
 import { Checkbox } from "@dxe/petitions-components/checkbox";
-import { SonomaCities } from "./data/zipcodes";
 import { cn } from "@dxe/petitions-components/utils";
 import {
   Select,
@@ -45,6 +44,11 @@ export function EmailPetition(props: {
   petitionId: string;
   campaignName: string;
   defaultMessage: string;
+  areaScope: {
+    name: string;
+    subdivision: "city" | "county" | "state" | "country";
+    googleGeocodingApiKey: string;
+  };
   onSubmit?: () => void;
   debug: boolean;
   test: boolean;
@@ -71,8 +75,19 @@ export function EmailPetition(props: {
     }
   });
 
+  // Google Geocoding cache for postcode_localities
+  const [geocodingCache, setGeocodingCache] = useState<
+    Record<string, string[]>
+  >({});
+
+  const petitionFormSchema = useMemo(() => {
+    return makePetitionFormSchema({
+      citiesByZip: geocodingCache,
+    });
+  }, [geocodingCache]);
+
   const form = useForm<PetitionForm>({
-    resolver: zodResolver(PetitionFormSchema),
+    resolver: zodResolver(petitionFormSchema),
     defaultValues: {
       name: "",
       email: "",
@@ -183,16 +198,99 @@ export function EmailPetition(props: {
 
   const outsideUS = watch("outsideUS");
   const zip = watch("zip");
-  const isInSonomaCounty = useMemo(() => {
-    return zip && zip in SonomaCities;
-  }, [zip]);
-  const cities = useMemo(() => {
-    if (!isInSonomaCounty) {
-      return [];
-    }
-    return SonomaCities[zip as keyof typeof SonomaCities];
-  }, [isInSonomaCounty, zip]);
 
+  // Fetch postcode_localities from Google Geocoding API
+  async function fetchPostcodeLocalities(zipcode: string) {
+    try {
+      const response = await ky
+        .get(
+          `https://maps.googleapis.com/maps/api/geocode/json?address=${zipcode}&key=${props.areaScope.googleGeocodingApiKey}`,
+        )
+        .json<{ results: any[] }>();
+
+      const scopeComponentType = (() => {
+        switch (props.areaScope.subdivision) {
+          case "city":
+            return "locality";
+          case "county":
+            return "administrative_area_level_2";
+          case "state":
+            return "administrative_area_level_1";
+          case "country":
+            return "country";
+        }
+      })();
+
+      const scopeName = props.areaScope.name;
+      const scopeNameLower = scopeName.toLowerCase();
+
+      const scopedResults = (response.results || []).filter((result) =>
+        (result.address_components || []).some((component: any) => {
+          if (!component?.types?.includes(scopeComponentType)) {
+            return false;
+          }
+          return (
+            String(component.long_name).toLowerCase() === scopeNameLower ||
+            String(component.short_name).toLowerCase() === scopeNameLower
+          );
+        }),
+      );
+
+      const resultsToUse = scopedResults.length ? scopedResults : [];
+
+      //if there are multiple cities/localities per zipcode
+      const postcodeLocalities = resultsToUse
+        .filter((result) => result.types?.includes("postal_code"))
+        .flatMap((result) => result.postcode_localities || []);
+
+      //if there is just one city/locality per zipcode
+      const fallbackLocalities = resultsToUse
+        .flatMap((result) => result.address_components || [])
+        .filter((component) => component.types?.includes("locality"))
+        .map((component) => component.long_name)
+        .filter(Boolean);
+
+      //casting to set and back to array to remove duplicates.
+      const localities = [
+        ...new Set(
+          (postcodeLocalities.length
+            ? postcodeLocalities
+            : fallbackLocalities
+          ).filter((val) => typeof val === "string" && val.length > 0),
+        ),
+      ];
+
+      //check if localities are in the area scope and filter accordingly
+      //create another cache called isInAreaScopeCache that queries geocoding api for each locality and checks if it is in the area scope
+      //put those filtered localities in the geocodingCache
+      setGeocodingCache((prev) => ({
+        ...prev,
+        [zipcode]: localities,
+      }));
+    } catch (error) {
+      console.error("Error fetching geocoding data:", error);
+      setGeocodingCache((prev) => ({
+        ...prev,
+        [zipcode]: [],
+      }));
+    }
+  }
+
+  // Fetch geocoding data when zip changes
+  useEffect(() => {
+    if (!zip || zip.length !== 5) {
+      return;
+    }
+    if (zip in geocodingCache) {
+      return;
+    }
+
+    fetchPostcodeLocalities(zip);
+  }, [zip, geocodingCache]);
+
+  const cities = useMemo(() => {
+    return geocodingCache[zip] || [];
+  }, [zip, geocodingCache]);
   // Clear zip code if not in US to avoid validation errors when this field must be blank anyway.
   useEffect(() => {
     if (outsideUS) {
