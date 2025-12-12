@@ -60,7 +60,11 @@
   "compounds": [
     {
       "name": "Dev ALL websites",
-      "configurations": ["Dev helpthechickens.com", "Dev helptheducks.com"]
+      "configurations": [
+        "Dev helpthechickens.com",
+        "Dev helptheducks.com",
+        "Dev freezoe.org"
+      ]
     },
     {
       "name": "Dev ALL shared components",
