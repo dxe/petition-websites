@@ -20,25 +20,25 @@ export const Thermometer = ({
   offset: number;
   campaignName: string;
 }) => {
-  const { data, isLoading, isError } = useQuery<{ amt: number; count: number }>(
-    {
-      queryKey: ["thermometer", campaignName, startDate],
-      queryFn: () => fetchDonationData({ startDate, campaignName }),
-      ...queryOptions,
-    },
-  );
+  const { data, isLoading, isError } = useQuery<{ total: number }>({
+    queryKey: ["thermometer", campaignName, startDate],
+    queryFn: () => fetchDonationData({ startDate, campaignName }),
+    ...queryOptions,
+  });
   const calculatedAmt = useMemo(
-    () => (!data?.amt ? 0 : data?.amt - offset),
-    [data?.amt, offset],
+    () => (!data?.total ? 0 : data?.total - offset),
+    [data?.total, offset],
   );
   const calculatedGoal = useMemo(
     () => (goal !== 0 ? goal : !calculatedAmt ? 0 : getNextGoal(calculatedAmt)),
     [calculatedAmt, goal],
   );
-  const progress = useMemo(
-    () => (!calculatedAmt ? 0 : (calculatedAmt / calculatedGoal) * 100),
-    [calculatedAmt, calculatedGoal],
-  );
+  const progress = useMemo(() => {
+    const raw = !calculatedAmt ? 0 : (calculatedAmt / calculatedGoal) * 100;
+    return Number.isFinite(raw) ? Math.min(Math.max(raw, 0), 100) : 0;
+  }, [calculatedAmt, calculatedGoal]);
+
+  console.log("PROGRESS : ", progress);
 
   return isError ? null : (
     <div
@@ -55,10 +55,10 @@ export const Thermometer = ({
           )}
         >
           <span className="text-2xl font-medium">
-            {data ? calculatedAmt : "🐔"}
+            {data ? calculatedAmt : "✍️"}
           </span>
           <span className="text-sm whitespace-nowrap">
-            {data?.count.toLocaleString() ?? "Loading"} petitions signed
+            {data?.total.toLocaleString() ?? "Loading"} petitions signed
           </span>
         </div>
         <div className="self-end text-right">
@@ -68,7 +68,7 @@ export const Thermometer = ({
       </div>
       <div className="w-full bg-gray-200 rounded-full h-5 overflow-hidden">
         <div
-          className="bg-primary h-5 transition-all"
+          className="bg-blue-500 h-5 transition-all"
           style={{ width: `${progress}%` }}
         ></div>
       </div>

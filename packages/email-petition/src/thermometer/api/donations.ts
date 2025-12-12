@@ -10,9 +10,8 @@ export const fetchDonationData = async ({
   campaignName: string;
 }) => {
   const resp = await fetch(`${API_URL}`); //await fetch(`${API_URL}${campaignName}?start_date=${startDate}`);
-  const json = (await resp.json()) as { amt: string; count: string };
+  const json = (await resp.json()) as { total?: number | null };
   return {
-    amt: parseFloat(json.amt === "None" ? "0" : json.amt),
-    count: parseFloat(json.count),
+    total: json.total ?? 0,
   };
 };
