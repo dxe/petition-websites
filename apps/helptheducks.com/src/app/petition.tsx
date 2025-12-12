@@ -16,6 +16,23 @@ export function PetitionWithSuspense() {
 
 export function Petition() {
   const searchParams = useSearchParams();
+
+  const thermometerStartDate = process.env.NEXT_PUBLIC_THERMOMETER_START_DATE;
+  const thermometerGoalEnv = process.env.NEXT_PUBLIC_THERMOMETER_GOAL;
+  const thermometerOffsetEnv = process.env.NEXT_PUBLIC_THERMOMETER_OFFSET;
+
+  const thermometerProps = thermometerStartDate
+    ? {
+        thermometerStartDate,
+        thermometerGoal: thermometerGoalEnv
+          ? parseInt(thermometerGoalEnv, 10)
+          : undefined,
+        thermometerOffset: thermometerOffsetEnv
+          ? parseInt(thermometerOffsetEnv, 10)
+          : undefined,
+      }
+    : {};
+
   return (
     <EmailPetition
       petitionId={process.env.NEXT_PUBLIC_PETITION_ID!}
@@ -24,6 +41,7 @@ export function Petition() {
       onSubmit={onSubmit}
       debug={searchParams.get("debug") === "true"}
       test={searchParams.get("test") === "true"}
+      {...thermometerProps}
     />
   );
 }
