@@ -1,15 +1,15 @@
 //add petition thermometer implementation here here
 
-const API_URL = "https://helptheducks.dxe.io/tally?campaign=freezoe";
+const API_URL = "https://helptheducks.dxe.io/tally?campaign=";
 
-export const fetchDonationData = async ({
+export const fetchPetitionSignatureCountData = async ({
   startDate,
   campaignName,
 }: {
   startDate: string;
   campaignName: string;
 }) => {
-  const resp = await fetch(`${API_URL}`); //await fetch(`${API_URL}${campaignName}?start_date=${startDate}`);
+  const resp = await fetch(`${API_URL}${campaignName}?start_date=${startDate}`);
   const json = (await resp.json()) as { total?: number | null };
   return {
     total: json.total ?? 0,

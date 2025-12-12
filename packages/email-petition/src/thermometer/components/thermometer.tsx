@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import React, { useMemo } from "react";
 import classNames from "classnames";
-import { fetchDonationData } from "../api/donations";
+import { fetchPetitionSignatureCountData } from "../api/petitionSignatures";
 import { getNextGoal } from "../utils/calculate-goal";
 
 const queryOptions = {
@@ -22,7 +22,7 @@ export const Thermometer = ({
 }) => {
   const { data, isLoading, isError } = useQuery<{ total: number }>({
     queryKey: ["thermometer", campaignName, startDate],
-    queryFn: () => fetchDonationData({ startDate, campaignName }),
+    queryFn: () => fetchPetitionSignatureCountData({ startDate, campaignName }),
     ...queryOptions,
   });
   const calculatedAmt = useMemo(
@@ -33,10 +33,10 @@ export const Thermometer = ({
     () => (goal !== 0 ? goal : !calculatedAmt ? 0 : getNextGoal(calculatedAmt)),
     [calculatedAmt, goal],
   );
-  const progress = useMemo(() => {
-    const raw = !calculatedAmt ? 0 : (calculatedAmt / calculatedGoal) * 100;
-    return Number.isFinite(raw) ? Math.min(Math.max(raw, 0), 100) : 0;
-  }, [calculatedAmt, calculatedGoal]);
+  const progress = useMemo(
+    () => (!calculatedAmt ? 0 : (calculatedAmt / calculatedGoal) * 100),
+    [calculatedAmt, calculatedGoal],
+  );
 
   console.log("PROGRESS : ", progress);
 
