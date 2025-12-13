@@ -421,9 +421,8 @@ function TakeActionSection() {
               href="https://docs.google.com/document/d/13_GfwrsF6ahr7pT0em-epbFLtLqublc6dfjAhyAP_8A/edit?usp=sharing"
               className="underline"
             >
-              Instructions for writing to Zoe are here 
+              Instructions for writing to Zoe are here. 
             </a>{" "}
-            .
           </li>
           <li>
             Join the animal rights movement. By locking Zoe up, prosecutors and
