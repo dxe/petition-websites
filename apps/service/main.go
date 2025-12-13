@@ -64,6 +64,7 @@ func (s *server) runServer() {
 			"https://righttorescue.com",
 			"https://www.freezoe.org",
 			"https://factoryfarmwatch.org",
+			"https://helptheducks.dxe.io",
 		},
 		AllowedMethods:   []string{"GET", "POST", "OPTIONS"},
 		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type"},
