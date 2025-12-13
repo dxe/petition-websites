@@ -46,7 +46,8 @@ jobs:
         run: pnpm lint --filter="${{ inputs.package-name }}"
       - name: check format
         run: pnpm format
-        continue-on-error: false
+        # Allow non-developers to edit the site using GitHub's interface rather than an IDE or command line.
+        continue-on-error: true
       - uses: jakejarvis/s3-sync-action@master
         with:
           args: --follow-symlinks --delete
