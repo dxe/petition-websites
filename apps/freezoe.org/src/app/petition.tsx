@@ -21,6 +21,12 @@ export function Petition() {
       petitionId={process.env.NEXT_PUBLIC_PETITION_ID!}
       campaignName={process.env.NEXT_PUBLIC_CAMPAIGN_NAME!}
       defaultMessage={DEFAULT_MESSAGE}
+      areaScope={{
+        name: "CA",
+        subdivision: "state",
+        googleGeocodingApiKey:
+          process.env.NEXT_PUBLIC_GOOGLE_GEOCODING_API_KEY!,
+      }}
       onSubmit={onSubmit}
       debug={searchParams.get("debug") === "true"}
       test={searchParams.get("test") === "true"}
