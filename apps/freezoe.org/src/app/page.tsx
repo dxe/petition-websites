@@ -416,6 +416,16 @@ function TakeActionSection() {
             and the right to rescue animals from abuse.
           </li>
           <li>
+            Write a letter to Zoe in jail. {" "}
+            <a
+              href="https://docs.google.com/document/d/13_GfwrsF6ahr7pT0em-epbFLtLqublc6dfjAhyAP_8A/edit?usp=sharing"
+              className="underline"
+            >
+              Instructions for writing to Zoe are here 
+            </a>{" "}
+            .
+          </li>
+          <li>
             Join the animal rights movement. By locking Zoe up, prosecutors and
             industry are hoping to scare us into silence. Don&apos;t let them.
             Let&apos;s speak out louder than ever before.
