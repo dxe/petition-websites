@@ -40,6 +40,62 @@ const CAMPAIGN_MAILER_API_URL = `${process.env.NEXT_PUBLIC_CAMPAIGN_MAILER_API_R
 
 const CAPTCHA_SITE_KEY = "6LdiglcpAAAAAM9XE_TNnAiZ22NR9nSRxHMOFn8E";
 
+const SUBDIVISION_COMPONENT_TYPE = {
+  city: "locality",
+  county: "administrative_area_level_2",
+  state: "administrative_area_level_1",
+  country: "country",
+} as const;
+type GeocodeComponent = {
+  long_name?: string;
+  short_name?: string;
+  types?: string[];
+};
+
+type GeocodeResult = {
+  address_components?: GeocodeComponent[];
+  types?: string[];
+  postcode_localities?: string[];
+};
+
+const isNonEmptyString = (value: unknown): value is string =>
+  typeof value === "string" && value.length > 0;
+
+function filterResultsByScope(
+  results: GeocodeResult[],
+  scopeComponentType: string,
+  scopeNameLower: string,
+) {
+  return results.filter((result) =>
+    (result.address_components ?? []).some((component) => {
+      if (!component?.types?.includes(scopeComponentType)) {
+        return false;
+      }
+      const longName = String(component.long_name ?? "").toLowerCase();
+      const shortName = String(component.short_name ?? "").toLowerCase();
+      return longName === scopeNameLower || shortName === scopeNameLower;
+    }),
+  );
+}
+
+function extractPostcodeLocalities(results: GeocodeResult[]) {
+  return results
+    .filter((result) => result.types?.includes("postal_code"))
+    .flatMap((result) => result.postcode_localities ?? []);
+}
+
+function extractFallbackLocalities(results: GeocodeResult[]) {
+  return results
+    .flatMap((result) => result.address_components ?? [])
+    .filter((component) => component.types?.includes("locality"))
+    .map((component) => component.long_name)
+    .filter(isNonEmptyString);
+}
+
+function dedupeStrings(values: string[]) {
+  return [...new Set(values)];
+}
+
 export function EmailPetition(props: {
   petitionId: string;
   campaignName: string;
@@ -196,69 +252,37 @@ export function EmailPetition(props: {
     [handleSubmit],
   );
 
+  const areaScope = props.areaScope;
   const outsideUS = watch("outsideUS");
   const zip = watch("zip");
 
   // Fetch postcode_localities from Google Geocoding API
   async function fetchPostcodeLocalities(zipcode: string) {
     try {
-      const response = await ky
+      const { results = [] } = await ky
         .get(
-          `https://maps.googleapis.com/maps/api/geocode/json?address=${zipcode}&key=${props.areaScope.googleGeocodingApiKey}`,
+          `https://maps.googleapis.com/maps/api/geocode/json?address=${zipcode}&key=${areaScope.googleGeocodingApiKey}`,
         )
-        .json<{ results: any[] }>();
+        .json<{ results: GeocodeResult[] }>();
 
-      const scopeComponentType = (() => {
-        switch (props.areaScope.subdivision) {
-          case "city":
-            return "locality";
-          case "county":
-            return "administrative_area_level_2";
-          case "state":
-            return "administrative_area_level_1";
-          case "country":
-            return "country";
-        }
-      })();
+      const scopeComponentType =
+        SUBDIVISION_COMPONENT_TYPE[areaScope.subdivision];
+      const scopeNameLower = areaScope.name.toLowerCase();
 
-      const scopeName = props.areaScope.name;
-      const scopeNameLower = scopeName.toLowerCase();
-
-      const scopedResults = (response.results || []).filter((result) =>
-        (result.address_components || []).some((component: any) => {
-          if (!component?.types?.includes(scopeComponentType)) {
-            return false;
-          }
-          return (
-            String(component.long_name).toLowerCase() === scopeNameLower ||
-            String(component.short_name).toLowerCase() === scopeNameLower
-          );
-        }),
+      const scopedResults = filterResultsByScope(
+        results,
+        scopeComponentType,
+        scopeNameLower,
       );
 
-      const resultsToUse = scopedResults.length ? scopedResults : [];
+      const postcodeLocalities = extractPostcodeLocalities(scopedResults);
+      const fallbackLocalities = extractFallbackLocalities(scopedResults);
 
-      //if there are multiple cities/localities per zipcode
-      const postcodeLocalities = resultsToUse
-        .filter((result) => result.types?.includes("postal_code"))
-        .flatMap((result) => result.postcode_localities || []);
-
-      //if there is just one city/locality per zipcode
-      const fallbackLocalities = resultsToUse
-        .flatMap((result) => result.address_components || [])
-        .filter((component) => component.types?.includes("locality"))
-        .map((component) => component.long_name)
-        .filter(Boolean);
-
-      //casting to set and back to array to remove duplicates.
-      const localities = [
-        ...new Set(
-          (postcodeLocalities.length
-            ? postcodeLocalities
-            : fallbackLocalities
-          ).filter((val) => typeof val === "string" && val.length > 0),
+      const localities = dedupeStrings(
+        (postcodeLocalities.length ? postcodeLocalities : fallbackLocalities).filter(
+          isNonEmptyString,
         ),
-      ];
+      );
 
       //check if localities are in the area scope and filter accordingly
       //create another cache called isInAreaScopeCache that queries geocoding api for each locality and checks if it is in the area scope
@@ -278,10 +302,7 @@ export function EmailPetition(props: {
 
   // Fetch geocoding data when zip changes
   useEffect(() => {
-    if (!zip || zip.length !== 5) {
-      return;
-    }
-    if (zip in geocodingCache) {
+    if (!zip || zip.length !== 5 || zip in geocodingCache) {
       return;
     }
 
