@@ -30,7 +30,3 @@ test-monorepo/
 out/
 build
 dist
-
-# Service binaries
-apps/service/service.exe
-apps/service/__debug_bin.exe

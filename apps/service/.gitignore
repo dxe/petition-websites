@@ -1,2 +1,3 @@
-# debug binary
-service
+# Service binaries
+service.exe
+__debug_bin.exe

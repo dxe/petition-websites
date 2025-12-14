@@ -10,35 +10,26 @@ const queryOptions = {
 };
 
 export const Thermometer = ({
-  startDate,
   goal,
-  offset,
   campaignName,
 }: {
-  startDate: string;
   goal: number;
-  offset: number;
   campaignName: string;
 }) => {
   const { data, isLoading, isError } = useQuery<{ total: number }>({
-    queryKey: ["thermometer", campaignName, startDate],
-    queryFn: () => fetchPetitionSignatureCountData({ startDate, campaignName }),
+    queryKey: ["thermometer", campaignName],
+    queryFn: () => fetchPetitionSignatureCountData({ campaignName }),
     ...queryOptions,
   });
-  const calculatedAmt = useMemo(
-    () => (!data?.total ? 0 : data?.total - offset),
-    [data?.total, offset],
-  );
+  const calculatedAmt = useMemo(() => data?.total ?? 0, [data?.total]);
   const calculatedGoal = useMemo(
-    () => (goal !== 0 ? goal : !calculatedAmt ? 0 : getNextGoal(calculatedAmt)),
+    () => getNextGoal(calculatedAmt, goal),
     [calculatedAmt, goal],
   );
   const progress = useMemo(
     () => (!calculatedAmt ? 0 : (calculatedAmt / calculatedGoal) * 100),
     [calculatedAmt, calculatedGoal],
   );
-
-  console.log("PROGRESS : ", progress);
 
   return isError ? null : (
     <div

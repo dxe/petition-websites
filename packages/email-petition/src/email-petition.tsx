@@ -50,9 +50,8 @@ export function EmailPetition(props: {
   onSubmit?: () => void;
   debug: boolean;
   test: boolean;
-  thermometerStartDate?: string;
-  thermometerGoal?: number;
-  thermometerOffset?: number;
+  hasPetitionThermometer: boolean;
+  petitionThermometerGoal?: number;
 }) {
   let petitionId = props.petitionId;
   let campaignName = props.campaignName;
@@ -199,9 +198,6 @@ export function EmailPetition(props: {
   }, [isInSonomaCounty, zip]);
 
   const queryClient = useMemo(() => new QueryClient(), []);
-
-  const shouldRenderThermometer =
-    props.thermometerStartDate != null && props.thermometerStartDate !== "";
 
   // Clear zip code if not in US to avoid validation errors when this field must be blank anyway.
   useEffect(() => {
@@ -454,20 +450,19 @@ export function EmailPetition(props: {
           </div>
         </form>
       </Form>
-      {shouldRenderThermometer && (
-        <QueryClientProvider client={queryClient}>
-          <div className="mt-6 w-full flex justify-center">
-            <div className="w-full max-w-3xl">
-              <Thermometer
-                startDate={props.thermometerStartDate!}
-                goal={props.thermometerGoal ?? 0}
-                offset={props.thermometerOffset ?? 0}
-                campaignName={campaignName}
-              />
+      {props.hasPetitionThermometer &&
+        props.petitionThermometerGoal != null && (
+          <QueryClientProvider client={queryClient}>
+            <div className="mt-6 w-full flex justify-center">
+              <div className="w-full max-w-3xl">
+                <Thermometer
+                  goal={props.petitionThermometerGoal}
+                  campaignName={campaignName}
+                />
+              </div>
             </div>
-          </div>
-        </QueryClientProvider>
-      )}
+          </QueryClientProvider>
+        )}
     </>
   );
 }

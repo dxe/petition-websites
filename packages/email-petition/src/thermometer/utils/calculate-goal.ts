@@ -2,13 +2,13 @@ const MIN_GOAL = 20000;
 const INCREMENT = 10000;
 const THRESHOLD = 1000;
 
-export const getNextGoal = (amt: number) => {
-  if (amt < MIN_GOAL - THRESHOLD) {
-    return MIN_GOAL;
+export const getNextGoal = (amt: number, default_goal: number) => {
+  if (amt < default_goal - THRESHOLD) {
+    return default_goal;
   }
-  for (let goal = MIN_GOAL; ; goal += INCREMENT) {
-    if (goal - amt > THRESHOLD) {
-      return goal;
-    }
-  }
+
+  const remainder = amt % INCREMENT;
+  const nextGoal = amt - remainder + INCREMENT;
+
+  return nextGoal - amt <= THRESHOLD ? nextGoal + INCREMENT : nextGoal;
 };
