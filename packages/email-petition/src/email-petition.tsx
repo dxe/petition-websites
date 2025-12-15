@@ -35,7 +35,7 @@ import {
 import { LoaderIcon, MailCheckIcon } from "lucide-react";
 import ReCAPTCHA from "react-google-recaptcha";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Thermometer } from "./thermometer/components/thermometer";
+import { Thermometer } from "./thermometer/thermometer";
 
 const PETITION_API_URL = `${process.env.NEXT_PUBLIC_PETITIONS_API_ROOT}/sign`;
 

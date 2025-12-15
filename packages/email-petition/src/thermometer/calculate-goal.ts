@@ -1,4 +1,3 @@
-const MIN_GOAL = 20000;
 const INCREMENT = 10000;
 const THRESHOLD = 1000;
 

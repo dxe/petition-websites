@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import React, { useMemo } from "react";
 import classNames from "classnames";
-import { fetchPetitionSignatureCountData } from "../api/petitionSignatures";
-import { getNextGoal } from "../utils/calculate-goal";
+import { fetchPetitionSignatureCountData } from "./petitionSignatures";
+import { getNextGoal } from "./calculate-goal";
 
 const queryOptions = {
   // Refetch every minute.
