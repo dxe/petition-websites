@@ -16,6 +16,7 @@ export function PetitionWithSuspense() {
 
 export function Petition() {
   const searchParams = useSearchParams();
+
   return (
     <EmailPetition
       petitionId={process.env.NEXT_PUBLIC_PETITION_ID!}
@@ -24,6 +25,9 @@ export function Petition() {
       onSubmit={onSubmit}
       debug={searchParams.get("debug") === "true"}
       test={searchParams.get("test") === "true"}
+      signatureThermometer={{
+        defaultGoal: Number(process.env.NEXT_PUBLIC_THERMOMETER_GOAL!),
+      }}
     />
   );
 }

@@ -16,6 +16,7 @@ export function PetitionWithSuspense() {
 
 export function Petition() {
   const searchParams = useSearchParams();
+
   return (
     <EmailPetition
       petitionId={process.env.NEXT_PUBLIC_PETITION_ID!}

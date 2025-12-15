@@ -34,6 +34,8 @@ import {
 } from "@dxe/petitions-components/alert";
 import { LoaderIcon, MailCheckIcon } from "lucide-react";
 import ReCAPTCHA from "react-google-recaptcha";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Thermometer } from "./thermometer/thermometer";
 
 const PETITION_API_URL = `${process.env.NEXT_PUBLIC_PETITIONS_API_ROOT}/sign`;
 
@@ -48,6 +50,9 @@ export function EmailPetition(props: {
   onSubmit?: () => void;
   debug: boolean;
   test: boolean;
+  signatureThermometer?: {
+    defaultGoal: number;
+  };
 }) {
   let petitionId = props.petitionId;
   let campaignName = props.campaignName;
@@ -193,6 +198,8 @@ export function EmailPetition(props: {
     return SonomaCities[zip as keyof typeof SonomaCities];
   }, [isInSonomaCounty, zip]);
 
+  const queryClient = useMemo(() => new QueryClient(), []);
+
   // Clear zip code if not in US to avoid validation errors when this field must be blank anyway.
   useEffect(() => {
     if (outsideUS) {
@@ -258,186 +265,204 @@ export function EmailPetition(props: {
       </AlertDescription>
     </Alert>
   ) : (
-    <Form {...form}>
-      <form
-        onSubmit={onReactHookFormSubmit}
-        className="w-full flex flex-col md:flex-row gap-8 justify-center"
-      >
-        <div className="flex flex-col gap-4 basis-1/3">
-          <FormField
-            control={control}
-            name="name"
-            disabled={isSubmitting}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Full Name</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Jane Doe"
-                    type="text"
-                    {...field}
-                    onBlur={() => {
-                      field.onBlur();
-                      injectValuesIntoMessage(field.value, getValues("city"));
+    <>
+      <Form {...form}>
+        <form
+          onSubmit={onReactHookFormSubmit}
+          className="w-full flex flex-col md:flex-row gap-8 justify-center"
+        >
+          <div className="flex flex-col gap-4 basis-1/3">
+            <FormField
+              control={control}
+              name="name"
+              disabled={isSubmitting}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Full Name</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Jane Doe"
+                      type="text"
+                      {...field}
+                      onBlur={() => {
+                        field.onBlur();
+                        injectValuesIntoMessage(field.value, getValues("city"));
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={control}
+              name="email"
+              disabled={isSubmitting}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="email"
+                      placeholder="janedoe@gmail.com"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={control}
+              name="phone"
+              disabled={isSubmitting}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Phone Number</FormLabel>
+                  <FormControl>
+                    <Input type="tel" placeholder="888-888-8888" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={control}
+              name="zip"
+              disabled={outsideUS || isSubmitting}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    Zip Code <span className="font-normal">(US only)</span>
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type="text"
+                      placeholder={
+                        outsideUS ? "United States zip codes only" : "95401"
+                      }
+                      {...field}
+                      onBlur={() => {
+                        field.onBlur();
+                        injectValuesIntoMessage(
+                          getValues("name"),
+                          getValues("city"),
+                        );
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={control}
+              name="city"
+              disabled={outsideUS || isSubmitting}
+              render={({ field }) => (
+                <FormItem className={cn({ hidden: !cities.length })}>
+                  <FormLabel>City</FormLabel>
+                  <Select
+                    onValueChange={(val: string | undefined) => {
+                      field.onChange(val);
+                      injectValuesIntoMessage(getValues("name"), val);
                     }}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={control}
-            name="email"
-            disabled={isSubmitting}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input
-                    type="email"
-                    placeholder="janedoe@gmail.com"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={control}
-            name="phone"
-            disabled={isSubmitting}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Phone Number</FormLabel>
-                <FormControl>
-                  <Input type="tel" placeholder="888-888-8888" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={control}
-            name="zip"
-            disabled={outsideUS || isSubmitting}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>
-                  Zip Code <span className="font-normal">(US only)</span>
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    type="text"
-                    placeholder={
-                      outsideUS ? "United States zip codes only" : "95401"
-                    }
-                    {...field}
-                    onBlur={() => {
-                      field.onBlur();
-                      injectValuesIntoMessage(
-                        getValues("name"),
-                        getValues("city"),
-                      );
-                    }}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={control}
-            name="city"
-            disabled={outsideUS || isSubmitting}
-            render={({ field }) => (
-              <FormItem className={cn({ hidden: !cities.length })}>
-                <FormLabel>City</FormLabel>
-                <Select
-                  onValueChange={(val: string | undefined) => {
-                    field.onChange(val);
-                    injectValuesIntoMessage(getValues("name"), val);
-                  }}
-                  defaultValue={field.value}
-                  value={field.value}
+                    defaultValue={field.value}
+                    value={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a city" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {cities?.map((city) => (
+                        <SelectItem
+                          value={city}
+                          key={city}
+                          onBlur={field.onBlur}
+                        >
+                          {city}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={control}
+              name="outsideUS"
+              disabled={isSubmitting}
+              render={({ field }) => (
+                <FormItem
+                  className={cn("flex gap-2 items-center", {
+                    hidden: cities.length,
+                  })}
                 >
                   <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select a city" />
-                    </SelectTrigger>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                      aria-label="Outside the United States?"
+                    />
                   </FormControl>
-                  <SelectContent>
-                    {cities?.map((city) => (
-                      <SelectItem value={city} key={city} onBlur={field.onBlur}>
-                        {city}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={control}
-            name="outsideUS"
-            disabled={isSubmitting}
-            render={({ field }) => (
-              <FormItem
-                className={cn("flex gap-2 items-center", {
-                  hidden: cities.length,
-                })}
-              >
-                <FormControl>
-                  <Checkbox
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                    aria-label="Outside the United States?"
-                  />
-                </FormControl>
-                <FormLabel className="mt-0!">
-                  Outside the United States
-                </FormLabel>
-                <FormDescription></FormDescription>
-              </FormItem>
-            )}
-          />
-        </div>
-        <div className="flex flex-col gap-4 basis-2/3">
-          <FormField
-            control={control}
-            name="message"
-            disabled={isSubmitting}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Message</FormLabel>
-                <FormControl>
-                  <Textarea {...field} rows={18} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting && (
-              <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />
-            )}
-            Submit
-          </Button>
-          <ReCAPTCHA
-            ref={recaptchaRef}
-            sitekey={CAPTCHA_SITE_KEY}
-            badge="bottomright"
-            size="invisible"
-            className="z-60"
-          />
-          <p className="text-xs text-center">
-            By signing, you agree to receive email messages from Direct Action
-            Everywhere. You may unsubscribe at any time.
-          </p>
-        </div>
-      </form>
-    </Form>
+                  <FormLabel className="mt-0!">
+                    Outside the United States
+                  </FormLabel>
+                  <FormDescription></FormDescription>
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="flex flex-col gap-4 basis-2/3">
+            <FormField
+              control={control}
+              name="message"
+              disabled={isSubmitting}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Message</FormLabel>
+                  <FormControl>
+                    <Textarea {...field} rows={18} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting && (
+                <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />
+              )}
+              Submit
+            </Button>
+            <ReCAPTCHA
+              ref={recaptchaRef}
+              sitekey={CAPTCHA_SITE_KEY}
+              badge="bottomright"
+              size="invisible"
+              className="z-60"
+            />
+            <p className="text-xs text-center">
+              By signing, you agree to receive email messages from Direct Action
+              Everywhere. You may unsubscribe at any time.
+            </p>
+          </div>
+        </form>
+      </Form>
+      {props.signatureThermometer && (
+        <QueryClientProvider client={queryClient}>
+          <div className="mt-6 w-full flex justify-center">
+            <div className="w-full max-w-3xl">
+              <Thermometer
+                goal={props.signatureThermometer.defaultGoal}
+                campaignName={campaignName}
+              />
+            </div>
+          </div>
+        </QueryClientProvider>
+      )}
+    </>
   );
 }
