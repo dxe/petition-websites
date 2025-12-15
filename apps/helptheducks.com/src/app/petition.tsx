@@ -25,7 +25,6 @@ export function Petition() {
       onSubmit={onSubmit}
       debug={searchParams.get("debug") === "true"}
       test={searchParams.get("test") === "true"}
-      hasPetitionThermometer={false}
     />
   );
 }

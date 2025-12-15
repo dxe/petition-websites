@@ -25,10 +25,9 @@ export function Petition() {
       onSubmit={onSubmit}
       debug={searchParams.get("debug") === "true"}
       test={searchParams.get("test") === "true"}
-      hasPetitionThermometer={true}
-      petitionThermometerGoal={Number(
-        process.env.NEXT_PUBLIC_THERMOMETER_GOAL!,
-      )}
+      signatureThermometer={{
+        defaultGoal: Number(process.env.NEXT_PUBLIC_THERMOMETER_GOAL!),
+      }}
     />
   );
 }

@@ -50,8 +50,9 @@ export function EmailPetition(props: {
   onSubmit?: () => void;
   debug: boolean;
   test: boolean;
-  hasPetitionThermometer: boolean;
-  petitionThermometerGoal?: number;
+  signatureThermometer?: {
+    defaultGoal: number;
+  };
 }) {
   let petitionId = props.petitionId;
   let campaignName = props.campaignName;
@@ -450,19 +451,18 @@ export function EmailPetition(props: {
           </div>
         </form>
       </Form>
-      {props.hasPetitionThermometer &&
-        props.petitionThermometerGoal != null && (
-          <QueryClientProvider client={queryClient}>
-            <div className="mt-6 w-full flex justify-center">
-              <div className="w-full max-w-3xl">
-                <Thermometer
-                  goal={props.petitionThermometerGoal}
-                  campaignName={campaignName}
-                />
-              </div>
+      {props.signatureThermometer && (
+        <QueryClientProvider client={queryClient}>
+          <div className="mt-6 w-full flex justify-center">
+            <div className="w-full max-w-3xl">
+              <Thermometer
+                goal={props.signatureThermometer.defaultGoal}
+                campaignName={campaignName}
+              />
             </div>
-          </QueryClientProvider>
-        )}
+          </div>
+        </QueryClientProvider>
+      )}
     </>
   );
 }
