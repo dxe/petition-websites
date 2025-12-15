@@ -1,6 +1,6 @@
 const API_URL_BASE = "https://helptheducks.dxe.io/tally?campaign=";
 
-export const fetchPetitionSignatureCountData = async ({
+export const fetchPetitionSignatureCount = async ({
   campaignName,
 }: {
   campaignName: string;
