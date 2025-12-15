@@ -347,12 +347,12 @@ function TakeActionSection() {
         </p>
         <ul className="list-disc pl-8 space-y-3 text-lg">
           <li>
-            Ask your friends and family to sign the petition to free Zoe now
+            Ask your friends and family to sign the petition to free Zoe now. 
           </li>
           <li>
             Share Zoe&apos;s story on social media with{" "}
             <span className="font-semibold">#FreeZoe</span> and{" "}
-            <span className="font-semibold">#RightToRescue</span>
+            <span className="font-semibold">#RightToRescue</span>.
           </li>
           <li>
             Organize a Free Zoe march or rally in your area. You can find Free Zoe materials and instructions in
