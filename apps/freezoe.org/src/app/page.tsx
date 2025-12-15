@@ -355,49 +355,7 @@ function TakeActionSection() {
             <span className="font-semibold">#RightToRescue</span>
           </li>
           <li>
-            Join a Free Zoe march or rally near you, or organize your own. Free
-            Zoe marches are planned in the following cities:
-            <ul className="list-disc pl-6 mt-3 space-y-2 text-base">
-              <li>
-                <span className="font-semibold">San Francisco</span> — Saturday,
-                Dec. 13 at 12 PM PT. Meet at Dolores Park (Dolores St &amp; 19th
-                St).{" "}
-                <a href="https://dxe.io/marchsf" className="underline">
-                  RSVP here
-                </a>
-                .
-              </li>
-              <li>
-                <span className="font-semibold">New York City</span> — Saturday,
-                Dec. 13 at 1 PM ET. Meet at Union Square Station.{" "}
-                <a href="https://dxe.io/marchnyc" className="underline">
-                  RSVP here
-                </a>
-                .
-              </li>
-              <li>
-                <span className="font-semibold">Boston</span> — Saturday, Dec.
-                13 at 1:30 PM ET. Meet at Brewer Fountain, Boston Common,
-                Boston, MA.{" "}
-                <a
-                  href="https://www.mobilize.us/newenglandanimalactivism/event/876408/"
-                  className="underline"
-                >
-                  RSVP here
-                </a>
-                .
-              </li>
-              <li>
-                <span className="font-semibold">Los Angeles</span> — Sunday,
-                Dec. 14 at 12 PM PT. Meet at Media Park, 9091 Culver Blvd,
-                Culver City, CA 90232.{" "}
-                <a href="https://dxe.io/marchla" className="underline">
-                  RSVP here
-                </a>
-                .
-              </li>
-            </ul>
-            You can organize your own Free Zoe protest or outreach event with
+            Organize a Free Zoe march or rally in your area. You can find Free Zoe materials and instructions in
             this simple campaign guide:{" "}
             <a href="https://dxe.io/guide" className="underline">
               dxe.io/guide
