@@ -1,11 +1,13 @@
-import { FlatCompat } from "@eslint/eslintrc";
+import nextConfig from "eslint-config-next";
 
-const compat = new FlatCompat({
-  baseDirectory: import.meta.dirname,
-});
-
-const eslintConfig = [
-  ...compat.extends("next/core-web-vitals", "next/typescript"),
+const config = [
+  ...nextConfig,
+  {
+    rules: {
+      "react-hooks/static-components": "off",
+      "react-hooks/set-state-in-effect": "off",
+    },
+  },
 ];
 
-export default eslintConfig;
+export default config;
