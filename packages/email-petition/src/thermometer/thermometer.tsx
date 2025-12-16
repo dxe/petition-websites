@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import React, { useMemo } from "react";
 import classNames from "classnames";
-import { fetchPetitionSignatureCount } from "../petition-signatures";
+import { fetchPetitionSignatureCount } from "./api";
 import { getNextGoal } from "./calculate-goal";
 
 const queryOptions = {
