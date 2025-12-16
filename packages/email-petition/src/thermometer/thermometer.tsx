@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import React, { useMemo } from "react";
 import classNames from "classnames";
-import { fetchPetitionSignatureCountData } from "./petitionSignatures";
+import { fetchPetitionSignatureCount } from "../petition-signatures";
 import { getNextGoal } from "./calculate-goal";
 
 const queryOptions = {
@@ -18,7 +18,7 @@ export const Thermometer = ({
 }) => {
   const { data, isLoading, isError } = useQuery<{ total: number }>({
     queryKey: ["thermometer", campaignName],
-    queryFn: () => fetchPetitionSignatureCountData({ campaignName }),
+    queryFn: () => fetchPetitionSignatureCount({ campaignName }),
     ...queryOptions,
   });
   const calculatedAmt = useMemo(() => data?.total ?? 0, [data?.total]);
