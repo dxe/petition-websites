@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 	"unicode"
@@ -17,6 +18,7 @@ import (
 	"github.com/go-chi/cors"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
+	"github.com/joho/godotenv"
 
 	"golang.org/x/text/runes"
 	"golang.org/x/text/transform"
@@ -29,6 +31,21 @@ var (
 )
 
 func main() {
+	// Load environment variables from .env file
+	err := godotenv.Load()
+	if err != nil {
+		fmt.Println("Warning: Could not load .env file")
+	}
+
+	// Try to load environment-specific .env file
+	env := os.Getenv("GO_ENV")
+	if env != "" {
+		envFile := fmt.Sprintf(".env.%s", env)
+		if err := godotenv.Load(envFile); err != nil {
+			fmt.Printf("Warning: Could not load %s file\n", envFile)
+		}
+	}
+
 	db := getDb()
 	defer db.Close()
 	s := NewServer(db)
@@ -82,6 +99,10 @@ func (s *server) runServer() {
 	r.Get("/tally", s.getTallyHandler)
 
 	r.Get("/assemblyMembers", s.getAssemblyMembersHandler)
+
+	r.Post("/zipToCityLookup", s.zipToCityLookupHandler)
+
+	r.Post("/cityPredictions", s.cityPredictionsHandler)
 
 	fmt.Printf("Listening on port %v\n", config.Port)
 	http.ListenAndServe(":"+config.Port, r)

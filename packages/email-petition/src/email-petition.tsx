@@ -41,6 +41,8 @@ const PETITION_API_URL = `${process.env.NEXT_PUBLIC_PETITIONS_API_ROOT}/sign`;
 
 const CAMPAIGN_MAILER_API_URL = `${process.env.NEXT_PUBLIC_CAMPAIGN_MAILER_API_ROOT}/message/create`;
 
+const ZIP_TO_CITY_API_URL = `${process.env.NEXT_PUBLIC_CAMPAIGN_MAILER_API_ROOT}/zipToCityLookup`;
+
 const CAPTCHA_SITE_KEY = "6LdiglcpAAAAAM9XE_TNnAiZ22NR9nSRxHMOFn8E";
 
 export function EmailPetition(props: {
@@ -100,6 +102,13 @@ export function EmailPetition(props: {
   } = form;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [apiCity, setApiCity] = useState<string>("");
+  const [isLoadingCity, setIsLoadingCity] = useState(false);
+  const [coordinates, setCoordinates] = useState<{
+    lat: number;
+    lng: number;
+  } | null>(null);
+  const [cityPredictions, setCityPredictions] = useState<string[]>([]);
 
   const onReactHookFormSubmit = useMemo(
     () =>
@@ -200,12 +209,33 @@ export function EmailPetition(props: {
 
   const queryClient = useMemo(() => new QueryClient(), []);
 
-  // Clear zip code if not in US to avoid validation errors when this field must be blank anyway.
+  // Call API when zip code changes
   useEffect(() => {
-    if (outsideUS) {
-      setValue("zip", "");
-      clearErrors(["zip", "city"]);
+    console.log("[DEBUG] Zip lookup useEffect triggered:", {
+      zip,
+      zipLength: zip?.length,
+      outsideUS,
+      shouldCall: zip && !outsideUS && zip.length === 5,
+    });
+
+    if (zip && !outsideUS && zip.length === 5) {
+      console.log("[DEBUG] Calling fetchCityByZip for:", zip);
+      fetchCityByZip(zip);
+    } else {
+      console.log("[DEBUG] Clearing city - conditions not met");
+      setApiCity("");
+      setValue("city", "");
     }
+  }, [zip, outsideUS, setValue]);
+
+  // Clear zip code and city when outsideUS changes
+  useEffect(() => {
+    setValue("zip", "");
+    setValue("city", "");
+    setApiCity("");
+    setCoordinates(null);
+    setCityPredictions([]);
+    clearErrors(["zip", "city"]);
   }, [outsideUS, setValue, clearErrors]);
 
   // When cities change, just select it if there's only one. Else, reset the city.
@@ -255,6 +285,50 @@ export function EmailPetition(props: {
   );
 
   const recaptchaRef = useRef<ReCAPTCHA>(null);
+
+  // Function to call zipToCityLookup API
+  const fetchCityByZip = async (zipCode: string) => {
+    console.log("[DEBUG] fetchCityByZip called with:", zipCode);
+
+    if (!zipCode || zipCode.length !== 5) {
+      console.log("[DEBUG] Invalid zip format, clearing city");
+      setApiCity("");
+      return;
+    }
+
+    console.log("[DEBUG] Starting API call for zip:", zipCode);
+    setIsLoadingCity(true);
+    try {
+      const response = await ky
+        .post(ZIP_TO_CITY_API_URL, {
+          json: { zip_code: zipCode },
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+        .json<{ city: string; lat: number; lng: number }>();
+
+      console.log("[DEBUG] API response:", response);
+      setApiCity(response.city);
+      setValue("city", response.city);
+      //setCoordinates({ lat: response.lat, lng: response.lng });
+      injectValuesIntoMessage(getValues("name"), response.city);
+
+      // Store coordinates if needed for future use
+      console.log(
+        "[DEBUG] Coordinates - Lat:",
+        response.lat,
+        "Lng:",
+        response.lng,
+      );
+    } catch (error) {
+      console.error("[DEBUG] Error fetching city:", error);
+      setApiCity("");
+      setValue("city", "");
+    } finally {
+      setIsLoadingCity(false);
+    }
+  };
 
   return isSubmitted ? (
     <Alert className="self-center w-fit bg-slate-100">
@@ -360,33 +434,26 @@ export function EmailPetition(props: {
               name="city"
               disabled={outsideUS || isSubmitting}
               render={({ field }) => (
-                <FormItem className={cn({ hidden: !cities.length })}>
-                  <FormLabel>City</FormLabel>
-                  <Select
-                    onValueChange={(val: string | undefined) => {
-                      field.onChange(val);
-                      injectValuesIntoMessage(getValues("name"), val);
-                    }}
-                    defaultValue={field.value}
-                    value={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a city" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {cities?.map((city) => (
-                        <SelectItem
-                          value={city}
-                          key={city}
-                          onBlur={field.onBlur}
-                        >
-                          {city}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                <FormItem>
+                  <FormLabel>City {isLoadingCity && "(Loading...)"}</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="text"
+                      placeholder={
+                        outsideUS ? "United States cities only" : "Santa Rosa"
+                      }
+                      value={field.value || ""}
+                      onChange={(e) => {
+                        field.onChange(e.target.value);
+                        injectValuesIntoMessage(
+                          getValues("name"),
+                          e.target.value,
+                        );
+                      }}
+                      onBlur={field.onBlur}
+                      disabled={isLoadingCity || outsideUS || isSubmitting}
+                    />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
@@ -396,11 +463,7 @@ export function EmailPetition(props: {
               name="outsideUS"
               disabled={isSubmitting}
               render={({ field }) => (
-                <FormItem
-                  className={cn("flex gap-2 items-center", {
-                    hidden: cities.length,
-                  })}
-                >
+                <FormItem>
                   <FormControl>
                     <Checkbox
                       checked={field.value}

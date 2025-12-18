@@ -165,3 +165,121 @@ func (s *server) getAssemblyMembersHandler(w http.ResponseWriter, r *http.Reques
 	w.WriteHeader(http.StatusOK)
 	w.Write(json)
 }
+
+// ZipToCityLookupReq represents request for city lookup by ZIP code
+type ZipToCityLookupReq struct {
+	ZipCode string `json:"zip_code"`
+}
+
+// ZipToCityLookupResp represents response for city lookup
+type ZipToCityLookupResp struct {
+	City string  `json:"city"`
+	Lat  float64 `json:"lat"`
+	Lng  float64 `json:"lng"`
+}
+
+// CityPredictionsReq represents request for city predictions
+type CityPredictionsReq struct {
+	Input string  `json:"input"`
+	Lat   float64 `json:"lat"`
+	Lng   float64 `json:"lng"`
+}
+
+// CityPredictionsResp represents response for city predictions
+type CityPredictionsResp struct {
+	Predictions []CityPrediction `json:"predictions"`
+}
+
+// zipToCityLookupHandler handles ZIP code to city lookup requests
+func (s *server) zipToCityLookupHandler(w http.ResponseWriter, r *http.Request) {
+	var req ZipToCityLookupReq
+
+	err := json.NewDecoder(r.Body).Decode(&req)
+	if err != nil {
+		http.Error(w, "invalid request body", http.StatusBadRequest)
+		return
+	}
+
+	if req.ZipCode == "" {
+		http.Error(w, "zip_code is required", http.StatusBadRequest)
+		return
+	}
+
+	// Get Google API key from config or environment
+	apiKey := config.GetGoogleMapsAPIKey()
+	fmt.Printf("[DEBUG] Retrieved API key from config: %s\n", apiKey)
+	if apiKey == "" {
+		fmt.Println("[DEBUG] Google Maps API key not configured in config")
+		http.Error(w, "Google Maps API key not configured", http.StatusInternalServerError)
+		return
+	}
+
+	fmt.Printf("[DEBUG] Looking up city for ZIP code: %s\n", req.ZipCode)
+	city, lat, lng, err := GetCityByZipCode(req.ZipCode)
+	if err != nil {
+		fmt.Printf("[DEBUG] City lookup failed: %v\n", err)
+		http.Error(w, fmt.Sprintf("failed to lookup city: %v", err), http.StatusInternalServerError)
+		return
+	}
+	fmt.Printf("[DEBUG] Successfully found city: %s, lat: %f, lng: %f\n", city, lat, lng)
+
+	resp := ZipToCityLookupResp{
+		City: city,
+		Lat:  lat,
+		Lng:  lng,
+	}
+
+	json, err := json.Marshal(resp)
+	if err != nil {
+		http.Error(w, "failed to marshal json", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(json)
+}
+
+// cityPredictionsHandler handles city prediction requests
+func (s *server) cityPredictionsHandler(w http.ResponseWriter, r *http.Request) {
+	var req CityPredictionsReq
+
+	err := json.NewDecoder(r.Body).Decode(&req)
+	if err != nil {
+		http.Error(w, "invalid request body", http.StatusBadRequest)
+		return
+	}
+
+	if req.Input == "" {
+		http.Error(w, "input is required", http.StatusBadRequest)
+		return
+	}
+
+	if len(req.Input) <= 3 {
+		http.Error(w, "input must be more than 3 characters", http.StatusBadRequest)
+		return
+	}
+
+	fmt.Printf("[DEBUG] Looking up city predictions for: %s near lat: %f, lng: %f\n", req.Input, req.Lat, req.Lng)
+	predictions, err := GetCityPredictions(req.Input, req.Lat, req.Lng)
+	if err != nil {
+		fmt.Printf("[DEBUG] City predictions lookup failed: %v\n", err)
+		http.Error(w, fmt.Sprintf("failed to lookup city predictions: %v", err), http.StatusInternalServerError)
+		return
+	}
+	fmt.Printf("[DEBUG] Successfully found %d city predictions\n", len(predictions))
+
+	resp := CityPredictionsResp{
+		Predictions: predictions,
+	}
+
+	json, err := json.Marshal(resp)
+	if err != nil {
+		http.Error(w, "failed to marshal json", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(json)
+}
