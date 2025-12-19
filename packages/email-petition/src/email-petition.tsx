@@ -36,6 +36,7 @@ import { LoaderIcon, MailCheckIcon } from "lucide-react";
 import ReCAPTCHA from "react-google-recaptcha";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Thermometer } from "./thermometer/thermometer";
+import { CityAutocomplete } from "./city-autocomplete";
 
 const PETITION_API_URL = `${process.env.NEXT_PUBLIC_PETITIONS_API_ROOT}/sign`;
 
@@ -311,7 +312,7 @@ export function EmailPetition(props: {
       console.log("[DEBUG] API response:", response);
       setApiCity(response.city);
       setValue("city", response.city);
-      //setCoordinates({ lat: response.lat, lng: response.lng });
+      setCoordinates({ lat: response.lat, lng: response.lng });
       injectValuesIntoMessage(getValues("name"), response.city);
 
       // Store coordinates if needed for future use
@@ -437,21 +438,19 @@ export function EmailPetition(props: {
                 <FormItem>
                   <FormLabel>City {isLoadingCity && "(Loading...)"}</FormLabel>
                   <FormControl>
-                    <Input
-                      type="text"
-                      placeholder={
-                        outsideUS ? "United States cities only" : "Santa Rosa"
-                      }
+                    <CityAutocomplete
                       value={field.value || ""}
-                      onChange={(e) => {
-                        field.onChange(e.target.value);
-                        injectValuesIntoMessage(
-                          getValues("name"),
-                          e.target.value,
-                        );
+                      onChange={(value) => {
+                        field.onChange(value);
+                        injectValuesIntoMessage(getValues("name"), value);
                       }}
                       onBlur={field.onBlur}
                       disabled={isLoadingCity || outsideUS || isSubmitting}
+                      placeholder={
+                        outsideUS ? "United States cities only" : "Santa Rosa"
+                      }
+                      lat={coordinates?.lat}
+                      lng={coordinates?.lng}
                     />
                   </FormControl>
                   <FormMessage />

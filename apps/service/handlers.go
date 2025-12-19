@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/mail"
 
+	"github.com/dxe/service/api"
 	"github.com/dxe/service/config"
 	"github.com/dxe/service/data"
 	"github.com/dxe/service/model"
@@ -178,16 +179,16 @@ type ZipToCityLookupResp struct {
 	Lng  float64 `json:"lng"`
 }
 
-// CityPredictionsReq represents request for city predictions
-type CityPredictionsReq struct {
+// CityAutocompleteReq represents request for city autocomplete
+type CityAutocompleteReq struct {
 	Input string  `json:"input"`
 	Lat   float64 `json:"lat"`
 	Lng   float64 `json:"lng"`
 }
 
-// CityPredictionsResp represents response for city predictions
-type CityPredictionsResp struct {
-	Predictions []CityPrediction `json:"predictions"`
+// CityAutocompleteResp represents response for city autocomplete
+type CityAutocompleteResp struct {
+	Predictions []api.CityPrediction `json:"predictions"`
 }
 
 // zipToCityLookupHandler handles ZIP code to city lookup requests
@@ -215,7 +216,7 @@ func (s *server) zipToCityLookupHandler(w http.ResponseWriter, r *http.Request) 
 	}
 
 	fmt.Printf("[DEBUG] Looking up city for ZIP code: %s\n", req.ZipCode)
-	city, lat, lng, err := GetCityByZipCode(req.ZipCode)
+	city, lat, lng, err := api.GetCityByZipCode(req.ZipCode)
 	if err != nil {
 		fmt.Printf("[DEBUG] City lookup failed: %v\n", err)
 		http.Error(w, fmt.Sprintf("failed to lookup city: %v", err), http.StatusInternalServerError)
@@ -240,9 +241,9 @@ func (s *server) zipToCityLookupHandler(w http.ResponseWriter, r *http.Request) 
 	w.Write(json)
 }
 
-// cityPredictionsHandler handles city prediction requests
-func (s *server) cityPredictionsHandler(w http.ResponseWriter, r *http.Request) {
-	var req CityPredictionsReq
+// cityAutocompleteHandler handles city autocomplete requests
+func (s *server) cityAutocompleteHandler(w http.ResponseWriter, r *http.Request) {
+	var req CityAutocompleteReq
 
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
@@ -255,13 +256,8 @@ func (s *server) cityPredictionsHandler(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	if len(req.Input) <= 3 {
-		http.Error(w, "input must be more than 3 characters", http.StatusBadRequest)
-		return
-	}
-
 	fmt.Printf("[DEBUG] Looking up city predictions for: %s near lat: %f, lng: %f\n", req.Input, req.Lat, req.Lng)
-	predictions, err := GetCityPredictions(req.Input, req.Lat, req.Lng)
+	predictions, err := api.GetCityPredictions(req.Input, req.Lat, req.Lng)
 	if err != nil {
 		fmt.Printf("[DEBUG] City predictions lookup failed: %v\n", err)
 		http.Error(w, fmt.Sprintf("failed to lookup city predictions: %v", err), http.StatusInternalServerError)
@@ -269,7 +265,7 @@ func (s *server) cityPredictionsHandler(w http.ResponseWriter, r *http.Request) 
 	}
 	fmt.Printf("[DEBUG] Successfully found %d city predictions\n", len(predictions))
 
-	resp := CityPredictionsResp{
+	resp := CityAutocompleteResp{
 		Predictions: predictions,
 	}
 

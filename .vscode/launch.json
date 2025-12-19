@@ -50,6 +50,8 @@
       "request": "launch",
       "mode": "debug",
       "program": "${workspaceFolder}/apps/service/",
+      "preLaunchTask": "build:debug-env",
+      "envFile": "${workspaceFolder}/apps/service/.env.debug",
       "env": {
         "GO_ENV": "development"
       }

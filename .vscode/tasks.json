@@ -1,0 +1,15 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build:debug-env",
+      "type": "shell",
+      "command": "bash",
+      "args": [
+        "-lc",
+        "cat apps/service/.env.shared apps/service/.env.local > apps/service/.env.debug"
+      ],
+      "problemMatcher": []
+    }
+  ]
+}
