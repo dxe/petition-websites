@@ -53,6 +53,11 @@ export function EmailPetition(props: {
   onSubmit?: () => void;
   debug: boolean;
   test: boolean;
+  useGoogleMapsApi: boolean;
+  areaScope?: {
+    name: string;
+    scope: "city" | "county" | "state" | "country";
+  };
   signatureThermometer?: {
     defaultGoal: number;
   };
@@ -105,6 +110,7 @@ export function EmailPetition(props: {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [apiCity, setApiCity] = useState<string>("");
   const [isLoadingCity, setIsLoadingCity] = useState(false);
+  const [hideCity, setHideCity] = useState(true);
   const [coordinates, setCoordinates] = useState<{
     lat: number;
     lng: number;
@@ -226,10 +232,10 @@ export function EmailPetition(props: {
       console.log("[DEBUG] Clearing city - conditions not met");
       setApiCity("");
       setValue("city", "");
+      setHideCity(true);
     }
   }, [zip, outsideUS, setValue]);
 
-  // Clear zip code and city when outsideUS changes
   useEffect(() => {
     setValue("zip", "");
     setValue("city", "");
@@ -300,9 +306,16 @@ export function EmailPetition(props: {
     console.log("[DEBUG] Starting API call for zip:", zipCode);
     setIsLoadingCity(true);
     try {
+      const requestBody: any = { zip_code: zipCode };
+
+      // Add areaScope if it's provided in props
+      if (props.areaScope) {
+        requestBody.areaScope = props.areaScope;
+      }
+
       const response = await ky
         .post(ZIP_TO_CITY_API_URL, {
-          json: { zip_code: zipCode },
+          json: requestBody,
           headers: {
             "Content-Type": "application/json",
           },
@@ -310,6 +323,21 @@ export function EmailPetition(props: {
         .json<{ city: string; lat: number; lng: number }>();
 
       console.log("[DEBUG] API response:", response);
+
+      // Check if the response is empty (indicating area scope mismatch)
+      if (!response.city) {
+        console.log(
+          "[DEBUG] Empty response - likely area scope mismatch, hiding city field",
+        );
+        setApiCity("");
+        setValue("city", "");
+        setHideCity(true);
+        return;
+      }
+
+      // Reset hideCity state when we get a valid city
+      setHideCity(false);
+
       setApiCity(response.city);
       setValue("city", response.city);
       setCoordinates({ lat: response.lat, lng: response.lng });
@@ -430,33 +458,37 @@ export function EmailPetition(props: {
                 </FormItem>
               )}
             />
-            <FormField
-              control={control}
-              name="city"
-              disabled={outsideUS || isSubmitting}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>City {isLoadingCity && "(Loading...)"}</FormLabel>
-                  <FormControl>
-                    <CityAutocomplete
-                      value={field.value || ""}
-                      onChange={(value) => {
-                        field.onChange(value);
-                        injectValuesIntoMessage(getValues("name"), value);
-                      }}
-                      onBlur={field.onBlur}
-                      disabled={isLoadingCity || outsideUS || isSubmitting}
-                      placeholder={
-                        outsideUS ? "United States cities only" : "Santa Rosa"
-                      }
-                      lat={coordinates?.lat}
-                      lng={coordinates?.lng}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {!hideCity && (
+              <FormField
+                control={control}
+                name="city"
+                disabled={outsideUS || isSubmitting}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      City {isLoadingCity && "(Loading...)"}
+                    </FormLabel>
+                    <FormControl>
+                      <CityAutocomplete
+                        value={field.value || ""}
+                        onChange={(value) => {
+                          field.onChange(value);
+                          injectValuesIntoMessage(getValues("name"), value);
+                        }}
+                        onBlur={field.onBlur}
+                        disabled={isLoadingCity || outsideUS || isSubmitting}
+                        placeholder={
+                          outsideUS ? "United States cities only" : "Santa Rosa"
+                        }
+                        lat={coordinates?.lat}
+                        lng={coordinates?.lng}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
             <FormField
               control={control}
               name="outsideUS"

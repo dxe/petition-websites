@@ -169,7 +169,11 @@ func (s *server) getAssemblyMembersHandler(w http.ResponseWriter, r *http.Reques
 
 // ZipToCityLookupReq represents request for city lookup by ZIP code
 type ZipToCityLookupReq struct {
-	ZipCode string `json:"zip_code"`
+	ZipCode   string `json:"zip_code"`
+	AreaScope *struct {
+		Name  string `json:"name"`
+		Scope string `json:"scope"`
+	} `json:"areaScope,omitempty"`
 }
 
 // ZipToCityLookupResp represents response for city lookup
@@ -216,7 +220,17 @@ func (s *server) zipToCityLookupHandler(w http.ResponseWriter, r *http.Request) 
 	}
 
 	fmt.Printf("[DEBUG] Looking up city for ZIP code: %s\n", req.ZipCode)
-	city, lat, lng, err := api.GetCityByZipCode(req.ZipCode)
+
+	// Convert areaScope to API type if provided
+	var areaScope *api.AreaScope
+	if req.AreaScope != nil {
+		areaScope = &api.AreaScope{
+			Name:  req.AreaScope.Name,
+			Scope: req.AreaScope.Scope,
+		}
+	}
+
+	city, lat, lng, err := api.GetCityByZipCode(req.ZipCode, areaScope)
 	if err != nil {
 		fmt.Printf("[DEBUG] City lookup failed: %v\n", err)
 		http.Error(w, fmt.Sprintf("failed to lookup city: %v", err), http.StatusInternalServerError)

@@ -25,6 +25,11 @@ export function Petition() {
       onSubmit={onSubmit}
       debug={searchParams.get("debug") === "true"}
       test={searchParams.get("test") === "true"}
+      useGoogleMapsApi={true}
+      areaScope={{
+        name: "California",
+        scope: "state",
+      }}
       signatureThermometer={{
         defaultGoal: Number(process.env.NEXT_PUBLIC_THERMOMETER_GOAL!),
       }}

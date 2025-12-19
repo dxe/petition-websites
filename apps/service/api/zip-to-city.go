@@ -40,8 +40,14 @@ type AddressComponent struct {
 	Types     []string `json:"types"`
 }
 
+// AreaScope represents the geographic scope for validation
+type AreaScope struct {
+	Name  string `json:"name"`
+	Scope string `json:"scope"`
+}
+
 // GetCityByZipCode uses Google Geocoding API to find the city name and coordinates from a ZIP code
-func GetCityByZipCode(zipCode string) (string, float64, float64, error) {
+func GetCityByZipCode(zipCode string, areaScope *AreaScope) (string, float64, float64, error) {
 	// Get API key from environment
 	apiKey := os.Getenv("GOOGLE_MAPS_API_KEY")
 	fmt.Printf("[DEBUG] Loaded API key from environment: %s\n", apiKey)
@@ -100,6 +106,54 @@ func GetCityByZipCode(zipCode string) (string, float64, float64, error) {
 	if len(geocodingResp.Results) == 0 {
 		fmt.Printf("[DEBUG] No results array found for ZIP code: %s\n", zipCode)
 		return "", 0, 0, fmt.Errorf("no results found for ZIP code: %s", zipCode)
+	}
+
+	// Validate area scope if provided
+	if areaScope != nil {
+		fmt.Printf("[DEBUG] Validating area scope: %s (%s)\n", areaScope.Name, areaScope.Scope)
+
+		// Map scope to Google Maps component type
+		var componentType string
+		switch areaScope.Scope {
+		case "city":
+			componentType = "locality"
+		case "county":
+			componentType = "administrative_area_level_2"
+		case "state":
+			componentType = "administrative_area_level_1"
+		case "country":
+			componentType = "country"
+		default:
+			fmt.Printf("[DEBUG] Unknown area scope: %s\n", areaScope.Scope)
+			return "", 0, 0, fmt.Errorf("unknown area scope: %s", areaScope.Scope)
+		}
+
+		// Find the matching component and validate
+		scopeMatched := false
+		for _, component := range geocodingResp.Results[0].AddressComponents {
+			fmt.Printf("[DEBUG] Checking component: %s with types: %v\n", component.LongName, component.Types)
+			for _, ct := range component.Types {
+				if ct == componentType {
+					fmt.Printf("[DEBUG] Found matching component type: %s with name: %s\n", ct, component.LongName)
+					if component.LongName == areaScope.Name {
+						fmt.Printf("[DEBUG] Area scope validation passed\n")
+						scopeMatched = true
+						break
+					} else {
+						fmt.Printf("[DEBUG] Area scope validation failed - expected: %s, got: %s\n", areaScope.Name, component.LongName)
+						return "", 0, 0, fmt.Errorf("area scope validation failed: expected %s, got %s", areaScope.Name, component.LongName)
+					}
+				}
+			}
+			if scopeMatched {
+				break
+			}
+		}
+
+		if !scopeMatched {
+			fmt.Printf("[DEBUG] No matching component found for area scope: %s\n", componentType)
+			return "", 0, 0, fmt.Errorf("no matching component found for area scope: %s", componentType)
+		}
 	}
 
 	// Find the city (locality) in address components
