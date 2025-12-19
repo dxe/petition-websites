@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"time"
 )
 
 // PlacesAutocompleteRequest represents request for Places Autocomplete API
@@ -50,7 +51,19 @@ type CityPrediction struct {
 	CityName    string `json:"cityName"`
 }
 
+// SessionTokenManager manages session tokens for cost optimization
+type SessionTokenManager struct {
+	currentToken string
+	lastUsed     time.Time
+}
+
+// NewSessionToken generates a new session token
+func NewSessionToken() string {
+	return fmt.Sprintf("autocomplete-%d", time.Now().UnixNano())
+}
+
 // GetCityPredictions uses Google Places Autocomplete API to find city predictions near coordinates
+// See [google-places-autocomplete-api.md](./google-places-autocomplete-api.md) for complete API documentation
 func GetCityPredictions(input string, lat, lng float64) ([]CityPrediction, error) {
 	// Get API key from environment
 	apiKey := os.Getenv("GOOGLE_MAPS_API_KEY")
@@ -60,10 +73,14 @@ func GetCityPredictions(input string, lat, lng float64) ([]CityPrediction, error
 		return nil, fmt.Errorf("GOOGLE_MAPS_API_KEY environment variable not set")
 	}
 
+	// Generate session token for cost optimization
+	sessionToken := NewSessionToken()
+	fmt.Printf("[DEBUG] Generated session token: %s\n", sessionToken)
+
 	// Build the request URL for NEW Places API
 	baseURL := "https://places.googleapis.com/v1/places:autocomplete"
 
-	// Request body for NEW Places API
+	// Request body for NEW Places API with session token
 	requestBody := map[string]interface{}{
 		"input": input,
 		"locationRestriction": map[string]interface{}{
@@ -73,10 +90,8 @@ func GetCityPredictions(input string, lat, lng float64) ([]CityPrediction, error
 			},
 		},
 		"includedPrimaryTypes": []string{"locality"},
+		"sessionToken":         sessionToken,
 	}
-
-	// Make HTTP request
-	fmt.Printf("[DEBUG] Making HTTP POST request to Google Places API\n")
 
 	// Marshal request body to JSON
 	jsonBody, err := json.Marshal(requestBody)
@@ -93,6 +108,7 @@ func GetCityPredictions(input string, lat, lng float64) ([]CityPrediction, error
 	req.Header.Set("X-Goog-FieldMask", "suggestions.placePrediction.text,suggestions.placePrediction.structuredFormat.mainText.text")
 
 	// Make the request
+	fmt.Printf("[DEBUG] Making HTTP POST request to Google Places API with session token\n")
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {

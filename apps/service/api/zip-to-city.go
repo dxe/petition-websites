@@ -46,7 +46,8 @@ type AreaScope struct {
 	Scope string `json:"scope"`
 }
 
-// GetCityByZipCode uses Google Geocoding API to find the city name and coordinates from a ZIP code
+// GetCityByZipCode uses Google Maps Geocoding API to convert ZIP codes to city names and coordinates
+// See [google-geocoding-api.md](./google-geocoding-api.md) for complete API documentation
 func GetCityByZipCode(zipCode string, areaScope *AreaScope) (string, float64, float64, error) {
 	// Get API key from environment
 	apiKey := os.Getenv("GOOGLE_MAPS_API_KEY")

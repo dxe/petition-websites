@@ -108,14 +108,14 @@ export function EmailPetition(props: {
   } = form;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [apiCity, setApiCity] = useState<string>("");
   const [isLoadingCity, setIsLoadingCity] = useState(false);
   const [hideCity, setHideCity] = useState(true);
+  const [userInteractedWithCityField, setUserInteractedWithCityField] =
+    useState(false);
   const [coordinates, setCoordinates] = useState<{
     lat: number;
     lng: number;
   } | null>(null);
-  const [cityPredictions, setCityPredictions] = useState<string[]>([]);
 
   const onReactHookFormSubmit = useMemo(
     () =>
@@ -230,19 +230,18 @@ export function EmailPetition(props: {
       fetchCityByZip(zip);
     } else {
       console.log("[DEBUG] Clearing city - conditions not met");
-      setApiCity("");
       setValue("city", "");
       setHideCity(true);
+      setUserInteractedWithCityField(false); // Reset user interaction when ZIP changes
     }
   }, [zip, outsideUS, setValue]);
 
   useEffect(() => {
     setValue("zip", "");
     setValue("city", "");
-    setApiCity("");
     setCoordinates(null);
-    setCityPredictions([]);
     clearErrors(["zip", "city"]);
+    setUserInteractedWithCityField(false); // Reset user interaction when outsideUS changes
   }, [outsideUS, setValue, clearErrors]);
 
   // When cities change, just select it if there's only one. Else, reset the city.
@@ -299,7 +298,6 @@ export function EmailPetition(props: {
 
     if (!zipCode || zipCode.length !== 5) {
       console.log("[DEBUG] Invalid zip format, clearing city");
-      setApiCity("");
       return;
     }
 
@@ -329,7 +327,6 @@ export function EmailPetition(props: {
         console.log(
           "[DEBUG] Empty response - likely area scope mismatch, hiding city field",
         );
-        setApiCity("");
         setValue("city", "");
         setHideCity(true);
         return;
@@ -338,7 +335,6 @@ export function EmailPetition(props: {
       // Reset hideCity state when we get a valid city
       setHideCity(false);
 
-      setApiCity(response.city);
       setValue("city", response.city);
       setCoordinates({ lat: response.lat, lng: response.lng });
       injectValuesIntoMessage(getValues("name"), response.city);
@@ -352,7 +348,6 @@ export function EmailPetition(props: {
       );
     } catch (error) {
       console.error("[DEBUG] Error fetching city:", error);
-      setApiCity("");
       setValue("city", "");
     } finally {
       setIsLoadingCity(false);
@@ -469,20 +464,44 @@ export function EmailPetition(props: {
                       City {isLoadingCity && "(Loading...)"}
                     </FormLabel>
                     <FormControl>
-                      <CityAutocomplete
-                        value={field.value || ""}
-                        onChange={(value) => {
-                          field.onChange(value);
-                          injectValuesIntoMessage(getValues("name"), value);
-                        }}
-                        onBlur={field.onBlur}
-                        disabled={isLoadingCity || outsideUS || isSubmitting}
-                        placeholder={
-                          outsideUS ? "United States cities only" : "Santa Rosa"
-                        }
-                        lat={coordinates?.lat}
-                        lng={coordinates?.lng}
-                      />
+                      {userInteractedWithCityField ? (
+                        <CityAutocomplete
+                          value={field.value || ""}
+                          onChange={(value) => {
+                            field.onChange(value);
+                            injectValuesIntoMessage(getValues("name"), value);
+                          }}
+                          onBlur={field.onBlur}
+                          disabled={isLoadingCity || outsideUS || isSubmitting}
+                          placeholder={
+                            outsideUS
+                              ? "United States cities only"
+                              : "Santa Rosa"
+                          }
+                          lat={coordinates?.lat}
+                          lng={coordinates?.lng}
+                        />
+                      ) : (
+                        <Input
+                          type="text"
+                          value={field.value || ""}
+                          onChange={(e) => {
+                            field.onChange(e.target.value);
+                            injectValuesIntoMessage(
+                              getValues("name"),
+                              e.target.value,
+                            );
+                            setUserInteractedWithCityField(true); // Enable autocomplete when user types
+                          }}
+                          onBlur={field.onBlur}
+                          disabled={isLoadingCity || outsideUS || isSubmitting}
+                          placeholder={
+                            outsideUS
+                              ? "United States cities only"
+                              : "Santa Rosa"
+                          }
+                        />
+                      )}
                     </FormControl>
                     <FormMessage />
                   </FormItem>
