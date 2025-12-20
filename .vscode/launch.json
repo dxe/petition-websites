@@ -51,10 +51,7 @@
       "mode": "debug",
       "program": "${workspaceFolder}/apps/service/",
       "preLaunchTask": "build:debug-env",
-      "envFile": "${workspaceFolder}/apps/service/.env.debug",
-      "env": {
-        "GO_ENV": "development"
-      }
+      "envFile": "${workspaceFolder}/apps/service/.env.debug"
     }
   ],
   // Use launch.json `compounds` instead of `turbo --filter` commands to keep

@@ -4,5 +4,5 @@ service.exe
 __debug_bin.exe
 
 # Environment files
-.env
-.env.*
+.env.debug
+.env.local
