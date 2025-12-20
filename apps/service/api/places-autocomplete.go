@@ -51,13 +51,7 @@ type CityPrediction struct {
 	CityName    string `json:"cityName"`
 }
 
-// SessionTokenManager manages session tokens for cost optimization
-type SessionTokenManager struct {
-	currentToken string
-	lastUsed     time.Time
-}
-
-// NewSessionToken generates a new session token
+// NewSessionToken generates a new session token for Google Places API cost optimization
 func NewSessionToken() string {
 	return fmt.Sprintf("autocomplete-%d", time.Now().UnixNano())
 }

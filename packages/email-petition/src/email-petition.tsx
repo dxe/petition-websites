@@ -218,18 +218,24 @@ export function EmailPetition(props: {
 
   // Call API when zip code changes
   useEffect(() => {
-    console.log("[DEBUG] Zip lookup useEffect triggered:", {
-      zip,
-      zipLength: zip?.length,
-      outsideUS,
-      shouldCall: zip && !outsideUS && zip.length === 5,
-    });
-
-    if (zip && !outsideUS && zip.length === 5) {
-      console.log("[DEBUG] Calling fetchCityByZip for:", zip);
+    if (zip && !outsideUS && zip.length === 5 && props.useGoogleMapsApi) {
       fetchCityByZip(zip);
+    } else if (
+      zip &&
+      !outsideUS &&
+      zip.length === 5 &&
+      !props.useGoogleMapsApi
+    ) {
+      // For non-Google Maps apps, only show city field if ZIP is in SonomaCities
+      if (zip in SonomaCities) {
+        setHideCity(false);
+        setUserInteractedWithCityField(false);
+      } else {
+        setValue("city", "");
+        setHideCity(true);
+        setUserInteractedWithCityField(false);
+      }
     } else {
-      console.log("[DEBUG] Clearing city - conditions not met");
       setValue("city", "");
       setHideCity(true);
       setUserInteractedWithCityField(false); // Reset user interaction when ZIP changes
@@ -294,14 +300,15 @@ export function EmailPetition(props: {
 
   // Function to call zipToCityLookup API
   const fetchCityByZip = async (zipCode: string) => {
-    console.log("[DEBUG] fetchCityByZip called with:", zipCode);
-
-    if (!zipCode || zipCode.length !== 5) {
-      console.log("[DEBUG] Invalid zip format, clearing city");
+    // Don't make API calls if Google Maps API is disabled
+    if (!props.useGoogleMapsApi) {
       return;
     }
 
-    console.log("[DEBUG] Starting API call for zip:", zipCode);
+    if (!zipCode || zipCode.length !== 5) {
+      return;
+    }
+
     setIsLoadingCity(true);
     try {
       const requestBody: any = { zip_code: zipCode };
@@ -320,13 +327,8 @@ export function EmailPetition(props: {
         })
         .json<{ city: string; lat: number; lng: number }>();
 
-      console.log("[DEBUG] API response:", response);
-
       // Check if the response is empty (indicating area scope mismatch)
       if (!response.city) {
-        console.log(
-          "[DEBUG] Empty response - likely area scope mismatch, hiding city field",
-        );
         setValue("city", "");
         setHideCity(true);
         return;
@@ -340,14 +342,8 @@ export function EmailPetition(props: {
       injectValuesIntoMessage(getValues("name"), response.city);
 
       // Store coordinates if needed for future use
-      console.log(
-        "[DEBUG] Coordinates - Lat:",
-        response.lat,
-        "Lng:",
-        response.lng,
-      );
     } catch (error) {
-      console.error("[DEBUG] Error fetching city:", error);
+      console.error("Error fetching city:", error);
       setValue("city", "");
     } finally {
       setIsLoadingCity(false);
@@ -464,43 +460,75 @@ export function EmailPetition(props: {
                       City {isLoadingCity && "(Loading...)"}
                     </FormLabel>
                     <FormControl>
-                      {userInteractedWithCityField ? (
-                        <CityAutocomplete
-                          value={field.value || ""}
-                          onChange={(value) => {
-                            field.onChange(value);
-                            injectValuesIntoMessage(getValues("name"), value);
-                          }}
-                          onBlur={field.onBlur}
-                          disabled={isLoadingCity || outsideUS || isSubmitting}
-                          placeholder={
-                            outsideUS
-                              ? "United States cities only"
-                              : "Santa Rosa"
-                          }
-                          lat={coordinates?.lat}
-                          lng={coordinates?.lng}
-                        />
+                      {props.useGoogleMapsApi ? (
+                        userInteractedWithCityField ? (
+                          <CityAutocomplete
+                            value={field.value || ""}
+                            onChange={(value) => {
+                              field.onChange(value);
+                              injectValuesIntoMessage(getValues("name"), value);
+                            }}
+                            onBlur={field.onBlur}
+                            disabled={
+                              isLoadingCity || outsideUS || isSubmitting
+                            }
+                            placeholder={
+                              outsideUS
+                                ? "United States cities only"
+                                : "Santa Rosa"
+                            }
+                            lat={coordinates?.lat}
+                            lng={coordinates?.lng}
+                          />
+                        ) : (
+                          <Input
+                            type="text"
+                            value={field.value || ""}
+                            onChange={(e) => {
+                              field.onChange(e.target.value);
+                              injectValuesIntoMessage(
+                                getValues("name"),
+                                e.target.value,
+                              );
+                              setUserInteractedWithCityField(true);
+                            }}
+                            onBlur={field.onBlur}
+                            disabled={
+                              isLoadingCity || outsideUS || isSubmitting
+                            }
+                            placeholder={
+                              outsideUS
+                                ? "United States cities only"
+                                : "Santa Rosa"
+                            }
+                          />
+                        )
                       ) : (
-                        <Input
-                          type="text"
-                          value={field.value || ""}
-                          onChange={(e) => {
-                            field.onChange(e.target.value);
-                            injectValuesIntoMessage(
-                              getValues("name"),
-                              e.target.value,
-                            );
-                            setUserInteractedWithCityField(true); // Enable autocomplete when user types
+                        <Select
+                          onValueChange={(val: string | undefined) => {
+                            field.onChange(val);
+                            injectValuesIntoMessage(getValues("name"), val);
                           }}
-                          onBlur={field.onBlur}
-                          disabled={isLoadingCity || outsideUS || isSubmitting}
-                          placeholder={
-                            outsideUS
-                              ? "United States cities only"
-                              : "Santa Rosa"
-                          }
-                        />
+                          defaultValue={field.value}
+                          value={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select a city" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {cities?.map((city) => (
+                              <SelectItem
+                                value={city}
+                                key={city}
+                                onBlur={field.onBlur}
+                              >
+                                {city}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                       )}
                     </FormControl>
                     <FormMessage />
