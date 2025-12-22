@@ -102,8 +102,6 @@ func (s *server) runServer() {
 
 	r.Post("/zipToCityLookup", s.zipToCityLookupHandler)
 
-	r.Post("/cityAutocomplete", s.cityAutocompleteHandler)
-
 	fmt.Printf("Listening on port %v\n", config.Port)
 	http.ListenAndServe(":"+config.Port, r)
 }

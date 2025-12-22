@@ -50,7 +50,7 @@ type AreaScope struct {
 // See [google-geocoding-api.md](./google-geocoding-api.md) for complete API documentation
 func GetCityByZipCode(zipCode string, areaScope *AreaScope) (string, float64, float64, error) {
 	// Get API key from environment
-	apiKey := os.Getenv("GOOGLE_MAPS_API_KEY")
+	apiKey := os.Getenv("GOOGLE_MAPS_GEOCODING_API_KEY")
 	fmt.Printf("[DEBUG] Loaded API key from environment: %s\n", apiKey)
 	if apiKey == "" {
 		fmt.Println("[DEBUG] GOOGLE_MAPS_API_KEY environment variable not set")

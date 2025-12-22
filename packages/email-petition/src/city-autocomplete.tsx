@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef } from "react";
 import { Input } from "@dxe/petitions-components/input";
-import ky from "ky";
 
 interface CityPrediction {
   cityAddress: string;
@@ -41,17 +40,63 @@ export function CityAutocomplete({
     }
 
     try {
-      const response = await ky
-        .post(
-          `${process.env.NEXT_PUBLIC_CAMPAIGN_MAILER_API_ROOT}/cityAutocomplete`,
-          {
-            json: { input, lat, lng },
-          },
-        )
-        .json<{ predictions: CityPrediction[] }>();
+      const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_PLACES_NEW_API_KEY;
+      if (!apiKey) {
+        console.error("Google Maps API key not found");
+        return;
+      }
 
-      setPredictions(response.predictions);
-      setIsOpen(response.predictions.length > 0);
+      // Generate session token for cost optimization (max 36 characters)
+      const sessionToken = `ac-${Date.now().toString(36)}-${Math.random().toString(36).substring(2, 5)}`;
+
+      // Request body for Google Places API
+      const requestBody = {
+        input,
+        locationRestriction: {
+          circle: {
+            center: { latitude: lat, longitude: lng },
+            radius: 50000,
+          },
+        },
+        includedPrimaryTypes: ["locality"],
+        sessionToken,
+      };
+
+      const response = await fetch(
+        `https://places.googleapis.com/v1/places:autocomplete?key=${apiKey}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Goog-FieldMask":
+              "suggestions.placePrediction.text,suggestions.placePrediction.structuredFormat.mainText.text",
+          },
+          body: JSON.stringify(requestBody),
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      // Convert Google API response to our format
+      const predictions: CityPrediction[] =
+        data.suggestions?.map((suggestion: any) => {
+          const cityAddress = suggestion.placePrediction?.text?.text || "";
+          const cityName =
+            suggestion.placePrediction?.structuredFormat?.mainText?.text ||
+            cityAddress;
+
+          return {
+            cityAddress,
+            cityName,
+          };
+        }) || [];
+
+      setPredictions(predictions);
+      setIsOpen(predictions.length > 0);
     } catch (error) {
       console.error("Error fetching city predictions:", error);
       setPredictions([]);

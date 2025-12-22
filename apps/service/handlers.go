@@ -190,11 +190,6 @@ type CityAutocompleteReq struct {
 	Lng   float64 `json:"lng"`
 }
 
-// CityAutocompleteResp represents response for city autocomplete
-type CityAutocompleteResp struct {
-	Predictions []api.CityPrediction `json:"predictions"`
-}
-
 // zipToCityLookupHandler handles ZIP code to city lookup requests
 func (s *server) zipToCityLookupHandler(w http.ResponseWriter, r *http.Request) {
 	var req ZipToCityLookupReq
@@ -211,11 +206,11 @@ func (s *server) zipToCityLookupHandler(w http.ResponseWriter, r *http.Request) 
 	}
 
 	// Get Google API key from config or environment
-	apiKey := config.GetGoogleMapsAPIKey()
+	apiKey := config.GetGoogleMapsGeocodingAPIKey()
 	fmt.Printf("[DEBUG] Retrieved API key from config: %s\n", apiKey)
 	if apiKey == "" {
-		fmt.Println("[DEBUG] Google Maps API key not configured in config")
-		http.Error(w, "Google Maps API key not configured", http.StatusInternalServerError)
+		fmt.Println("[DEBUG] Google Maps Geocoding API key not configured in config")
+		http.Error(w, "Google Maps Geocoding API key not configured", http.StatusInternalServerError)
 		return
 	}
 
@@ -242,45 +237,6 @@ func (s *server) zipToCityLookupHandler(w http.ResponseWriter, r *http.Request) 
 		City: city,
 		Lat:  lat,
 		Lng:  lng,
-	}
-
-	json, err := json.Marshal(resp)
-	if err != nil {
-		http.Error(w, "failed to marshal json", http.StatusInternalServerError)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write(json)
-}
-
-// cityAutocompleteHandler handles city autocomplete requests
-func (s *server) cityAutocompleteHandler(w http.ResponseWriter, r *http.Request) {
-	var req CityAutocompleteReq
-
-	err := json.NewDecoder(r.Body).Decode(&req)
-	if err != nil {
-		http.Error(w, "invalid request body", http.StatusBadRequest)
-		return
-	}
-
-	if req.Input == "" {
-		http.Error(w, "input is required", http.StatusBadRequest)
-		return
-	}
-
-	fmt.Printf("[DEBUG] Looking up city predictions for: %s near lat: %f, lng: %f\n", req.Input, req.Lat, req.Lng)
-	predictions, err := api.GetCityPredictions(req.Input, req.Lat, req.Lng)
-	if err != nil {
-		fmt.Printf("[DEBUG] City predictions lookup failed: %v\n", err)
-		http.Error(w, fmt.Sprintf("failed to lookup city predictions: %v", err), http.StatusInternalServerError)
-		return
-	}
-	fmt.Printf("[DEBUG] Successfully found %d city predictions\n", len(predictions))
-
-	resp := CityAutocompleteResp{
-		Predictions: predictions,
 	}
 
 	json, err := json.Marshal(resp)

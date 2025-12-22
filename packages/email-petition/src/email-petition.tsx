@@ -53,7 +53,17 @@ export function EmailPetition(props: {
   onSubmit?: () => void;
   debug: boolean;
   test: boolean;
-  useGoogleMapsApi: boolean;
+  /**
+   * City selection mode prop:
+   * - "sonomaCountyDropdown": Uses static dropdown with Sonoma County cities (no API calls)
+   * - "autocompleteTextbox": Uses Google Geocoding API for zip to city lookup and Google Places API (New) for city autocomplete
+   *
+   * If using "autocompleteTextbox", you must provide:
+   * - areaScope prop for geographic validation
+   * - NEXT_PUBLIC_GOOGLE_MAPS_PLACES_NEW_API_KEY for frontend autocomplete in service/.env.local
+   * - GOOGLE_MAPS_GEOCODING_API_KEY for backend ZIP lookup in [website]/.env
+   */
+  citySelectionMode: "sonomaCountyDropdown" | "autocompleteTextbox";
   areaScope?: {
     name: string;
     scope: "city" | "county" | "state" | "country";
@@ -218,13 +228,18 @@ export function EmailPetition(props: {
 
   // Call API when zip code changes
   useEffect(() => {
-    if (zip && !outsideUS && zip.length === 5 && props.useGoogleMapsApi) {
+    if (
+      zip &&
+      !outsideUS &&
+      zip.length === 5 &&
+      props.citySelectionMode === "autocompleteTextbox"
+    ) {
       fetchCityByZip(zip);
     } else if (
       zip &&
       !outsideUS &&
       zip.length === 5 &&
-      !props.useGoogleMapsApi
+      props.citySelectionMode === "sonomaCountyDropdown"
     ) {
       // For non-Google Maps apps, only show city field if ZIP is in SonomaCities
       if (zip in SonomaCities) {
@@ -301,7 +316,7 @@ export function EmailPetition(props: {
   // Function to call zipToCityLookup API
   const fetchCityByZip = async (zipCode: string) => {
     // Don't make API calls if Google Maps API is disabled
-    if (!props.useGoogleMapsApi) {
+    if (props.citySelectionMode !== "autocompleteTextbox") {
       return;
     }
 
@@ -460,7 +475,7 @@ export function EmailPetition(props: {
                       City {isLoadingCity && "(Loading...)"}
                     </FormLabel>
                     <FormControl>
-                      {props.useGoogleMapsApi ? (
+                      {props.citySelectionMode === "autocompleteTextbox" ? (
                         userInteractedWithCityField ? (
                           <CityAutocomplete
                             value={field.value || ""}
