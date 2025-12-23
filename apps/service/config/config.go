@@ -21,10 +21,6 @@ func getEnvWithFallback(key string, fallback string) string {
 	return v
 }
 
-func GetGoogleMapsGeocodingAPIKey() string {
-	return GoogleMapsGeocodingAPIKey
-}
-
 var helpTheChickensRecipients = []string{
 	"kmcdonnell@cityofpetaluma.org",
 	"knau@cityofpetaluma.org",

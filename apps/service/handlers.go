@@ -7,9 +7,9 @@ import (
 	"net/http"
 	"net/mail"
 
-	"github.com/dxe/service/api"
 	"github.com/dxe/service/config"
 	"github.com/dxe/service/data"
+	"github.com/dxe/service/geocoding"
 	"github.com/dxe/service/model"
 )
 
@@ -205,33 +205,29 @@ func (s *server) zipToCityLookupHandler(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	// Get Google API key from config or environment
-	apiKey := config.GetGoogleMapsGeocodingAPIKey()
-	fmt.Printf("[DEBUG] Retrieved API key from config: %s\n", apiKey)
-	if apiKey == "" {
-		fmt.Println("[DEBUG] Google Maps Geocoding API key not configured in config")
+	if config.GoogleMapsGeocodingAPIKey == "" {
 		http.Error(w, "Google Maps Geocoding API key not configured", http.StatusInternalServerError)
 		return
 	}
 
-	fmt.Printf("[DEBUG] Looking up city for ZIP code: %s\n", req.ZipCode)
-
 	// Convert areaScope to API type if provided
-	var areaScope *api.AreaScope
+	var areaScope *geocoding.AreaScope
 	if req.AreaScope != nil {
-		areaScope = &api.AreaScope{
+		areaScope = &geocoding.AreaScope{
 			Name:  req.AreaScope.Name,
 			Scope: req.AreaScope.Scope,
 		}
 	}
 
-	city, lat, lng, err := api.GetCityByZipCode(req.ZipCode, areaScope)
+	cityResult, err := geocoding.GetCityByZipCode(req.ZipCode, areaScope, config.GoogleMapsGeocodingAPIKey)
 	if err != nil {
-		fmt.Printf("[DEBUG] City lookup failed: %v\n", err)
 		http.Error(w, fmt.Sprintf("failed to lookup city: %v", err), http.StatusInternalServerError)
 		return
 	}
-	fmt.Printf("[DEBUG] Successfully found city: %s, lat: %f, lng: %f\n", city, lat, lng)
+
+	city := cityResult.Name
+	lat := cityResult.Latitude
+	lng := cityResult.Longitude
 
 	resp := ZipToCityLookupResp{
 		City: city,

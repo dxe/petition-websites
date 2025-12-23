@@ -42,7 +42,7 @@ const PETITION_API_URL = `${process.env.NEXT_PUBLIC_PETITIONS_API_ROOT}/sign`;
 
 const CAMPAIGN_MAILER_API_URL = `${process.env.NEXT_PUBLIC_CAMPAIGN_MAILER_API_ROOT}/message/create`;
 
-const ZIP_TO_CITY_API_URL = `${process.env.NEXT_PUBLIC_CAMPAIGN_MAILER_API_ROOT}/zipToCityLookup`;
+const ZIP_TO_CITY_API_URL = `${process.env.NEXT_PUBLIC_CAMPAIGN_MAILER_API_ROOT}/zip-to-city-lookup`;
 
 const CAPTCHA_SITE_KEY = "6LdiglcpAAAAAM9XE_TNnAiZ22NR9nSRxHMOFn8E";
 
@@ -67,6 +67,7 @@ export function EmailPetition(props: {
   areaScope?: {
     name: string;
     scope: "city" | "county" | "state" | "country";
+    googleMapsPlacesApiKey: string;
   };
   signatureThermometer?: {
     defaultGoal: number;
@@ -228,33 +229,26 @@ export function EmailPetition(props: {
 
   // Call API when zip code changes
   useEffect(() => {
-    if (
-      zip &&
-      !outsideUS &&
-      zip.length === 5 &&
-      props.citySelectionMode === "autocompleteTextbox"
-    ) {
-      fetchCityByZip(zip);
-    } else if (
-      zip &&
-      !outsideUS &&
-      zip.length === 5 &&
-      props.citySelectionMode === "sonomaCountyDropdown"
-    ) {
-      // For non-Google Maps apps, only show city field if ZIP is in SonomaCities
-      if (zip in SonomaCities) {
-        setHideCity(false);
-        setUserInteractedWithCityField(false);
-      } else {
-        setValue("city", "");
-        setHideCity(true);
-        setUserInteractedWithCityField(false);
+    if (zip && !outsideUS && zip.length === 5) {
+      if (props.citySelectionMode === "autocompleteTextbox") {
+        fetchCityByZip(zip);
+        return;
+      } else if (props.citySelectionMode === "sonomaCountyDropdown") {
+        // For non-Google Maps apps, only show city field if ZIP is in SonomaCities
+        if (zip in SonomaCities) {
+          setHideCity(false);
+          setUserInteractedWithCityField(false);
+        } else {
+          setValue("city", "");
+          setHideCity(true);
+          setUserInteractedWithCityField(false);
+        }
+        return;
       }
-    } else {
-      setValue("city", "");
-      setHideCity(true);
-      setUserInteractedWithCityField(false); // Reset user interaction when ZIP changes
     }
+    setValue("city", "");
+    setHideCity(true);
+    setUserInteractedWithCityField(false);
   }, [zip, outsideUS, setValue]);
 
   useEffect(() => {
@@ -262,7 +256,7 @@ export function EmailPetition(props: {
     setValue("city", "");
     setCoordinates(null);
     clearErrors(["zip", "city"]);
-    setUserInteractedWithCityField(false); // Reset user interaction when outsideUS changes
+    setUserInteractedWithCityField(false);
   }, [outsideUS, setValue, clearErrors]);
 
   // When cities change, just select it if there's only one. Else, reset the city.
@@ -315,12 +309,7 @@ export function EmailPetition(props: {
 
   // Function to call zipToCityLookup API
   const fetchCityByZip = async (zipCode: string) => {
-    // Don't make API calls if Google Maps API is disabled
-    if (props.citySelectionMode !== "autocompleteTextbox") {
-      return;
-    }
-
-    if (!zipCode || zipCode.length !== 5) {
+    if (zipCode.length !== 5) {
       return;
     }
 
@@ -328,7 +317,6 @@ export function EmailPetition(props: {
     try {
       const requestBody: any = { zip_code: zipCode };
 
-      // Add areaScope if it's provided in props
       if (props.areaScope) {
         requestBody.areaScope = props.areaScope;
       }
@@ -342,21 +330,17 @@ export function EmailPetition(props: {
         })
         .json<{ city: string; lat: number; lng: number }>();
 
-      // Check if the response is empty (indicating area scope mismatch)
       if (!response.city) {
         setValue("city", "");
         setHideCity(true);
         return;
       }
 
-      // Reset hideCity state when we get a valid city
       setHideCity(false);
 
       setValue("city", response.city);
       setCoordinates({ lat: response.lat, lng: response.lng });
       injectValuesIntoMessage(getValues("name"), response.city);
-
-      // Store coordinates if needed for future use
     } catch (error) {
       console.error("Error fetching city:", error);
       setValue("city", "");
@@ -492,8 +476,13 @@ export function EmailPetition(props: {
                                 ? "United States cities only"
                                 : "Santa Rosa"
                             }
-                            lat={coordinates?.lat}
-                            lng={coordinates?.lng}
+                            primaryCityCenterCoordinates={{
+                              lat: coordinates?.lat || 0,
+                              lng: coordinates?.lng || 0,
+                            }}
+                            googleMapsPlacesApiKey={
+                              props.areaScope?.googleMapsPlacesApiKey || ""
+                            }
                           />
                         ) : (
                           <Input

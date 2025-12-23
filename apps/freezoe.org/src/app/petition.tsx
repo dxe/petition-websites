@@ -29,6 +29,8 @@ export function Petition() {
       areaScope={{
         name: "California",
         scope: "state",
+        googleMapsPlacesApiKey:
+          process.env.NEXT_PUBLIC_GOOGLE_MAPS_PLACES_NEW_API_KEY!,
       }}
       signatureThermometer={{
         defaultGoal: Number(process.env.NEXT_PUBLIC_THERMOMETER_GOAL!),

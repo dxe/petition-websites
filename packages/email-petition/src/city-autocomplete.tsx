@@ -8,14 +8,21 @@ interface CityPrediction {
   cityName: string;
 }
 
+interface Coordinates {
+  lat: number;
+  lng: number;
+}
+
 interface CityAutocompleteProps {
   value: string;
   onChange: (value: string) => void;
   onBlur: () => void;
-  disabled?: boolean;
+  disabled: boolean;
   placeholder?: string;
-  lat?: number;
-  lng?: number;
+  // Coordinates at the epicenter of the primary city affiliated to the zipcode based on Google Geocoding API.
+  // Used as the center of a custom search radius to restrict the cities that show up in the autocomplete dropdown.
+  primaryCityCenterCoordinates: Coordinates;
+  googleMapsPlacesApiKey: string;
 }
 
 export function CityAutocomplete({
@@ -24,29 +31,32 @@ export function CityAutocomplete({
   onBlur,
   disabled = false,
   placeholder = "Santa Rosa",
-  lat,
-  lng,
+  primaryCityCenterCoordinates,
+  googleMapsPlacesApiKey,
 }: CityAutocompleteProps) {
+  if (!googleMapsPlacesApiKey) {
+    console.error("Google Maps Places API key not provided");
+    return null;
+  }
+
   const [predictions, setPredictions] = useState<CityPrediction[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const fetchPredictions = async (input: string) => {
-    if (input.length == 0 || !lat || !lng) {
+    if (
+      input.length == 0 ||
+      !primaryCityCenterCoordinates.lat ||
+      !primaryCityCenterCoordinates.lng
+    ) {
       setPredictions([]);
       setIsOpen(false);
       return;
     }
 
     try {
-      const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_PLACES_NEW_API_KEY;
-      if (!apiKey) {
-        console.error("Google Maps API key not found");
-        return;
-      }
-
-      // Generate session token for cost optimization (max 36 characters)
+      // Generate session token for cost optimization (max allowed length: 36 characters)
       const sessionToken = `ac-${Date.now().toString(36)}-${Math.random().toString(36).substring(2, 5)}`;
 
       // Request body for Google Places API
@@ -54,7 +64,12 @@ export function CityAutocomplete({
         input,
         locationRestriction: {
           circle: {
-            center: { latitude: lat, longitude: lng },
+            center: {
+              latitude: primaryCityCenterCoordinates.lat,
+              longitude: primaryCityCenterCoordinates.lng,
+            },
+            // 50 km is the maximum allowed by the autocomplete API: https://developers.google.com/maps/documentation/javascript/reference/places-service#LocationRestriction
+            // Note: This may exclude some relevant cities in dispersed regions.
             radius: 50000,
           },
         },
@@ -63,7 +78,7 @@ export function CityAutocomplete({
       };
 
       const response = await fetch(
-        `https://places.googleapis.com/v1/places:autocomplete?key=${apiKey}`,
+        `https://places.googleapis.com/v1/places:autocomplete?key=${googleMapsPlacesApiKey}`,
         {
           method: "POST",
           headers: {
@@ -115,7 +130,11 @@ export function CityAutocomplete({
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [value, lat, lng]);
+  }, [
+    value,
+    primaryCityCenterCoordinates.lat,
+    primaryCityCenterCoordinates.lng,
+  ]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
