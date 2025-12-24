@@ -203,14 +203,14 @@ function WhyIsZoeInJailSection() {
         Why is Zoe in custody?
       </h2>
       <div className="flex flex-col lg:flex-row items-center justify-evenly gap-12">
-        <div className="w-full lg:w-1/2 flex items-center justify-center order-1 lg:order-1">
+        <div className="w-full lg:w-1/2 flex items-center justify-center order-1 lg:order-2">
           <Image
             src={zoeRescuedChicken}
             alt="Rescued chicken outdoors"
             className="rounded-2xl w-full object-cover max-h-80 lg:max-h-[700px] object-[center_60%] lg:object-[center_100%]"
           />
         </div>
-        <div className="w-full lg:w-1/2 text-left space-y-8 order-2 lg:order-2">
+        <div className="w-full lg:w-1/2 text-left space-y-8 order-2 lg:order-1">
           <p>
             In June 2023, Zoe and other animal cruelty investigators with Direct
             Action Everywhere (DxE) openly rescued four ailing chickens from
