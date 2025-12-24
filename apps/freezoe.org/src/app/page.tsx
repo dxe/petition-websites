@@ -7,7 +7,6 @@ import Image from "next/image";
 import hero from "./img/zoe-hero-2.jpg";
 import zoeArrested from "./img/zoe-arrested-nov-30-2023.jpeg";
 import zoeWithAnimal from "./img/zoe-with-two-rescued-hens.jpg";
-import zoeHealthRisk from "./img/zoe-health-risk.jpg";
 import zoeRescuedChicken from "./img/zoe-rescued-chicken.jpg";
 import { PetitionWithSuspense } from "./petition";
 import { PressHits } from "./press-hits";
@@ -41,7 +40,6 @@ function HomePage() {
       <PetitionSection />
       <MoreBackgroundSection />
       <WhoIsZoeSection />
-      <ZoesHealthSection />
       <WhyIsZoeInJailSection />
       <TakeActionSection />
       <PressHits />
@@ -67,7 +65,7 @@ function Hero() {
               Free Zoe Rosenberg
             </h1>
             <p className="font-medium max-w-lg">
-              Zoe was politically prosecuted. Now, her life is in danger.
+              Zoe was politically prosecuted for rescuing animals.
             </p>
           </div>
           <ScrollButton
@@ -119,11 +117,14 @@ function MoreBackgroundSection() {
       <div className="flex flex-col lg:flex-row items-center justify-evenly gap-12">
         <div className="w-full lg:w-1/2 text-left space-y-8 order-2 lg:order-1">
           <p>
-            Zoe is incarcerated in Sonoma County, CA for the &quot;crime&quot;
-            of rescuing animals from abuse at a Perdue-owned slaughterhouse.{" "}
-            <b>All along, this was a political prosecution</b>; instead of
-            prosecuting Perdue for documented animal cruelty, the District
-            Attorney punished Zoe for exposing it.
+            Zoe was sentenced to 90 days in custody in Sonoma County, CA for the
+            &quot;crime&quot; of rescuing animals from abuse at a Perdue-owned
+            slaughterhouse. She spent the first portion of her sentence in jail
+            and was released on December 24th after being approved for jail
+            alternatives. She will spend the rest of her sentence on restrictive
+            house arrest. <b>All along, this was a political prosecution</b>;
+            instead of prosecuting Perdue for documented animal cruelty, the
+            District Attorney punished Zoe for exposing it.
           </p>
           <p>
             The District Attorney charged Zoe with a ramped-up felony conspiracy
@@ -136,22 +137,8 @@ function MoreBackgroundSection() {
             sentenced to jail.
           </p>
           <p>
-            <b>
-              Her incarceration isn&apos;t just unjust; it is life-threatening.
-            </b>{" "}
-            Zoe has a serious chronic illness that requires constant medical
-            attention.{" "}
-            <b>
-              Being deprived of her freedom and medical care while in jail could
-              kill her.
-            </b>
-          </p>
-          <p>
-            We demand her immediate release.{" "}
-            <b>
-              Compassion should not be criminalized, and it certainly
-              shouldn&apos;t be a death sentence.
-            </b>
+            We demand her immediate pardon.{" "}
+            <b>Compassion should not be criminalized.</b>
           </p>
         </div>
         <div className="w-full lg:w-1/2 flex items-center justify-center order-1 lg:order-2">
@@ -209,65 +196,11 @@ function WhoIsZoeSection() {
   );
 }
 
-function ZoesHealthSection() {
-  return (
-    <Section className="bg-red-50">
-      <h2 className="border-b border-slate-300 pb-2 uppercase text-xl tracking-wide text-slate-800">
-        Zoe&apos;s Health is at Immediate Risk
-      </h2>
-      <div className="flex flex-col lg:flex-row items-center justify-evenly gap-12">
-        <div className="w-full lg:w-1/2 text-left space-y-8 order-2 lg:order-1">
-          <p>
-            Zoe lives with Type 1 Diabetes, meaning she is insulin-dependent. If
-            she goes off insulin for even just several hours, she could go into
-            diabetic ketoacidosis which is life-threatening and requires
-            immediate hospitalization.{" "}
-            <b>
-              Despite this, the Sonoma County jail threatened to take away
-              Zoe&apos;s insulin pump when she was initially arrested in this
-              case.
-            </b>
-          </p>
-          <p>
-            If her blood sugar drops without prompt treatment with glucose, she
-            could have a seizure, go into a coma, or die. Zoe also suffers from
-            serious complications from her diabetes, including gastroparesis –
-            partial stomach paralysis that prevents her from eating or drinking
-            enough, leading to dehydration, weight loss, and malnutrition.
-          </p>
-          <p>
-            <b>
-              Without constant access to her medical supplies and regular care,
-              Zoe could die in custody.
-            </b>{" "}
-            Her incarceration is not only unjust—it is a direct threat to her
-            life.
-          </p>
-          <p className="text-slate-700">
-            Tragically, it is not uncommon for people with diabetes to die
-            preventable deaths in custody due to lack of medical care.
-          </p>
-        </div>
-        <div className="w-full lg:w-1/2 flex items-center justify-center order-1 lg:order-2">
-          <Image
-            src={zoeHealthRisk}
-            alt="Zoe Rosenberg"
-            className="rounded-2xl w-full object-cover max-h-80 lg:max-h-[500px]"
-            style={{
-              objectPosition: "center 40%",
-            }}
-          />
-        </div>
-      </div>
-    </Section>
-  );
-}
-
 function WhyIsZoeInJailSection() {
   return (
     <Section>
       <h2 className="border-b border-slate-300 pb-2 uppercase text-xl tracking-wide text-slate-800">
-        Why is Zoe in Jail?
+        Why is Zoe in custody?
       </h2>
       <div className="flex flex-col lg:flex-row items-center justify-evenly gap-12">
         <div className="w-full lg:w-1/2 flex items-center justify-center order-1 lg:order-1">
@@ -347,20 +280,12 @@ function TakeActionSection() {
         </p>
         <ul className="list-disc pl-8 space-y-3 text-lg">
           <li>
-            Ask your friends and family to sign the petition to free Zoe now. 
+            Ask your friends and family to sign the petition to free Zoe now.
           </li>
           <li>
             Share Zoe&apos;s story on social media with{" "}
             <span className="font-semibold">#FreeZoe</span> and{" "}
             <span className="font-semibold">#RightToRescue</span>.
-          </li>
-          <li>
-            Organize a Free Zoe march or rally in your area. You can find Free Zoe materials and instructions in
-            this simple campaign guide:{" "}
-            <a href="https://dxe.io/guide" className="underline">
-              dxe.io/guide
-            </a>
-            .
           </li>
           <li>
             {" "}
@@ -374,12 +299,12 @@ function TakeActionSection() {
             and the right to rescue animals from abuse.
           </li>
           <li>
-            Write a letter to Zoe in jail. {" "}
+            Write a letter to Zoe on house arrest.{" "}
             <a
               href="https://docs.google.com/document/d/13_GfwrsF6ahr7pT0em-epbFLtLqublc6dfjAhyAP_8A/edit?usp=sharing"
               className="underline"
             >
-              Instructions for writing to Zoe are here. 
+              Instructions for writing to Zoe are here.
             </a>{" "}
           </li>
           <li>
