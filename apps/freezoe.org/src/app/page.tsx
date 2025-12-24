@@ -300,8 +300,9 @@ function TakeActionSection() {
           </li>
           <li>
             Write a letter to Zoe on house arrest.{" "}
+            {/* Original link: https://docs.google.com/document/d/13_GfwrsF6ahr7pT0em-epbFLtLqublc6dfjAhyAP_8A/edit?usp=sharing */}
             <a
-              href="https://docs.google.com/document/d/13_GfwrsF6ahr7pT0em-epbFLtLqublc6dfjAhyAP_8A/edit?usp=sharing"
+              href="https://docs.google.com/document/d/1EK4PJ74PjrdVzTlCp2FR1y2kn28wO0GsaQjNQejPpDA/edit?usp=sharing"
               className="underline"
             >
               Instructions for writing to Zoe are here.
