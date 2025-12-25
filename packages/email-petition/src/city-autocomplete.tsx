@@ -2,19 +2,14 @@
 
 import { useState, useEffect, useRef } from "react";
 import { Input } from "@dxe/petitions-components/input";
-
-interface CityPrediction {
-  cityAddress: string;
-  cityName: string;
-}
-
-interface Coordinates {
-  lat: number;
-  lng: number;
-}
+import {
+  googleMapsPlacesAutoCompleteApiResponse,
+  CityPrediction,
+  Coordinates,
+} from "./google-maps-places-autocomplete-api";
 
 interface CityAutocompleteProps {
-  value: string;
+  searchInput: string;
   onChange: (value: string) => void;
   onBlur: () => void;
   disabled: boolean;
@@ -26,7 +21,7 @@ interface CityAutocompleteProps {
 }
 
 export function CityAutocomplete({
-  value,
+  searchInput,
   onChange,
   onBlur,
   disabled = false,
@@ -44,94 +39,52 @@ export function CityAutocomplete({
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const fetchPredictions = async (input: string) => {
+  const fetchCityPredictions = async (
+    searchQuery: string,
+  ): Promise<CityPrediction[]> => {
     if (
-      input.length == 0 ||
+      searchQuery.length == 0 ||
       !primaryCityCenterCoordinates.lat ||
       !primaryCityCenterCoordinates.lng
     ) {
-      setPredictions([]);
-      setIsOpen(false);
-      return;
+      return [];
     }
 
     try {
-      // Generate session token for cost optimization (max allowed length: 36 characters)
-      const sessionToken = `ac-${Date.now().toString(36)}-${Math.random().toString(36).substring(2, 5)}`;
-
-      // Request body for Google Places API
-      const requestBody = {
-        input,
-        locationRestriction: {
-          circle: {
-            center: {
-              latitude: primaryCityCenterCoordinates.lat,
-              longitude: primaryCityCenterCoordinates.lng,
-            },
-            // 50 km is the maximum allowed by the autocomplete API: https://developers.google.com/maps/documentation/javascript/reference/places-service#LocationRestriction
-            // Note: This may exclude some relevant cities in dispersed regions.
-            radius: 50000,
-          },
-        },
-        includedPrimaryTypes: ["locality"],
-        sessionToken,
-      };
-
-      const response = await fetch(
-        `https://places.googleapis.com/v1/places:autocomplete?key=${googleMapsPlacesApiKey}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "X-Goog-FieldMask":
-              "suggestions.placePrediction.text,suggestions.placePrediction.structuredFormat.mainText.text",
-          },
-          body: JSON.stringify(requestBody),
-        },
+      return await googleMapsPlacesAutoCompleteApiResponse(
+        searchQuery,
+        primaryCityCenterCoordinates,
+        googleMapsPlacesApiKey,
       );
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-
-      // Convert Google API response to our format
-      const predictions: CityPrediction[] =
-        data.suggestions?.map((suggestion: any) => {
-          const cityAddress = suggestion.placePrediction?.text?.text || "";
-          const cityName =
-            suggestion.placePrediction?.structuredFormat?.mainText?.text ||
-            cityAddress;
-
-          return {
-            cityAddress,
-            cityName,
-          };
-        }) || [];
-
-      setPredictions(predictions);
-      setIsOpen(predictions.length > 0);
     } catch (error) {
       console.error("Error fetching city predictions:", error);
-      setPredictions([]);
-      setIsOpen(false);
+      return [];
     }
   };
 
+  const updatePredictionsState = (predictions: CityPrediction[]) => {
+    setPredictions(predictions);
+    setIsOpen(predictions.length > 0);
+  };
+
+  const clearPredictionsState = () => {
+    setPredictions([]);
+    setIsOpen(false);
+  };
+
   useEffect(() => {
-    const timer = setTimeout(() => {
-      if (value) {
-        fetchPredictions(value);
+    const timer = setTimeout(async () => {
+      if (searchInput) {
+        const predictions = await fetchCityPredictions(searchInput);
+        updatePredictionsState(predictions);
       } else {
-        setPredictions([]);
-        setIsOpen(false);
+        clearPredictionsState();
       }
     }, 300);
 
     return () => clearTimeout(timer);
   }, [
-    value,
+    searchInput,
     primaryCityCenterCoordinates.lat,
     primaryCityCenterCoordinates.lng,
   ]);
@@ -154,8 +107,7 @@ export function CityAutocomplete({
 
   const selectPrediction = (prediction: CityPrediction) => {
     onChange(prediction.cityName);
-    setPredictions([]);
-    setIsOpen(false);
+    clearPredictionsState();
   };
 
   return (
@@ -163,7 +115,7 @@ export function CityAutocomplete({
       <Input
         ref={inputRef}
         type="text"
-        value={value}
+        value={searchInput}
         onChange={(e) => onChange(e.target.value)}
         onBlur={onBlur}
         disabled={disabled}

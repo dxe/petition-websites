@@ -60,8 +60,7 @@ export function EmailPetition(props: {
    *
    * If using "autocompleteTextbox", you must provide:
    * - areaScope prop for geographic validation
-   * - NEXT_PUBLIC_GOOGLE_MAPS_PLACES_NEW_API_KEY for frontend autocomplete in service/.env.local
-   * - GOOGLE_MAPS_GEOCODING_API_KEY for backend ZIP lookup in [website]/.env
+   * - googleMapsPlacesApiKey for city autocomplete
    */
   citySelectionMode: "sonomaCountyDropdown" | "autocompleteTextbox";
   areaScope?: {
@@ -127,6 +126,7 @@ export function EmailPetition(props: {
     lat: number;
     lng: number;
   } | null>(null);
+  const [isCityInScope, setIsCityInScope] = useState(false);
 
   const onReactHookFormSubmit = useMemo(
     () =>
@@ -165,7 +165,7 @@ export function EmailPetition(props: {
               email: data.email,
               ...(data.phone && { phone: data.phone }),
               ...(data.zip && { zip: data.zip }),
-              ...(data.city && { city: data.city }),
+              ...(data.city && isCityInScope && { city: data.city }),
               ...(!data.outsideUS && { country: "United States" }),
               fullHref: window.location.href,
             }),
@@ -227,7 +227,7 @@ export function EmailPetition(props: {
 
   const queryClient = useMemo(() => new QueryClient(), []);
 
-  // Call API when zip code changes
+  // Fetch default city when zip code changes
   useEffect(() => {
     if (zip && !outsideUS && zip.length === 5) {
       if (props.citySelectionMode === "autocompleteTextbox") {
@@ -255,6 +255,7 @@ export function EmailPetition(props: {
     setValue("zip", "");
     setValue("city", "");
     setCoordinates(null);
+    setIsCityInScope(false);
     clearErrors(["zip", "city"]);
     setUserInteractedWithCityField(false);
   }, [outsideUS, setValue, clearErrors]);
@@ -328,7 +329,12 @@ export function EmailPetition(props: {
             "Content-Type": "application/json",
           },
         })
-        .json<{ city: string; lat: number; lng: number }>();
+        .json<{
+          city: string;
+          lat: number;
+          lng: number;
+          isCityInScope: boolean;
+        }>();
 
       if (!response.city) {
         setValue("city", "");
@@ -336,7 +342,8 @@ export function EmailPetition(props: {
         return;
       }
 
-      setHideCity(false);
+      setHideCity(!response.isCityInScope);
+      setIsCityInScope(response.isCityInScope);
 
       setValue("city", response.city);
       setCoordinates({ lat: response.lat, lng: response.lng });
@@ -462,7 +469,7 @@ export function EmailPetition(props: {
                       {props.citySelectionMode === "autocompleteTextbox" ? (
                         userInteractedWithCityField ? (
                           <CityAutocomplete
-                            value={field.value || ""}
+                            searchInput={field.value || ""}
                             onChange={(value) => {
                               field.onChange(value);
                               injectValuesIntoMessage(getValues("name"), value);

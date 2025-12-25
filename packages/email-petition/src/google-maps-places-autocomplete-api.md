@@ -1,10 +1,10 @@
-# Google Places Autocomplete API Documentation
+# Google Maps Places Autocomplete API Documentation
 
 ## Overview
 
-The Google Places Autocomplete API provides real-time place predictions based on partial user input.
+The Google Maps Places Autocomplete API provides real-time place predictions based on partial user input.
 
-**Note**: The petition system uses the NEW Google Places API (v1) with POST requests and JSON body, not the legacy API with GET parameters.
+**Note**: The petition system uses the NEW Google Maps Places API (v1) with POST requests and JSON body, not the legacy API with GET parameters.
 
 ## Response Structure
 
@@ -44,4 +44,4 @@ The Google Places Autocomplete API provides real-time place predictions based on
 
 ## Further Reading
 
-For complete documentation, see the [Official Google Places API Documentation](https://developers.google.com/maps/documentation/places/web-service/autocomplete).
+For complete documentation, see the [Official Google Maps Places Autocomplete API Documentation](https://developers.google.com/maps/documentation/places/web-service/autocomplete).
