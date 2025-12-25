@@ -3,6 +3,7 @@ package geocoding
 import "fmt"
 
 func extractCityFromGeocodingResponse(geocodingResp *GoogleGeocodingResponse, zipCode string, areaScope *AreaScope) (*CityResult, error) {
+
 	// Extract city from the first result
 	if len(geocodingResp.Results) == 0 {
 		return nil, fmt.Errorf("no results found for ZIP code: %s", zipCode)
@@ -12,6 +13,7 @@ func extractCityFromGeocodingResponse(geocodingResp *GoogleGeocodingResponse, zi
 
 	// Validate area scope if provided
 	if areaScope != nil {
+
 		// Custom defined area scope to Google Maps component type
 		var componentType string
 		switch areaScope.Scope {
@@ -58,12 +60,13 @@ func extractCityFromGeocodingResponse(geocodingResp *GoogleGeocodingResponse, zi
 			if componentType == "locality" {
 				lat := geocodingResp.Results[0].Coordinates.Location.Lat
 				lng := geocodingResp.Results[0].Coordinates.Location.Lng
-				return &CityResult{
+				result := &CityResult{
 					Name:          component.LongName,
 					Latitude:      lat,
 					Longitude:     lng,
 					IsCityInScope: isCityInScope,
-				}, nil
+				}
+				return result, nil
 			}
 		}
 	}
