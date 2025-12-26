@@ -7,9 +7,10 @@ import (
 )
 
 var (
-	Port            = getEnvWithFallback("PORT", "3333")
-	Dsn             = getEnvWithFallback("DB_CONNECTION_STRING", "adb_user:adbpassword@tcp(localhost:3306)/campaign_mailer")
-	RecaptchaSecret = getEnvWithFallback("RECAPTCHA_SECRET", "")
+	Port                      = getEnvWithFallback("PORT", "3333")
+	Dsn                       = getEnvWithFallback("DB_CONNECTION_STRING", "adb_user:adbpassword@tcp(localhost:3306)/campaign_mailer")
+	RecaptchaSecret           = getEnvWithFallback("RECAPTCHA_SECRET", "")
+	GoogleMapsGeocodingAPIKey = getEnvWithFallback("GOOGLE_MAPS_GEOCODING_API_KEY", "")
 )
 
 func getEnvWithFallback(key string, fallback string) string {

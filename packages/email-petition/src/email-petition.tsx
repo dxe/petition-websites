@@ -36,10 +36,13 @@ import { LoaderIcon, MailCheckIcon } from "lucide-react";
 import ReCAPTCHA from "react-google-recaptcha";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Thermometer } from "./thermometer/thermometer";
+import { CityAutocomplete } from "./city-autocomplete";
 
 const PETITION_API_URL = `${process.env.NEXT_PUBLIC_PETITIONS_API_ROOT}/sign`;
 
 const CAMPAIGN_MAILER_API_URL = `${process.env.NEXT_PUBLIC_CAMPAIGN_MAILER_API_ROOT}/message/create`;
+
+const ZIP_TO_CITY_API_URL = `${process.env.NEXT_PUBLIC_CAMPAIGN_MAILER_API_ROOT}/zip-to-city-lookup`;
 
 const CAPTCHA_SITE_KEY = "6LdiglcpAAAAAM9XE_TNnAiZ22NR9nSRxHMOFn8E";
 
@@ -50,6 +53,21 @@ export function EmailPetition(props: {
   onSubmit?: () => void;
   debug: boolean;
   test: boolean;
+  /**
+   * City selection mode prop:
+   * - "sonomaCountyDropdown": Uses static dropdown with Sonoma County cities (no API calls)
+   * - "autocompleteTextbox": Uses Google Geocoding API for zip to city lookup and Google Places API (New) for city autocomplete
+   *
+   * If using "autocompleteTextbox", you must provide:
+   * - areaScope prop for geographic validation
+   * - googleMapsPlacesApiKey for city autocomplete
+   */
+  citySelectionMode: "sonomaCountyDropdown" | "autocompleteTextbox";
+  areaScope?: {
+    name: string;
+    scope: "city" | "county" | "state" | "country";
+    googleMapsPlacesApiKey: string;
+  };
   signatureThermometer?: {
     defaultGoal: number;
   };
@@ -100,6 +118,15 @@ export function EmailPetition(props: {
   } = form;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isLoadingCity, setIsLoadingCity] = useState(false);
+  const [hideCity, setHideCity] = useState(true);
+  const [userInteractedWithCityField, setUserInteractedWithCityField] =
+    useState(false);
+  const [coordinates, setCoordinates] = useState<{
+    lat: number;
+    lng: number;
+  } | null>(null);
+  const [isCityInScope, setIsCityInScope] = useState(false);
 
   const onReactHookFormSubmit = useMemo(
     () =>
@@ -138,7 +165,7 @@ export function EmailPetition(props: {
               email: data.email,
               ...(data.phone && { phone: data.phone }),
               ...(data.zip && { zip: data.zip }),
-              ...(data.city && { city: data.city }),
+              ...(data.city && isCityInScope && { city: data.city }),
               ...(!data.outsideUS && { country: "United States" }),
               fullHref: window.location.href,
             }),
@@ -200,12 +227,37 @@ export function EmailPetition(props: {
 
   const queryClient = useMemo(() => new QueryClient(), []);
 
-  // Clear zip code if not in US to avoid validation errors when this field must be blank anyway.
+  // Fetch default city when zip code changes
   useEffect(() => {
-    if (outsideUS) {
-      setValue("zip", "");
-      clearErrors(["zip", "city"]);
+    if (zip && !outsideUS && zip.length === 5) {
+      if (props.citySelectionMode === "autocompleteTextbox") {
+        fetchCityByZip(zip);
+        return;
+      } else if (props.citySelectionMode === "sonomaCountyDropdown") {
+        // For non-Google Maps apps, only show city field if ZIP is in SonomaCities
+        if (zip in SonomaCities) {
+          setHideCity(false);
+          setUserInteractedWithCityField(false);
+        } else {
+          setValue("city", "");
+          setHideCity(true);
+          setUserInteractedWithCityField(false);
+        }
+        return;
+      }
     }
+    setValue("city", "");
+    setHideCity(true);
+    setUserInteractedWithCityField(false);
+  }, [zip, outsideUS, setValue]);
+
+  useEffect(() => {
+    setValue("zip", "");
+    setValue("city", "");
+    setCoordinates(null);
+    setIsCityInScope(false);
+    clearErrors(["zip", "city"]);
+    setUserInteractedWithCityField(false);
   }, [outsideUS, setValue, clearErrors]);
 
   // When cities change, just select it if there's only one. Else, reset the city.
@@ -255,6 +307,54 @@ export function EmailPetition(props: {
   );
 
   const recaptchaRef = useRef<ReCAPTCHA>(null);
+
+  // Function to call zipToCityLookup API
+  const fetchCityByZip = async (zipCode: string) => {
+    if (zipCode.length !== 5) {
+      return;
+    }
+
+    setIsLoadingCity(true);
+    try {
+      const requestBody: any = { zip_code: zipCode };
+
+      if (props.areaScope) {
+        requestBody.areaScope = props.areaScope;
+      }
+
+      const response = await ky
+        .post(ZIP_TO_CITY_API_URL, {
+          json: requestBody,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+        .json<{
+          city: string;
+          lat: number;
+          lng: number;
+          isCityInScope: boolean;
+        }>();
+
+      if (!response.city) {
+        setValue("city", "");
+        setHideCity(true);
+        return;
+      }
+
+      setHideCity(!response.isCityInScope);
+      setIsCityInScope(response.isCityInScope);
+
+      setValue("city", response.city);
+      setCoordinates({ lat: response.lat, lng: response.lng });
+      injectValuesIntoMessage(getValues("name"), response.city);
+    } catch (error) {
+      console.error("Error fetching city:", error);
+      setValue("city", "");
+    } finally {
+      setIsLoadingCity(false);
+    }
+  };
 
   return isSubmitted ? (
     <Alert className="self-center w-fit bg-slate-100">
@@ -355,52 +455,104 @@ export function EmailPetition(props: {
                 </FormItem>
               )}
             />
-            <FormField
-              control={control}
-              name="city"
-              disabled={outsideUS || isSubmitting}
-              render={({ field }) => (
-                <FormItem className={cn({ hidden: !cities.length })}>
-                  <FormLabel>City</FormLabel>
-                  <Select
-                    onValueChange={(val: string | undefined) => {
-                      field.onChange(val);
-                      injectValuesIntoMessage(getValues("name"), val);
-                    }}
-                    defaultValue={field.value}
-                    value={field.value}
-                  >
+            {!hideCity && (
+              <FormField
+                control={control}
+                name="city"
+                disabled={outsideUS || isSubmitting}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      City {isLoadingCity && "(Loading...)"}
+                    </FormLabel>
                     <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a city" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {cities?.map((city) => (
-                        <SelectItem
-                          value={city}
-                          key={city}
-                          onBlur={field.onBlur}
+                      {props.citySelectionMode === "autocompleteTextbox" ? (
+                        userInteractedWithCityField ? (
+                          <CityAutocomplete
+                            searchInput={field.value || ""}
+                            onChange={(value) => {
+                              field.onChange(value);
+                              injectValuesIntoMessage(getValues("name"), value);
+                            }}
+                            onBlur={field.onBlur}
+                            disabled={
+                              isLoadingCity || outsideUS || isSubmitting
+                            }
+                            placeholder={
+                              outsideUS
+                                ? "United States cities only"
+                                : "Santa Rosa"
+                            }
+                            primaryCityCenterCoordinates={{
+                              lat: coordinates?.lat || 0,
+                              lng: coordinates?.lng || 0,
+                            }}
+                            googleMapsPlacesApiKey={
+                              props.areaScope?.googleMapsPlacesApiKey || ""
+                            }
+                          />
+                        ) : (
+                          <Input
+                            type="text"
+                            value={field.value || ""}
+                            onChange={(e) => {
+                              field.onChange(e.target.value);
+                              injectValuesIntoMessage(
+                                getValues("name"),
+                                e.target.value,
+                              );
+                              setUserInteractedWithCityField(true);
+                            }}
+                            onBlur={field.onBlur}
+                            disabled={
+                              isLoadingCity || outsideUS || isSubmitting
+                            }
+                            placeholder={
+                              outsideUS
+                                ? "United States cities only"
+                                : "Santa Rosa"
+                            }
+                          />
+                        )
+                      ) : (
+                        <Select
+                          onValueChange={(val: string | undefined) => {
+                            field.onChange(val);
+                            injectValuesIntoMessage(getValues("name"), val);
+                          }}
+                          defaultValue={field.value}
+                          value={field.value}
                         >
-                          {city}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select a city" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {cities?.map((city) => (
+                              <SelectItem
+                                value={city}
+                                key={city}
+                                onBlur={field.onBlur}
+                              >
+                                {city}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      )}
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
             <FormField
               control={control}
               name="outsideUS"
               disabled={isSubmitting}
               render={({ field }) => (
-                <FormItem
-                  className={cn("flex gap-2 items-center", {
-                    hidden: cities.length,
-                  })}
-                >
+                <FormItem>
                   <FormControl>
                     <Checkbox
                       checked={field.value}
