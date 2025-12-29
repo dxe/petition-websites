@@ -49,7 +49,7 @@ export const Thermometer = ({
             {data ? calculatedAmt : "✍️"}
           </span>
           <span className="text-sm whitespace-nowrap">
-            {data?.total.toLocaleString() ?? "Loading"} emails sent
+            {data?.total.toLocaleString() ?? "Loading"} petitions signed
           </span>
         </div>
         <div className="self-end text-right">
