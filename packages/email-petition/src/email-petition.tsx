@@ -103,7 +103,9 @@ export function EmailPetition(props: {
       outsideUS: false,
       zip: "",
       city: "",
+      isValidCity: false,
       message: props.defaultMessage,
+      citySelectionMode: props.citySelectionMode,
     },
   });
   const {
@@ -127,6 +129,7 @@ export function EmailPetition(props: {
     lng: number;
   } | null>(null);
   const [isCityInScope, setIsCityInScope] = useState(false);
+  // Remove the local state for isValidCity as it's now part of the form
 
   const onReactHookFormSubmit = useMemo(
     () =>
@@ -134,6 +137,7 @@ export function EmailPetition(props: {
         if (props.onSubmit != null) {
           props.onSubmit();
         }
+
         setIsSubmitting(true);
         if (!recaptchaRef.current) {
           alert("Error loading captcha. Please refresh the page & try again.");
@@ -150,7 +154,7 @@ export function EmailPetition(props: {
         const message = injectMessageValues(
           data.message,
           data.name,
-          data.city,
+          isCityInScope ? data.city : undefined,
           false,
         );
 
@@ -165,7 +169,9 @@ export function EmailPetition(props: {
               email: data.email,
               ...(data.phone && { phone: data.phone }),
               ...(data.zip && { zip: data.zip }),
-              ...(data.city && isCityInScope && { city: data.city }),
+              ...(data.city && { city: data.city }),
+              ...(data.state && { state: data.state }),
+              ...(data.coords && { coords: data.coords }),
               ...(!data.outsideUS && { country: "United States" }),
               fullHref: window.location.href,
             }),
@@ -227,14 +233,16 @@ export function EmailPetition(props: {
 
   const queryClient = useMemo(() => new QueryClient(), []);
 
-  // Fetch default city when zip code changes
+  // Handle zip code changes
   useEffect(() => {
     if (zip && !outsideUS && zip.length === 5) {
       if (props.citySelectionMode === "autocompleteTextbox") {
+        // In autocompleteTextbox mode, always show the city field
+        setHideCity(false);
         fetchCityByZip(zip);
         return;
       } else if (props.citySelectionMode === "sonomaCountyDropdown") {
-        // For non-Google Maps apps, only show city field if ZIP is in SonomaCities
+        // In sonomaCountyDropdown mode, only show city field if ZIP is in SonomaCities
         if (zip in SonomaCities) {
           setHideCity(false);
           setUserInteractedWithCityField(false);
@@ -246,8 +254,13 @@ export function EmailPetition(props: {
         return;
       }
     }
+    // When clearing zip or outside US, reset city but only hide in sonomaCountyDropdown mode
     setValue("city", "");
-    setHideCity(true);
+    if (props.citySelectionMode === "sonomaCountyDropdown") {
+      setHideCity(true);
+    } else {
+      setHideCity(false);
+    }
     setUserInteractedWithCityField(false);
   }, [zip, outsideUS, setValue]);
 
@@ -257,6 +270,12 @@ export function EmailPetition(props: {
     setCoordinates(null);
     setIsCityInScope(false);
     clearErrors(["zip", "city"]);
+    // Only hide city field in sonomaCountyDropdown mode
+    if (props.citySelectionMode === "sonomaCountyDropdown") {
+      setHideCity(true);
+    } else {
+      setHideCity(false);
+    }
     setUserInteractedWithCityField(false);
   }, [outsideUS, setValue, clearErrors]);
 
@@ -308,46 +327,59 @@ export function EmailPetition(props: {
 
   const recaptchaRef = useRef<ReCAPTCHA>(null);
 
-  // Function to call zipToCityLookup API
+  const callZipToCityLookup = async (
+    zipCode: string,
+    areaScope?: { name: string; scope: string },
+  ) => {
+    const requestBody: any = { zip_code: zipCode };
+
+    if (areaScope) {
+      requestBody.area_scope = areaScope;
+    }
+
+    const response = await ky
+      .post(ZIP_TO_CITY_API_URL, {
+        json: requestBody,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .json<{
+        city: string;
+        state: string;
+        country: string;
+        lat: number;
+        lng: number;
+        is_city_in_scope: boolean;
+      }>();
+
+    return response;
+  };
+
   const fetchCityByZip = async (zipCode: string) => {
     if (zipCode.length !== 5) {
+      setValue("isValidCity", false);
       return;
     }
 
     setIsLoadingCity(true);
     try {
-      const requestBody: any = { zip_code: zipCode };
-
-      if (props.areaScope) {
-        requestBody.areaScope = props.areaScope;
-      }
-
-      const response = await ky
-        .post(ZIP_TO_CITY_API_URL, {
-          json: requestBody,
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .json<{
-          city: string;
-          lat: number;
-          lng: number;
-          isCityInScope: boolean;
-        }>();
+      const response = await callZipToCityLookup(zipCode, props.areaScope);
 
       if (!response.city) {
         setValue("city", "");
+        setValue("isValidCity", false);
         setHideCity(true);
         return;
       }
 
-      setHideCity(!response.isCityInScope);
-      setIsCityInScope(response.isCityInScope);
-
+      setHideCity(!response.is_city_in_scope);
+      setIsCityInScope(response.is_city_in_scope);
       setValue("city", response.city);
+      setValue("state", response.state);
+      setValue("isValidCity", response.is_city_in_scope);
+      setValue("coords", `${response.lat},${response.lng}`);
       setCoordinates({ lat: response.lat, lng: response.lng });
-      injectValuesIntoMessage(getValues("name"), response.city);
     } catch (error) {
       console.error("Error fetching city:", error);
       setValue("city", "");
@@ -455,7 +487,9 @@ export function EmailPetition(props: {
                 </FormItem>
               )}
             />
-            {!hideCity && (
+            {/* Always show city field in autocompleteTextbox mode, or in sonomaCountyDropdown when zip is in SonomaCities */}
+            {(props.citySelectionMode === "autocompleteTextbox" ||
+              !hideCity) && (
               <FormField
                 control={control}
                 name="city"
@@ -472,7 +506,9 @@ export function EmailPetition(props: {
                             searchInput={field.value || ""}
                             onChange={(value) => {
                               field.onChange(value);
+                              setValue("isValidCity", !!value);
                               injectValuesIntoMessage(getValues("name"), value);
+                              clearErrors("city");
                             }}
                             onBlur={field.onBlur}
                             disabled={
@@ -502,6 +538,7 @@ export function EmailPetition(props: {
                                 e.target.value,
                               );
                               setUserInteractedWithCityField(true);
+                              setValue("isValidCity", false);
                             }}
                             onBlur={field.onBlur}
                             disabled={

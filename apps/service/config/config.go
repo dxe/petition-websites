@@ -7,11 +7,19 @@ import (
 )
 
 var (
-	Port                      = getEnvWithFallback("PORT", "3333")
-	Dsn                       = getEnvWithFallback("DB_CONNECTION_STRING", "adb_user:adbpassword@tcp(localhost:3306)/campaign_mailer")
+	Port                      = getEnvWithPanic("PORT")
+	Dsn                       = getEnvWithPanic("DB_CONNECTION_STRING")
 	RecaptchaSecret           = getEnvWithFallback("RECAPTCHA_SECRET", "")
-	GoogleMapsGeocodingAPIKey = getEnvWithFallback("GOOGLE_MAPS_GEOCODING_API_KEY", "")
+	GoogleMapsGeocodingAPIKey = getEnvWithPanic("GOOGLE_MAPS_GEOCODING_API_KEY")
 )
+
+func getEnvWithPanic(key string) string {
+	v := os.Getenv(key)
+	if v == "" {
+		panic("Required environment variable not set: " + key)
+	}
+	return v
+}
 
 func getEnvWithFallback(key string, fallback string) string {
 	v := os.Getenv(key)

@@ -173,15 +173,16 @@ type ZipToCityLookupReq struct {
 	AreaScope *struct {
 		Name  string `json:"name"`
 		Scope string `json:"scope"`
-	} `json:"areaScope,omitempty"`
+	} `json:"area_scope,omitempty"`
 }
 
 // ZipToCityLookupResp represents response for city lookup
 type ZipToCityLookupResp struct {
 	City          string  `json:"city"`
+	State         string  `json:"state"`
 	Lat           float64 `json:"lat"`
 	Lng           float64 `json:"lng"`
-	IsCityInScope bool    `json:"isCityInScope"`
+	IsCityInScope bool    `json:"is_city_in_scope"`
 }
 
 // CityAutocompleteReq represents request for city autocomplete
@@ -226,13 +227,15 @@ func (s *server) zipToCityLookupHandler(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	city := cityResult.Name
+	city := cityResult.City
+	state := cityResult.State
 	lat := cityResult.Latitude
 	lng := cityResult.Longitude
 	IsCityInScope := cityResult.IsCityInScope
 
 	resp := ZipToCityLookupResp{
 		City:          city,
+		State:         state,
 		Lat:           lat,
 		Lng:           lng,
 		IsCityInScope: IsCityInScope,

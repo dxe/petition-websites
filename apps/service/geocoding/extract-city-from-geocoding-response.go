@@ -4,7 +4,6 @@ import "fmt"
 
 func extractCityFromGeocodingResponse(geocodingResp *GoogleGeocodingResponse, zipCode string, areaScope *AreaScope) (*CityResult, error) {
 
-	// Extract city from the first result
 	if len(geocodingResp.Results) == 0 {
 		return nil, fmt.Errorf("no results found for ZIP code: %s", zipCode)
 	}
@@ -54,21 +53,30 @@ func extractCityFromGeocodingResponse(geocodingResp *GoogleGeocodingResponse, zi
 		}
 	}
 
-	// Find the city (defined as "locality" in Google Maps Geocoding API) in address components
+	// Extract address components
+	var city, state string
 	for _, component := range geocodingResp.Results[0].AddressComponents {
 		for _, componentType := range component.Types {
-			if componentType == "locality" {
-				lat := geocodingResp.Results[0].Coordinates.Location.Lat
-				lng := geocodingResp.Results[0].Coordinates.Location.Lng
-				result := &CityResult{
-					Name:          component.LongName,
-					Latitude:      lat,
-					Longitude:     lng,
-					IsCityInScope: isCityInScope,
-				}
-				return result, nil
+			switch componentType {
+			case "locality":
+				city = component.LongName
+			case "administrative_area_level_1":
+				// Two letter state code
+				state = component.ShortName
 			}
 		}
+	}
+
+	if city != "" {
+		lat := geocodingResp.Results[0].Coordinates.Location.Lat
+		lng := geocodingResp.Results[0].Coordinates.Location.Lng
+		return &CityResult{
+			City:          city,
+			State:         state,
+			Latitude:      lat,
+			Longitude:     lng,
+			IsCityInScope: isCityInScope,
+		}, nil
 	}
 
 	return nil, nil
