@@ -119,10 +119,10 @@ function MoreBackgroundSection() {
           <p>
             Zoe was sentenced to 90 days in custody in Sonoma County, CA for the
             &quot;crime&quot; of rescuing animals from abuse at a Perdue-owned
-            slaughterhouse. She spent the first portion of her sentence in jail
+            slaughterhouse. She spent the first portion of her sentence in solitary confinement in jail
             and was released on December 24th after being approved for jail
             alternatives. She will spend the rest of her sentence on restrictive
-            house arrest. <b>All along, this was a political prosecution</b>;
+            house arrest. She was also ordered to pay over $100,000 in restitution. <b>All along, this was a political prosecution</b>;
             instead of prosecuting Perdue for documented animal cruelty, the
             District Attorney punished Zoe for exposing it.
           </p>
