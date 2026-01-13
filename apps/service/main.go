@@ -17,7 +17,6 @@ import (
 	"github.com/go-chi/cors"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
-
 	"golang.org/x/text/runes"
 	"golang.org/x/text/transform"
 	"golang.org/x/text/unicode/norm"
@@ -82,6 +81,8 @@ func (s *server) runServer() {
 	r.Get("/tally", s.getTallyHandler)
 
 	r.Get("/assemblyMembers", s.getAssemblyMembersHandler)
+
+	r.Post("/zip-to-city-lookup", s.zipToCityLookupHandler)
 
 	fmt.Printf("Listening on port %v\n", config.Port)
 	http.ListenAndServe(":"+config.Port, r)

@@ -9,6 +9,7 @@ import (
 
 	"github.com/dxe/service/config"
 	"github.com/dxe/service/data"
+	"github.com/dxe/service/geocoding"
 	"github.com/dxe/service/model"
 )
 
@@ -155,6 +156,91 @@ func (s *server) getAssemblyMembersHandler(w http.ResponseWriter, r *http.Reques
 	resp := GetAssemblyMembersResp{
 		Members: members,
 	}
+	json, err := json.Marshal(resp)
+	if err != nil {
+		http.Error(w, "failed to marshal json", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(json)
+}
+
+// ZipToCityLookupReq represents request for city lookup by ZIP code
+type ZipToCityLookupReq struct {
+	ZipCode   string `json:"zip_code"`
+	AreaScope *struct {
+		Name  string `json:"name"`
+		Scope string `json:"scope"`
+	} `json:"area_scope,omitempty"`
+}
+
+// ZipToCityLookupResp represents response for city lookup
+type ZipToCityLookupResp struct {
+	City          string  `json:"city"`
+	State         string  `json:"state"`
+	Lat           float64 `json:"lat"`
+	Lng           float64 `json:"lng"`
+	IsCityInScope bool    `json:"is_city_in_scope"`
+}
+
+// CityAutocompleteReq represents request for city autocomplete
+type CityAutocompleteReq struct {
+	Input string  `json:"input"`
+	Lat   float64 `json:"lat"`
+	Lng   float64 `json:"lng"`
+}
+
+// zipToCityLookupHandler handles ZIP code to city lookup requests
+func (s *server) zipToCityLookupHandler(w http.ResponseWriter, r *http.Request) {
+	var req ZipToCityLookupReq
+
+	err := json.NewDecoder(r.Body).Decode(&req)
+	if err != nil {
+		http.Error(w, "invalid request body", http.StatusBadRequest)
+		return
+	}
+
+	if req.ZipCode == "" {
+		http.Error(w, "zip_code is required", http.StatusBadRequest)
+		return
+	}
+
+	if config.GoogleMapsGeocodingAPIKey == "" {
+		http.Error(w, "Google Maps Geocoding API key not configured", http.StatusInternalServerError)
+		return
+	}
+
+	// Convert areaScope to API type if provided
+	var areaScope *geocoding.AreaScope
+	if req.AreaScope != nil {
+		areaScope = &geocoding.AreaScope{
+			Name:  req.AreaScope.Name,
+			Scope: req.AreaScope.Scope,
+		}
+	}
+
+	cityResult, err := geocoding.GetCityByZipCode(req.ZipCode, areaScope, config.GoogleMapsGeocodingAPIKey)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("failed to lookup city: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	city := cityResult.City
+	state := cityResult.State
+	lat := cityResult.Latitude
+	lng := cityResult.Longitude
+	IsCityInScope := cityResult.IsCityInScope
+
+	resp := ZipToCityLookupResp{
+		City:          city,
+		State:         state,
+		Lat:           lat,
+		Lng:           lng,
+		IsCityInScope: IsCityInScope,
+	}
+
 	json, err := json.Marshal(resp)
 	if err != nil {
 		http.Error(w, "failed to marshal json", http.StatusInternalServerError)
