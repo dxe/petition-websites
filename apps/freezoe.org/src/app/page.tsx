@@ -280,6 +280,15 @@ function TakeActionSection() {
         </p>
         <ul className="list-disc pl-8 space-y-3 text-lg">
           <li>
+            Join the Free Zoe rally and march at UC Berkeley on Friday, Jan. 23rd, at 12 PM on Sproul Plaza.{" "}
+            <a
+              href="https://www.facebook.com/events/3295040183986329"
+              className="underline"
+            >
+              The event page is here.
+            </a>{" "}  
+          </li>
+          <li>
             Ask your friends and family to sign the petition to free Zoe now.
           </li>
           <li>
