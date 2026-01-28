@@ -280,6 +280,15 @@ function TakeActionSection() {
         </p>
         <ul className="list-disc pl-8 space-y-3 text-lg">
           <li>
+            Join our call with Zoe from house arrest this Saturday, January 31st, at 11:30 AM Pacific Time. The Zoom link is{" "}
+            <a
+              href="https://us02web.zoom.us/j/83058683839"
+              className="underline"
+            >
+              dxe.io/meetupzoom
+            </a>{" "}.
+          </li>
+          <li>
             Ask your friends and family to sign the petition to free Zoe now.
           </li>
           <li>
