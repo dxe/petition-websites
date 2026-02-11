@@ -119,10 +119,10 @@ function MoreBackgroundSection() {
           <p>
             Zoe was sentenced to 90 days in custody in Sonoma County, CA for the
             &quot;crime&quot; of rescuing animals from abuse at a Perdue-owned
-            slaughterhouse. She spent the first portion of her sentence in solitary confinement in jail
-            and was released on December 24th after being approved for jail
-            alternatives. She will spend the rest of her sentence on restrictive
-            house arrest. She was also ordered to pay over $100,000 in restitution. <b>All along, this was a political prosecution</b>;
+            slaughterhouse. She spent 14 days in solitary confinement in the Sonoma County Main Adult Detention Facility
+            and was released on December 24, 2025 after being approved for jail
+            alternatives. She spent the rest of her sentence on restrictive
+            house arrest, which ended on February 11, 2026. She was also ordered to pay over $100,000 in restitution. <b>All along, this was a political prosecution</b>;
             instead of prosecuting Perdue for documented animal cruelty, the
             District Attorney punished Zoe for exposing it.
           </p>
@@ -133,11 +133,10 @@ function MoreBackgroundSection() {
             finally arrived, the court severely restricted Zoe&apos;s ability to
             present evidence of the animal cruelty she had documented at Perdue
             and reported to authorities before the rescue. The jury only heard a
-            small sliver of the story and Zoe was ultimately convicted and
-            sentenced to jail.
+            small sliver of the story and Zoe was ultimately convicted of felony conspiracy to commit misdemeanor trespass.
           </p>
           <p>
-            We demand her immediate pardon.{" "}
+            We demand an immediate pardon.{" "}
             <b>Compassion should not be criminalized.</b>
           </p>
         </div>
@@ -200,7 +199,7 @@ function WhyIsZoeInJailSection() {
   return (
     <Section>
       <h2 className="border-b border-slate-300 pb-2 uppercase text-xl tracking-wide text-slate-800">
-        Why is Zoe in custody?
+        Why was Zoe prosecuted?
       </h2>
       <div className="flex flex-col lg:flex-row items-center justify-evenly gap-12">
         <div className="w-full lg:w-1/2 flex items-center justify-center order-1 lg:order-2">
