@@ -2,9 +2,9 @@
 
 export const DEFAULT_MESSAGE = `Dear Governor Newsom,
 
-I am writing to urge you to immediately pardon Zoe Rosenberg, a 23-year-old UC Berkeley student and lifelong animal advocate, who was convicted and incarcerated in Sonoma County for an act of compassion. She has already spent time in jail and is now on house arrest. 
+I am writing to urge you to immediately pardon Zoe Rosenberg, a 23-year-old UC Berkeley student and lifelong animal advocate, who was convicted of a felony and incarcerated in Sonoma County jail for an act of compassion. She has already spent time in solitary confinement in jail and on house arrest. She is currently on probation.  
 
-Zoe rescued four sick and suffering chickens, who she named Poppy, Aster, Ivy, and Azalea, from Petaluma Poultry, a Perdue-owned slaughterhouse in Petaluma, California. The hens were provided with urgent veterinary care and are now living safe and happy at an animal sanctuary. Instead of addressing the well-documented animal cruelty at Petaluma Poultry, authorities have chosen to punish Zoe for exposing the truth.
+Zoe rescued four sick and suffering chickens, whom she named Poppy, Aster, Ivy, and Azalea, from Petaluma Poultry, a Perdue-owned slaughterhouse in Petaluma, California. The hens were provided with urgent veterinary care and are now living safe and happy at an animal sanctuary. Instead of addressing the well-documented animal cruelty at Petaluma Poultry, the authorities chose to punish Zoe for exposing the truth.
 
 This is not justice. This is criminalizing compassion.
 
