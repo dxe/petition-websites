@@ -10,6 +10,11 @@ export const PetitionFormSchema = z
       .min(2, { message: "Name too short" })
       .max(255, { message: "Name too long" }),
     email: z.string().email().max(255, { message: "Email too long" }),
+    citySelectionMode: z
+      .enum(["sonomaCountyDropdown", "autocompleteTextbox"], {
+        required_error: "City selection mode is required",
+      })
+      .default("autocompleteTextbox"),
     phone: z
       .string()
       .regex(/^[0-9+-]*$/, {
@@ -37,15 +42,20 @@ export const PetitionFormSchema = z
       .max(255, { message: "City too long" })
       .or(EmptyStringToUndefined)
       .optional(),
+    isValidCity: z.boolean().default(false),
+    state: z.string().optional(),
+    coords: z.string().optional(), // Stores coordinates as "lat,lng"
     message: z
       .string()
       .min(10, { message: "Message must be at least 10 characters" })
       .max(10_000, { message: "Please limit message to 10,000 characters" }),
   })
   .superRefine((data, ctx) => {
-    // If outside of US, throw away the zip code.
+    // If outside of US, throw away the zip code and city.
     if (data.outsideUS) {
       data.zip = undefined;
+      data.city = undefined;
+      data.isValidCity = false;
     } else {
       // If inside US, zip code is required.
       if (!data.zip) {
@@ -56,20 +66,32 @@ export const PetitionFormSchema = z
         });
       }
     }
-    const isInSonoma = !!(
+
+    // Only check Sonoma cities if in sonomaCountyDropdown mode
+    const isInSonoma =
+      data.citySelectionMode === "sonomaCountyDropdown" &&
       data.zip &&
       data.zip in SonomaCities &&
-      SonomaCities[data.zip as keyof typeof SonomaCities]
-    );
-    // If outside of Sonoma, throw away the city.
+      SonomaCities[data.zip as keyof typeof SonomaCities];
+    // If outside of Sonoma (and using sonomaCountyDropdown mode), throw away the city.
     if (!isInSonoma) {
       data.city = undefined;
     }
+
     // If in Sonoma, city is required.
     if (isInSonoma && !data.city) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: "City is required",
+        path: ["city"],
+      });
+    }
+
+    if (data.citySelectionMode === "autocompleteTextbox" && !data.isValidCity) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message:
+          "Please make a selection in the dropdown list that appears here as you type a city name or enter a zipcode",
         path: ["city"],
       });
     }
