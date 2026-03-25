@@ -46,7 +46,7 @@ type EmailSettings struct {
 var CampaignEmailSettings = map[string]EmailSettings{
 	"duck":    {FromDomain: "helptheducks.com", Subject: "Prosecute Reichardt Duck Farm for Animal Abuse", To: StaticRecipientList("carla.rodriguez@sonoma-county.org")},
 	"chicken": {FromDomain: "helpthechickens.com", Subject: "Shut Down Perdue's Petaluma Poultry Slaughterhouse to End Animal Abuse and Protect Public Health", To: StaticRecipientList(helpTheChickensRecipients...)},
-	"sonoma":  {FromDomain: "righttorescue.com", Subject: "Prosecute animal cruelty, not animal rescuers", To: StaticRecipientList("carla.rodriguez@sonoma-county.org")},
+	"sonoma":  {FromDomain: "righttorescue.com", Subject: "Prosecute animal cruelty, not animal rescuers", To: StaticRecipientList("Sarah.Hacker@co.kings.ca.us")},
 	"ridglan": {FromDomain: "righttorescue.com", Subject: "Prosecute animal abuse at Ridglan Farms", To: StaticRecipientList("ismael.ozanne@da.wi.gov")},
 	"freezoe": {FromDomain: "freezoe.org", Subject: "Pardon Zoe Rosenberg", To: StaticRecipientList("gavin.newsom@gov.ca.gov", "pardons@gov.ca.gov")},
 	"factoryfarmwatch": {FromDomain: "petition.factoryfarmwatch.org", Subject: "Regulate Factory Farms", To: func(city data.Municipality, zip data.Zip) []string {
