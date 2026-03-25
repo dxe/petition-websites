@@ -62,7 +62,7 @@ function Hero() {
         <div className="flex flex-col gap-9 max-w-(--breakpoint-xl) md:border-l-2 p-6 w-full">
           <div className="flex flex-col gap-4">
             <h1 className="uppercase text-2xl md:text-5xl leading-[1.125] tracking-wide max-w-[16rem] md:max-w-md border-b-2 md:border-0 py-4 md:py-0">
-              Free Zoe Rosenberg
+              Pardon Zoe Rosenberg
             </h1>
             <p className="font-medium max-w-lg">
               Zoe was politically prosecuted for rescuing animals.
