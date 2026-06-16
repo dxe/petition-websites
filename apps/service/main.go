@@ -64,6 +64,8 @@ func (s *server) runServer() {
 			"https://righttorescue.com",
 			"https://www.freezoe.org",
 			"https://factoryfarmwatch.org",
+			"https://www.directactioneverywhere.com",
+			"https://dxe.webflow.io",
 		},
 		AllowedMethods:   []string{"GET", "POST", "OPTIONS"},
 		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type"},

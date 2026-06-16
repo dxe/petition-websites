@@ -37,6 +37,21 @@ var factoryFarmWatchRecipients = []string{
 	"assemblymember.rivas@asm.ca.gov",
 }
 
+var sfPetStoresRecipients = []string{
+	"board.of.supervisors@sfgov.org",
+	"ChanStaff@sfgov.org",
+	"ChenStaff@sfgov.org",
+	"Jackie.Fielder@sfgov.org",
+	"DorseyStaff@sfgov.org",
+	"MandelmanStaff@sfgov.org",
+	"MahmoodStaff@sfgov.org",
+	"MelgarStaff@sfgov.org",
+	"SauterStaff@sfgov.org",
+	"Shamann.Walton@sfgov.org",
+	"SherrillStaff@sfgov.org",
+	"WongStaff@sfgov.org",
+}
+
 type EmailSettings struct {
 	FromDomain string
 	Subject    string
@@ -52,7 +67,8 @@ var CampaignEmailSettings = map[string]EmailSettings{
 	"factoryfarmwatch": {FromDomain: "petition.factoryfarmwatch.org", Subject: "Regulate Factory Farms", To: func(city data.Municipality, zip data.Zip) []string {
 		return mergeSliceWtihDeduplication(factoryFarmWatchRecipients, getEmailsForAssemblyMembers(GetAssemblyMembers(city, zip)))
 	}},
-	"test": {FromDomain: "righttorescue.com", Subject: "Test", To: StaticRecipientList("tech@directactioneverywhere.com")},
+	"sfpetstores": {FromDomain: "petition.directactioneverywhere.com", Subject: "Ban the retail sale of animals in San Francisco", To: StaticRecipientList(sfPetStoresRecipients...)},
+	"test":        {FromDomain: "righttorescue.com", Subject: "Test", To: StaticRecipientList("tech@directactioneverywhere.com")},
 }
 
 func StaticRecipientList(to ...string) func(city data.Municipality, zip data.Zip) []string {
