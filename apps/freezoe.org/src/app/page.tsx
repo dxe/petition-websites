@@ -143,7 +143,7 @@ function MoreBackgroundSection() {
         <div className="w-full lg:w-1/2 flex items-center justify-center order-1 lg:order-2">
           <Image
             src={zoeArrested}
-            alt="Zoe Rosenberg arrested on felony warrants in Santa Rosa, CA on Nov. 30 2023"
+            alt="Zoe Rosenberg arrested on felony warrants in Santa Rosa, CA on Nov. 30 20"
             className="rounded-2xl object-cover object-center h-80 lg:h-[500px]"
             style={{
               objectPosition: "center 30%",
@@ -172,7 +172,7 @@ function WhoIsZoeSection() {
         </div>
         <div className="w-full lg:w-1/2 text-left space-y-8 order-2 lg:order-2">
           <p>
-            Zoe is a 23-year-old UC Berkeley student, an animal sanctuary
+            Zoe is a 24-year-old UC Berkeley student, an animal sanctuary
             founder, and an animal cruelty investigator with Direct Action
             Everywhere. She is an incredible human being who has spent most of
             her young life working to protect animals.
