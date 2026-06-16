@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>email-petition demo</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        max-width: 720px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>email-petition element — dev demo</h2>
+    <email-petition
+      petition-id="-1"
+      campaign-name="Test Campaign"
+      default-message="I'm writing to urge you to take action on this important issue."
+      test="true"
+      debug="true"
+      thermometer-goal="1000"
+    ></email-petition>
+    <script type="module" src="/src/index.tsx"></script>
+  </body>
+</html>

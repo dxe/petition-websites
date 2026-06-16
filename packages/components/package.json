@@ -39,7 +39,7 @@
   },
   "devDependencies": {
     "tsc-alias": "^1.8.11",
-    "typescript": "latest"
+    "typescript": "5.8.2"
   },
   "ignore-future-use-only": {
     "devDependencies": {
