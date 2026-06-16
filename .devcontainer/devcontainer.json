@@ -14,9 +14,6 @@
       "version": "lts",
       "nvmVersion": "latest"
     },
-    // Shares a pnpm store between devcontainers.
-    // https://github.com/joshuanianji/devcontainer-features/tree/main/src/mount-pnpm-store
-    "ghcr.io/joshuanianji/devcontainer-features/mount-pnpm-store:1": {},
     // Install turbo globally so it can be called from anywhere in the repo.
     // TODO: if there is no pnpm-package feature, do it manually?
     //   pnpm i -g turbo
