@@ -28,7 +28,7 @@ In VS Code you can launch the same thing from the **Run and Debug** panel with t
 ## Usage
 
 ```html
-<script src="/path/to/email-petition.js"></script>
+<script src="https://s3.dxe.io/email-petition/email-petition.js"></script>
 
 <email-petition
   petition-id="your-petition-id"
