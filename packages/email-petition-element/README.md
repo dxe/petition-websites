@@ -75,6 +75,6 @@ Use `test` to prefix IDs with `test:` so submissions don't affect production dat
 
 ## Notes
 
-- The component is rendered into the **light DOM** (no shadow DOM), so your page's global styles will apply alongside the bundled Tailwind CSS.
+- The component is rendered into a **shadow DOM** root, so page-global styles do not automatically leak in; styles are bundled with the element.
 - API URLs are baked in at build time via the `.env` file — they are not runtime-configurable through attributes.
 - The reCAPTCHA site key is hardcoded in the underlying `@dxe/email-petition` package.

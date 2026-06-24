@@ -1,4 +1,4 @@
-import "./styles.css";
+import styles from "./styles.css?inline";
 import r2wc from "@r2wc/react-to-web-component";
 import { EmailPetition } from "@dxe/email-petition/email-petition";
 
@@ -25,22 +25,28 @@ function EmailPetitionWrapper(props: {
   }
 
   return (
-    <EmailPetition
-      petitionId={props.petitionId ?? ""}
-      campaignName={props.campaignName ?? ""}
-      defaultMessage={props.defaultMessage ?? ""}
-      debug={props.debug ?? false}
-      test={props.test ?? false}
-      signatureThermometer={
-        props.thermometerGoal != null
-          ? { defaultGoal: props.thermometerGoal }
-          : undefined
-      }
-    />
+    <>
+      {/* Rendered into the shadow root, so the styles are scoped to this
+          component and don't leak to (or inherit from) the host page. */}
+      <style>{styles}</style>
+      <EmailPetition
+        petitionId={props.petitionId ?? ""}
+        campaignName={props.campaignName ?? ""}
+        defaultMessage={props.defaultMessage ?? ""}
+        debug={props.debug ?? false}
+        test={props.test ?? false}
+        signatureThermometer={
+          props.thermometerGoal != null
+            ? { defaultGoal: props.thermometerGoal }
+            : undefined
+        }
+      />
+    </>
   );
 }
 
 const EmailPetitionElement = r2wc(EmailPetitionWrapper, {
+  shadow: "open",
   props: {
     petitionId: "string",
     campaignName: "string",

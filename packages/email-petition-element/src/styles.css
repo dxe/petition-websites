@@ -13,12 +13,12 @@
 @custom-variant dark (&:is(.dark *));
 
 @layer base {
-  email-petition,
-  email-petition *,
-  email-petition ::after,
-  email-petition ::before,
-  email-petition ::backdrop,
-  email-petition ::file-selector-button {
+  :host,
+  :host *,
+  :host ::after,
+  :host ::before,
+  :host ::backdrop,
+  :host ::file-selector-button {
     border-color: var(--color-gray-200, currentColor);
   }
 }
