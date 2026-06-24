@@ -1,0 +1,24 @@
+@import "tailwindcss";
+@source "../node_modules/@dxe/email-petition/";
+@source "../node_modules/@dxe/petitions-components/";
+@plugin "tailwindcss-animate";
+
+/*
+  Make the `dark:` variant class-based instead of media-based, matching the
+  consuming apps' globals.css. Without this, Tailwind v4 defaults to the
+  `prefers-color-scheme: dark` media query, so the components' dark: variants
+  would activate on any visitor whose OS is in dark mode — turning the dark
+  Submit button light, etc. The component is designed for a light surface only.
+*/
+@custom-variant dark (&:is(.dark *));
+
+@layer base {
+  :host,
+  :host *,
+  :host ::after,
+  :host ::before,
+  :host ::backdrop,
+  :host ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+}

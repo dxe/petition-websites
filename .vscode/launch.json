@@ -45,6 +45,14 @@
       "cwd": "${workspaceFolder}"
     },
     {
+      "type": "node",
+      "request": "launch",
+      "name": "Dev email petition element test page",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["run", "serve"],
+      "cwd": "${workspaceFolder}/packages/email-petition-element"
+    },
+    {
       "name": "Debug Petition Mailer Service",
       "type": "go",
       "request": "launch",
