@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>email-petition preview (built artifact)</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        max-width: 720px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>email-petition element — built-artifact preview</h2>
+    <p>
+      This page loads the bundled <code>email-petition.js</code> via a plain
+      <code>&lt;script src&gt;</code>, exactly the way a third-party site does —
+      no Vite, no module layer. Use it to catch bugs that only appear in the
+      shipped IIFE (e.g. undefined globals like <code>process</code>).
+    </p>
+    <email-petition
+      petition-id="-1"
+      campaign-name="Test Campaign"
+      default-message="I'm writing to urge you to take action on this important issue."
+      test="true"
+      debug="true"
+      thermometer-goal="1000"
+    ></email-petition>
+    <script src="/email-petition.js"></script>
+  </body>
+</html>

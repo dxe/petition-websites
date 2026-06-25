@@ -47,10 +47,24 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Dev email petition element test page",
+      "name": "Dev email petition element preview - fast reload",
       "runtimeExecutable": "pnpm",
       "runtimeArgs": ["run", "serve"],
       "cwd": "${workspaceFolder}/packages/email-petition-element"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Dev email petition element preview - build artifact",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["run", "preview"],
+      "cwd": "${workspaceFolder}/packages/email-petition-element",
+      // The `preview` script ends in `python3 -m http.server` (not a node
+      // process). With the default debug console, js-debug tears the session
+      // down — killing the python server — as soon as `vite build`'s node
+      // process exits. Running in a terminal ties the session to the command
+      // finishing instead, so the server keeps serving.
+      "console": "integratedTerminal"
     },
     {
       "name": "Debug Petition Mailer Service",
