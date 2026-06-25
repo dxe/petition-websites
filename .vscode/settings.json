@@ -14,5 +14,8 @@
   "prettier.requireConfig": true,
   "[go]": {
     "editor.defaultFormatter": "golang.go"
-  }
+  },
+  // Use the workspace TypeScript so the editor honors each package's
+  // tsconfig (e.g. "module": "Preserve") instead of falling back to defaults.
+  "js/ts.tsdk.path": "node_modules/typescript/lib"
 }

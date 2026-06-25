@@ -6,7 +6,8 @@
     "serve": "vite --host",
     "build": "vite build",
     "dev": "vite build --watch",
-    "preview": "vite build && cp dist/email-petition.js build-preview/ && python3 -m http.server 4173 --bind 0.0.0.0 --directory build-preview"
+    "preview": "vite build && cp dist/email-petition.js build-preview/ && python3 -m http.server 4173 --bind 0.0.0.0 --directory build-preview",
+    "clean": "rm -rf dist .turbo"
   },
   "dependencies": {
     "@dxe/email-petition": "workspace:*",

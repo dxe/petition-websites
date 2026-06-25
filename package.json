@@ -5,6 +5,8 @@
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
+    "clean": "turbo run clean && rm -rf .turbo",
+    "clean:all": "turbo run clean && rm -rf .turbo node_modules apps/*/node_modules packages/*/node_modules",
     "format": "prettier --check .",
     "format:fix": "prettier --write ."
   },

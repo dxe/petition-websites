@@ -50,6 +50,11 @@ Develop all apps and packages together:
 pnpm dev
 ```
 
+### Debugging
+
+If you run into build or dev server issues, try running `pnpm clean` to clear
+caches and build artifacts before rebuilding.
+
 ### Turborepo Links
 
 Learn more about Turborepo:

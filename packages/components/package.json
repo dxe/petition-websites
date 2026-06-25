@@ -2,8 +2,10 @@
   "name": "@dxe/petitions-components",
   "type": "module",
   "scripts": {
-    "dev": "tsc --watch && (concurrently \"tsc -w\" \"tsc-alias -w\")",
-    "build": "tsc && tsc-alias -p tsconfig.json"
+    "dev//": "Full one-shot build first (tsc emits dist, then tsc-alias rewrites '@/' path aliases to relative paths), THEN start incremental watchers. The initial pass is required because tsc-alias -w only rewrites files changed after it starts watching, so on a clean dist it would otherwise miss tsc's first emit and leave '@/' imports unresolved. --preserveWatchOutput stops tsc from clearing the console on each rebuild so it doesn't wipe the concurrently output.",
+    "dev": "tsc && tsc-alias && concurrently \"tsc -w --preserveWatchOutput\" \"tsc-alias -w\"",
+    "build": "tsc && tsc-alias -p tsconfig.json",
+    "clean": "rm -rf dist .turbo"
   },
   "exports": {
     "./alert": "./dist/shadcn/components/ui/alert.jsx",
@@ -38,6 +40,7 @@
     "tailwind-merge": "^3.0.2"
   },
   "devDependencies": {
+    "concurrently": "^9.1.2",
     "tsc-alias": "^1.8.11",
     "typescript": "5.8.2"
   },
