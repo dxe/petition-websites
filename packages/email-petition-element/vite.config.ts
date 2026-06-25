@@ -19,6 +19,13 @@ export default defineConfig(({ mode }) => {
     // shadow root, so no document-level CSS injection plugin is needed.
     plugins: [tailwindcss(), react()],
     define: {
+      // React reads process.env.NODE_ENV for its dev/prod branches. Vite's
+      // library mode leaves it untouched (it assumes a downstream bundler), but
+      // this IIFE is loaded directly in the browser, so we must replace it here
+      // or `process` is undefined at runtime.
+      "process.env.NODE_ENV": JSON.stringify(
+        isDev ? "development" : "production",
+      ),
       // The email-petition package uses Next.js-style env vars at module scope.
       // These are replaced at build time via the VITE_* equivalents in .env.
       "process.env.NEXT_PUBLIC_PETITIONS_API_ROOT": JSON.stringify(
