@@ -34,6 +34,7 @@ import {
 } from "@dxe/petitions-components/alert";
 import { LoaderIcon, MailCheckIcon } from "lucide-react";
 import ReCAPTCHA from "react-google-recaptcha";
+import { createPortal } from "react-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Thermometer } from "./thermometer/thermometer";
 
@@ -256,6 +257,15 @@ export function EmailPetition(props: {
 
   const recaptchaRef = useRef<ReCAPTCHA>(null);
 
+  // The reCAPTCHA widget is portaled into the document body (see below) rather
+  // than rendered inline, which keeps it out of this component's shadow root
+  // when mounted as the <email-petition> custom element. grecaptcha doesn't
+  // behave reliably inside a shadow tree. We only render the portal after mount
+  // so that `document.body` exists (this is a client component that Next.js
+  // still server-renders for initial HTML).
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
   return isSubmitted ? (
     <Alert className="self-center w-fit bg-slate-100">
       <MailCheckIcon className="h-4 w-4" />
@@ -431,19 +441,27 @@ export function EmailPetition(props: {
                 </FormItem>
               )}
             />
-            <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting && (
+            <Button type="submit" disabled={isSubmitting || !mounted}>
+              {(isSubmitting || !mounted) && (
                 <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />
               )}
               Submit
             </Button>
-            <ReCAPTCHA
-              ref={recaptchaRef}
-              sitekey={CAPTCHA_SITE_KEY}
-              badge="bottomright"
-              size="invisible"
-              className="z-60"
-            />
+            {!mounted && (
+              <p className="text-xs text-center text-muted-foreground">
+                Loading spam protection…
+              </p>
+            )}
+            {mounted &&
+              createPortal(
+                <ReCAPTCHA
+                  ref={recaptchaRef}
+                  sitekey={CAPTCHA_SITE_KEY}
+                  badge="bottomright"
+                  size="invisible"
+                />,
+                document.body,
+              )}
             <p className="text-xs text-center">
               By signing, you agree to receive email messages from Direct Action
               Everywhere. You may unsubscribe at any time.

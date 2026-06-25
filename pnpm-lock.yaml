@@ -315,6 +315,9 @@ importers:
       react:
         specifier: 19.2.3
         version: 19.2.3
+      react-dom:
+        specifier: 19.2.3
+        version: 19.2.3(react@19.2.3)
       react-google-recaptcha:
         specifier: ^3.1.0
         version: 3.1.0(react@19.2.3)
