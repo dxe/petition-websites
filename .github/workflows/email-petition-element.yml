@@ -42,11 +42,16 @@ jobs:
           pnpm install --frozen-lockfile
           pnpm build --filter="@dxe/email-petition-element"
       - name: sync to S3
+        # cache-control: The bundle filename is stable (not content-hashed), so
+        # third-party sites embedding it will keep serving a cached copy unless we
+        # set an explicit, short Cache-Control. 5 minutes balances letting third
+        # parties pick up published updates promptly against request volume.
         run: |
           aws s3 sync packages/email-petition-element/dist \
             "s3://${AWS_S3_BUCKET}/email-petition" \
             --acl public-read \
-            --delete
+            --delete \
+            --cache-control "public, max-age=300"
         env:
           AWS_S3_BUCKET: ${{ vars.DXE_STATIC_S3_BUCKET }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
