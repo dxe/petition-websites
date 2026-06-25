@@ -3,7 +3,8 @@
   "type": "module",
   "scripts": {
     "dev": "tsc --watch",
-    "build": "tsc"
+    "build": "tsc",
+    "clean": "rm -rf dist .turbo"
   },
   "exports": {
     "./email-petition": "./dist/email-petition.jsx"
