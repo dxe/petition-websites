@@ -15,15 +15,46 @@ The output is a single file: `dist/email-petition.js`. CSS is injected automatic
 
 ## Local preview
 
-To preview the component while developing, run a dev server that serves the test / example `index.html` page:
+There are two ways to preview the component, and they test different things.
+
+### 1. Dev server (fast iteration)
 
 ```sh
 pnpm serve
 ```
 
-This starts Vite (with `--host`) and serves the example `index.html`, which loads the component so you can see and interact with it in the browser.
+This starts Vite (with `--host`) and serves the example `index.html`, which loads
+the component's **source** (`/src/index.tsx`) as native ES modules with hot
+reloading. Use this for fast iteration on the component itself.
 
-In VS Code you can launch the same thing from the **Run and Debug** panel with the **"Dev email petition element test page"** configuration, which runs `pnpm run serve` in this package.
+In VS Code you can launch the same thing from the **Run and Debug** panel with the
+**"Dev email petition element preview - fast reload"** configuration, which runs
+`pnpm run serve` in this package.
+
+The dev server loads the source as modules through Vite — it does **not** run the
+bundled IIFE that ships to consumers. So it won't catch bugs that only exist in the
+built artifact (undefined globals like `process`, bundling/`define` gaps, etc.). For
+that, use the built-artifact preview below.
+
+### 2. Built-artifact preview (emulates a third-party site)
+
+```sh
+pnpm preview
+```
+
+This builds the bundle and serves the `build-preview/` directory over a plain static
+HTTP server (no Vite, no module layer). Open <http://localhost:4173/> — it loads the
+built `email-petition.js` via a plain `<script src>`, exactly the way a third-party
+site embeds it. This is the faithful way to catch bugs that only appear in the shipped
+IIFE before they reach production.
+
+Only `build-preview/` is served, so the source `index.html` and `/src` are not
+reachable — the page behaves like an isolated third-party host.
+
+In VS Code you can launch this from the **Run and Debug** panel with the
+**"Dev email petition element preview - build artifact"** configuration.
+
+> Requires `python3` (preinstalled in the dev container). Stop the server with `Ctrl+C`.
 
 ## Usage
 
