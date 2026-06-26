@@ -63,6 +63,7 @@ In VS Code you can launch this from the **Run and Debug** panel with the
   petition-id="your-petition-id"
   campaign-name="your-campaign-name"
   default-message="Dear Decision Maker,&#10;&#10;I urge you to take action.&#10;&#10;[Your name], [Your city]"
+  location-input-mode="zipWithSonomaCountyCity"
 ></email-petition>
 ```
 
@@ -73,6 +74,7 @@ In VS Code you can launch this from the **Run and Debug** panel with the
   petition-id="your-petition-id"
   campaign-name="your-campaign-name"
   default-message="Dear Decision Maker, ..."
+  location-input-mode="zipWithSonomaCountyCity"
   thermometer-goal="1000"
 ></email-petition>
 ```
@@ -86,6 +88,7 @@ Use `test` to prefix IDs with `test:` so submissions don't affect production dat
   petition-id="my-petition"
   campaign-name="my-campaign"
   default-message="..."
+  location-input-mode="zipWithSonomaCountyCity"
   test
   debug
 ></email-petition>
@@ -93,14 +96,34 @@ Use `test` to prefix IDs with `test:` so submissions don't affect production dat
 
 ## Attribute reference
 
-| Attribute          | Type    | Required | Description                                                                    |
-| ------------------ | ------- | -------- | ------------------------------------------------------------------------------ |
-| `petition-id`      | string  | yes      | ID passed to the petition signing API                                          |
-| `campaign-name`    | string  | yes      | Campaign name passed to the mailer API                                         |
-| `default-message`  | string  | yes      | Pre-filled message body; supports `[Your name]` and `[Your city]` placeholders |
-| `thermometer-goal` | number  | no       | Shows a signature thermometer with this goal count                             |
-| `test`             | boolean | no       | Prefixes IDs with `test:` to avoid polluting production data                   |
-| `debug`            | boolean | no       | Logs resolved API URLs and IDs to the console                                  |
+| Attribute             | Type    | Required | Description                                                                       |
+| --------------------- | ------- | -------- | --------------------------------------------------------------------------------- |
+| `petition-id`         | string  | yes      | ID passed to the petition signing API                                             |
+| `campaign-name`       | string  | yes      | Campaign name passed to the mailer API                                            |
+| `default-message`     | string  | yes      | Pre-filled message body; supports `[Your name]` and `[Your city]` placeholders    |
+| `location-input-mode` | string  | yes      | Which location fields to collect. `zipWithSonomaCountyCity` or `sfOnly`            |
+| `thermometer-goal`    | number  | no       | Shows a signature thermometer with this goal count                                |
+| `test`                | boolean | no       | Prefixes IDs with `test:` to avoid polluting production data                      |
+| `debug`               | boolean | no       | Logs resolved API URLs and IDs to the console                                     |
+
+### Location input modes
+
+The `location-input-mode` attribute is required and controls how a signer's
+location is collected:
+
+- `zipWithSonomaCountyCity`: a US zip code field, an auto-derived city
+  selector for Sonoma County zips, and an "Outside the United States" toggle.
+- `sfOnly`: hides zip and city and instead shows a required "I am a resident of
+  San Francisco, CA" checkbox. Submissions are tagged with San Francisco, CA, US.
+
+```html
+<email-petition
+  petition-id="your-petition-id"
+  campaign-name="your-campaign-name"
+  default-message="..."
+  location-input-mode="sfOnly"
+></email-petition>
+```
 
 ## Notes
 
