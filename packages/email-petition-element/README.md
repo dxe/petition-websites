@@ -23,9 +23,10 @@ There are two ways to preview the component, and they test different things.
 pnpm serve
 ```
 
-This starts Vite (with `--host`) and serves the example `index.html`, which loads
-the component's **source** (`/src/index.tsx`) as native ES modules with hot
-reloading. Use this for fast iteration on the component itself.
+This starts Vite (with `--host`) and opens the example page from `dev-preview/`
+(served at `/`), which loads the component's **source** (`src/index.tsx`) as
+native ES modules with hot reloading. Use this for fast iteration on the
+component itself.
 
 In VS Code you can launch the same thing from the **Run and Debug** panel with the
 **"Dev email petition element preview - fast reload"** configuration, which runs
@@ -47,9 +48,6 @@ HTTP server (no Vite, no module layer). Open <http://localhost:4173/> — it loa
 built `email-petition.js` via a plain `<script src>`, exactly the way a third-party
 site embeds it. This is the faithful way to catch bugs that only appear in the shipped
 IIFE before they reach production.
-
-Only `build-preview/` is served, so the source `index.html` and `/src` are not
-reachable — the page behaves like an isolated third-party host.
 
 In VS Code you can launch this from the **Run and Debug** panel with the
 **"Dev email petition element preview - build artifact"** configuration.

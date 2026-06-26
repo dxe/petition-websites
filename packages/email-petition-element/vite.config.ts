@@ -1,3 +1,4 @@
+import { fileURLToPath } from "node:url";
 import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
@@ -36,7 +37,19 @@ export default defineConfig(({ mode }) => {
       ),
     },
     ...(isDev
-      ? {}
+      ? {
+          // Serve the dev demo page (dev-preview/index.html) at `/`.
+          //
+          // Because the dev root is dev-preview/, the page can't reach the
+          // component source with a relative path (it'd be clamped at the root),
+          // so it imports `@src/index.tsx` and we alias `@src` back to ../src.
+          root: "dev-preview",
+          resolve: {
+            alias: {
+              "@src": fileURLToPath(new URL("./src", import.meta.url)),
+            },
+          },
+        }
       : {
           build: {
             lib: {
