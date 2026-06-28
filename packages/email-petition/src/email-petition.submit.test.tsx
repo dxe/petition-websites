@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
-import { EmailPetition } from "./email-petition";
+import { EmailPetition, MailerPayload } from "./email-petition";
 import { server } from "./test/server";
 import { TEST_CAPTCHA_TOKEN } from "./test/setup";
 
@@ -20,7 +20,7 @@ function captureBothEndpoints() {
   const captured: {
     petition: Record<string, string> | null;
     petitionContentType: string | null;
-    mailer: any;
+    mailer: MailerPayload | null;
     mailerContentType: string | null;
   } = {
     petition: null,
@@ -40,7 +40,7 @@ function captureBothEndpoints() {
     http.post(MAILER_URL, async ({ request }) => {
       // Mailer API is sent as JSON.
       captured.mailerContentType = request.headers.get("content-type");
-      captured.mailer = await request.json();
+      captured.mailer = (await request.json()) as MailerPayload;
       return HttpResponse.json({ ok: true });
     }),
   );
@@ -133,7 +133,7 @@ describe("EmailPetition submission — sfOnly mode", () => {
     await waitFor(() => expect(captured.mailer).not.toBeNull());
 
     expect(captured.petition?.id).toBe("test:my-petition");
-    expect(captured.mailer.campaign).toBe("test:my-campaign");
+    expect(captured.mailer?.campaign).toBe("test:my-campaign");
   });
 });
 
