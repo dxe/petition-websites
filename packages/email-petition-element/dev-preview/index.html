@@ -19,10 +19,13 @@
       petition-id="-1"
       campaign-name="Test Campaign"
       default-message="I'm writing to urge you to take action on this important issue."
+      location-input-mode="zipWithSonomaCountyCity"
       test="true"
       debug="true"
       thermometer-goal="1000"
     ></email-petition>
-    <script type="module" src="/src/index.tsx"></script>
+    <script type="module">
+      import "@src/index.tsx";
+    </script>
   </body>
 </html>

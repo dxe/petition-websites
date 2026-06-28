@@ -1,6 +1,13 @@
 "use client";
 
-import { PetitionForm, PetitionFormSchema } from "./data/petition";
+import {
+  LOCATION_INPUT_MODES,
+  LocationInputMode,
+  PetitionForm,
+  makePetitionFormSchema,
+  resolveLocation,
+} from "./data/petition";
+export type { LocationInputMode } from "./data/petition";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -48,6 +55,7 @@ export function EmailPetition(props: {
   petitionId: string;
   campaignName: string;
   defaultMessage: string;
+  locationInputMode: LocationInputMode;
   onSubmit?: () => void;
   debug: boolean;
   test: boolean;
@@ -55,6 +63,12 @@ export function EmailPetition(props: {
     defaultGoal: number;
   };
 }) {
+  if (!LOCATION_INPUT_MODES.includes(props.locationInputMode)) {
+    throw new Error(
+      `Invalid location-input-mode "${props.locationInputMode}". Must be one of: ${LOCATION_INPUT_MODES.join(", ")}.`,
+    );
+  }
+
   let petitionId = props.petitionId;
   let campaignName = props.campaignName;
   if (props.test) {
@@ -78,7 +92,7 @@ export function EmailPetition(props: {
   });
 
   const form = useForm<PetitionForm>({
-    resolver: zodResolver(PetitionFormSchema),
+    resolver: zodResolver(makePetitionFormSchema(props.locationInputMode)),
     defaultValues: {
       name: "",
       email: "",
@@ -86,6 +100,7 @@ export function EmailPetition(props: {
       outsideUS: false,
       zip: "",
       city: "",
+      sfResident: false,
       message: props.defaultMessage,
     },
   });
@@ -121,10 +136,12 @@ export function EmailPetition(props: {
           return;
         }
 
+        const location = resolveLocation(props.locationInputMode, data);
+
         const message = injectMessageValues(
           data.message,
           data.name,
-          data.city,
+          location.city ?? "",
           false,
         );
 
@@ -138,9 +155,10 @@ export function EmailPetition(props: {
               name: data.name,
               email: data.email,
               ...(data.phone && { phone: data.phone }),
-              ...(data.zip && { zip: data.zip }),
-              ...(data.city && { city: data.city }),
-              ...(!data.outsideUS && { country: "United States" }),
+              ...(location.zip && { zip: location.zip }),
+              ...(location.city && { city: location.city }),
+              ...(location.state && { state: location.state }),
+              ...(location.country && { country: location.country }),
               fullHref: window.location.href,
             }),
             headers: {
@@ -162,9 +180,11 @@ export function EmailPetition(props: {
               name: data.name,
               email: data.email,
               ...(data.phone && { phone: data.phone }),
-              outside_us: data.outsideUS,
-              ...(data.zip && { zip: data.zip }),
-              ...(data.city && { city: data.city }),
+              outside_us: location.outsideUS,
+              ...(location.zip && { zip: location.zip }),
+              ...(location.city && { city: location.city }),
+              ...(location.state && { state: location.state }),
+              ...(location.country && { country: location.country }),
               message: message,
               campaign: campaignName,
               token,
@@ -184,11 +204,18 @@ export function EmailPetition(props: {
         setIsSubmitting(false);
         recaptchaRef.current?.reset();
       }),
-    [handleSubmit],
+    [
+      handleSubmit,
+      props.locationInputMode,
+      props.onSubmit,
+      petitionId,
+      campaignName,
+    ],
   );
 
   const outsideUS = watch("outsideUS");
   const zip = watch("zip");
+  const city = watch("city");
   const isInSonomaCounty = useMemo(() => {
     return zip && zip in SonomaCities;
   }, [zip]);
@@ -255,6 +282,27 @@ export function EmailPetition(props: {
     [dirtyFields.message, resetField],
   );
 
+  // City injected into the visible message template ("" keeps the placeholder).
+  const getMessageCity = () =>
+    resolveLocation(props.locationInputMode, getValues()).city ?? "";
+
+  // Seed the visible message with relevant details so the signer sees the final
+  // text to send instead of placeholders.
+  useEffect(() => {
+    injectValuesIntoMessage(getValues("name"), getMessageCity());
+    // getMessageCity is recreated each render; the inputs it reads
+    // (locationInputMode + the zip/city/outsideUS fields resolveLocation
+    // derives from, and getValues) are the real dependencies.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    props.locationInputMode,
+    zip,
+    city,
+    outsideUS,
+    injectValuesIntoMessage,
+    getValues,
+  ]);
+
   const recaptchaRef = useRef<ReCAPTCHA>(null);
 
   // The reCAPTCHA widget is portaled into the document body (see below) rather
@@ -296,7 +344,7 @@ export function EmailPetition(props: {
                       {...field}
                       onBlur={() => {
                         field.onBlur();
-                        injectValuesIntoMessage(field.value, getValues("city"));
+                        injectValuesIntoMessage(field.value, getMessageCity());
                       }}
                     />
                   </FormControl>
@@ -336,95 +384,123 @@ export function EmailPetition(props: {
                 </FormItem>
               )}
             />
-            <FormField
-              control={control}
-              name="zip"
-              disabled={outsideUS || isSubmitting}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    Zip Code <span className="font-normal">(US only)</span>
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      type="text"
-                      placeholder={
-                        outsideUS ? "United States zip codes only" : "95401"
-                      }
-                      {...field}
-                      onBlur={() => {
-                        field.onBlur();
-                        injectValuesIntoMessage(
-                          getValues("name"),
-                          getValues("city"),
-                        );
-                      }}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={control}
-              name="city"
-              disabled={outsideUS || isSubmitting}
-              render={({ field }) => (
-                <FormItem className={cn({ hidden: !cities.length })}>
-                  <FormLabel>City</FormLabel>
-                  <Select
-                    onValueChange={(val: string | undefined) => {
-                      field.onChange(val);
-                      injectValuesIntoMessage(getValues("name"), val);
-                    }}
-                    defaultValue={field.value}
-                    value={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a city" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {cities?.map((city) => (
-                        <SelectItem
-                          value={city}
-                          key={city}
-                          onBlur={field.onBlur}
-                        >
-                          {city}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={control}
-              name="outsideUS"
-              disabled={isSubmitting}
-              render={({ field }) => (
-                <FormItem
-                  className={cn("flex gap-2 items-center", {
-                    hidden: cities.length,
-                  })}
-                >
-                  <FormControl>
-                    <Checkbox
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                      aria-label="Outside the United States?"
-                    />
-                  </FormControl>
-                  <FormLabel className="mt-0!">
-                    Outside the United States
-                  </FormLabel>
-                  <FormDescription></FormDescription>
-                </FormItem>
-              )}
-            />
+            {props.locationInputMode === "zipWithSonomaCountyCity" && (
+              <>
+                <FormField
+                  control={control}
+                  name="zip"
+                  disabled={outsideUS || isSubmitting}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        Zip Code <span className="font-normal">(US only)</span>
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          type="text"
+                          placeholder={
+                            outsideUS ? "United States zip codes only" : "95401"
+                          }
+                          {...field}
+                          onBlur={() => {
+                            field.onBlur();
+                            injectValuesIntoMessage(
+                              getValues("name"),
+                              getValues("city"),
+                            );
+                          }}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={control}
+                  name="city"
+                  disabled={outsideUS || isSubmitting}
+                  render={({ field }) => (
+                    <FormItem className={cn({ hidden: !cities.length })}>
+                      <FormLabel>City</FormLabel>
+                      <Select
+                        onValueChange={(val: string | undefined) => {
+                          field.onChange(val);
+                          injectValuesIntoMessage(getValues("name"), val);
+                        }}
+                        defaultValue={field.value}
+                        value={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select a city" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {cities?.map((city) => (
+                            <SelectItem
+                              value={city}
+                              key={city}
+                              onBlur={field.onBlur}
+                            >
+                              {city}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={control}
+                  name="outsideUS"
+                  disabled={isSubmitting}
+                  render={({ field }) => (
+                    <FormItem
+                      className={cn("flex gap-2 items-center", {
+                        hidden: cities.length,
+                      })}
+                    >
+                      <FormControl>
+                        <Checkbox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                          aria-label="Outside the United States?"
+                        />
+                      </FormControl>
+                      <FormLabel className="mt-0!">
+                        Outside the United States
+                      </FormLabel>
+                      <FormDescription></FormDescription>
+                    </FormItem>
+                  )}
+                />
+              </>
+            )}
+            {props.locationInputMode === "sfOnly" && (
+              <FormField
+                control={control}
+                name="sfResident"
+                disabled={isSubmitting}
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="flex gap-2 items-center">
+                      <FormControl>
+                        <Checkbox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                          aria-label="I am a resident of San Francisco, CA"
+                        />
+                      </FormControl>
+                      <FormLabel className="mt-0!">
+                        I am a resident of San Francisco, CA
+                      </FormLabel>
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
           </div>
           <div className="flex flex-col gap-4 basis-2/3">
             <FormField

@@ -22,6 +22,7 @@ export function Petition() {
       petitionId={process.env.NEXT_PUBLIC_PETITION_ID!}
       campaignName={process.env.NEXT_PUBLIC_CAMPAIGN_NAME!}
       defaultMessage={DEFAULT_MESSAGE}
+      locationInputMode="zipWithSonomaCountyCity"
       onSubmit={onSubmit}
       debug={searchParams.get("debug") === "true"}
       test={searchParams.get("test") === "true"}

@@ -1,6 +1,7 @@
 import styles from "./styles.css?inline";
 import r2wc from "@r2wc/react-to-web-component";
 import { EmailPetition } from "@dxe/email-petition/email-petition";
+import type { LocationInputMode } from "@dxe/email-petition/email-petition";
 
 /**
  * Tailwind v4 implements many utilities (borders, rings, shadows, transforms,
@@ -42,6 +43,7 @@ function EmailPetitionWrapper(props: {
   petitionId: string;
   campaignName: string;
   defaultMessage: string;
+  locationInputMode: LocationInputMode;
   debug?: boolean;
   test?: boolean;
   thermometerGoal?: number;
@@ -50,6 +52,7 @@ function EmailPetitionWrapper(props: {
     "petition-id": props.petitionId,
     "campaign-name": props.campaignName,
     "default-message": props.defaultMessage,
+    "location-input-mode": props.locationInputMode,
   };
   for (const [attribute, value] of Object.entries(required)) {
     if (!value) {
@@ -68,6 +71,7 @@ function EmailPetitionWrapper(props: {
         petitionId={props.petitionId}
         campaignName={props.campaignName}
         defaultMessage={props.defaultMessage}
+        locationInputMode={props.locationInputMode}
         debug={props.debug ?? false}
         test={props.test ?? false}
         signatureThermometer={
@@ -86,6 +90,7 @@ const EmailPetitionElement = r2wc(EmailPetitionWrapper, {
     petitionId: "string",
     campaignName: "string",
     defaultMessage: "string",
+    locationInputMode: "string",
     debug: "boolean",
     test: "boolean",
     thermometerGoal: "number",
