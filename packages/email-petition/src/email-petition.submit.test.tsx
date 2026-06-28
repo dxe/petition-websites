@@ -243,7 +243,10 @@ describe("EmailPetition submission — sequential-call contract", () => {
   // The failed submit rethrows out of react-hook-form's handler as a floating
   // rejection; swallow the expected one so it doesn't fail the run.
   const swallowExpectedRejection = (reason: unknown) => {
-    if (reason instanceof Error && reason.message === "Error submitting message")
+    if (
+      reason instanceof Error &&
+      reason.message === "Error submitting message"
+    )
       return;
     throw reason;
   };

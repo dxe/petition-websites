@@ -1,7 +1,8 @@
 # Builds and deploys the email-petition web component and the frontend sites,
 # gating each deploy on the @dxe/email-petition test suite.
 #
-# The shared `test` job runs the email-petition tests and linter, and every
+# The shared `test` job runs the email-petition tests, linter, and format check,
+# and every
 # deploy job depends on it via `needs: test`, so a failing test or lint blocks
 # all deploys. Keeping these in one workflow means the suite runs a single time
 # per push instead of once per deploy. Per-deploy path scoping is handled by the
@@ -29,7 +30,7 @@ concurrency:
 jobs:
   # Shared test gate for the deploy jobs below.
   test:
-    name: Test & lint email-petition
+    name: Test, lint & format email-petition
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -47,6 +48,8 @@ jobs:
         run: pnpm install --frozen-lockfile
       - name: lint
         run: pnpm lint --filter="@dxe/email-petition"
+      - name: check format
+        run: pnpm exec prettier --check packages/email-petition
       - name: test
         run: pnpm test --filter="@dxe/email-petition"
 
@@ -101,11 +104,14 @@ jobs:
       - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
         with:
           run_install: false
-      - name: build
+      - name: install
         run: |
           node --version
           pnpm install --frozen-lockfile
-          pnpm build --filter="@dxe/email-petition-element"
+      - name: check format
+        run: pnpm exec prettier --check packages/email-petition-element
+      - name: build
+        run: pnpm build --filter="@dxe/email-petition-element"
       - name: sync to S3
         # cache-control: The bundle filename is stable (not content-hashed), so
         # third-party sites embedding it will keep serving a cached copy unless we
