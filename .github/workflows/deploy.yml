@@ -1,12 +1,16 @@
-# Builds and deploys the email-petition web component and the frontend sites,
-# gating each deploy on the @dxe/email-petition test suite.
+# Builds and deploys the email-petition web component, the email-petition-element
+# bundle (embedded by third-party sites), and the frontend apps.
 #
-# The shared `test` job runs the email-petition tests, linter, and format check,
-# and every
-# deploy job depends on it via `needs: test`, so a failing test or lint blocks
-# all deploys. Keeping these in one workflow means the suite runs a single time
-# per push instead of once per deploy. Per-deploy path scoping is handled by the
-# `changes` job (GitHub doesn't support job-level `paths:` filters).
+# A `changes` job maps changed files to the work that depends on them, so each
+# job only runs when something it actually consumes changed:
+#   - the @dxe/email-petition gate (tests, lint, format) runs for that package
+#     and the shared components it builds on
+#   - the email-petition-element check runs only for its own sources,
+#     since nothing in this repo consumes it
+#   - each frontend app deploys for its own sources plus the email-petition
+#     stack it bundles
+#
+# PRs only run checks; they don't trigger deploys or get access to deploy secrets.
 
 name: Deploy
 
@@ -19,6 +23,9 @@ on:
       - apps/helpthechickens.com/**
       - apps/helptheducks.com/**
       - packages/**
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
 
 # Ensure only one run per branch is in flight so an older run can't finish after
@@ -28,9 +35,13 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # Shared test gate for the deploy jobs below.
+  # Test, lint, and format gate for @dxe/email-petition, shared by every deploy
+  # that bundles it. Runs when the package or the shared components it depends on
+  # change (or on manual dispatch, which has no diff to filter on).
   test:
     name: Test, lint & format email-petition
+    needs: changes
+    if: github.event_name == 'workflow_dispatch' || needs.changes.outputs.petition == 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -53,13 +64,43 @@ jobs:
       - name: test
         run: pnpm test --filter="@dxe/email-petition"
 
-  # Maps changed files to the deploys that depend on them.
+  # Checks for the standalone web-component build. It bundles the email-petition
+  # stack, so its checks run when that stack changes too (see the `element`
+  # filter).
+  # TODO: this currently only checks formatting; add lint and tests for
+  # email-petition-element so those dependency paths actually exercise its code.
+  check-email-petition-element:
+    name: Check email-petition-element
+    needs: changes
+    if: github.event_name == 'workflow_dispatch' || needs.changes.outputs.element == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 22
+      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+        with:
+          run_install: false
+      - name: install
+        run: pnpm install --frozen-lockfile
+      - name: check format
+        run: pnpm exec prettier --check packages/email-petition-element
+
+  # Maps changed files to the deploys that depend on them. Apps and the element
+  # bundle embed @dxe/email-petition, which in turn builds on the shared
+  # components, so both packages count as inputs to everything downstream.
   changes:
     name: Detect changes
     runs-on: ubuntu-latest
     permissions:
       contents: read
     outputs:
+      petition: ${{ steps.filter.outputs.petition }}
       element: ${{ steps.filter.outputs.element }}
       freezoe: ${{ steps.filter.outputs.freezoe }}
       chickens: ${{ steps.filter.outputs.chickens }}
@@ -72,25 +113,42 @@ jobs:
         id: filter
         with:
           filters: |
+            petition:
+              - packages/email-petition/**
+              - packages/components/**
             element:
               - packages/email-petition-element/**
               - packages/email-petition/**
               - packages/components/**
             freezoe:
               - apps/freezoe.org/**
-              - packages/**
+              - packages/email-petition/**
+              - packages/components/**
             chickens:
               - apps/helpthechickens.com/**
-              - packages/**
+              - packages/email-petition/**
+              - packages/components/**
             ducks:
               - apps/helptheducks.com/**
-              - packages/**
+              - packages/email-petition/**
+              - packages/components/**
 
+  # Rebuilds and publishes the third-party bundle when its own sources change or
+  # when the email-petition stack it embeds does.
+  #
+  # `!cancelled()` lets the job evaluate when its gates were skipped (e.g. only the
+  # element's own sources changed, so the email-petition `test` gate didn't run);
+  # GitHub only drops the implicit `success()` gate when the `if` calls a status
+  # check function.
   deploy-email-petition-element:
     name: Deploy email-petition-element
-    needs: [test, changes]
-    # workflow_dispatch has no diff to filter on, so deploy everything in that case.
-    if: needs.changes.outputs.element == 'true' || github.event_name == 'workflow_dispatch'
+    needs: [test, changes, check-email-petition-element]
+    if: >-
+      !cancelled() &&
+      github.event_name != 'pull_request' &&
+      (needs.test.result == 'success' || needs.test.result == 'skipped') &&
+      (needs.check-email-petition-element.result == 'success' || needs.check-email-petition-element.result == 'skipped') &&
+      (needs.changes.outputs.element == 'true' || needs.changes.outputs.petition == 'true' || github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -108,8 +166,7 @@ jobs:
         run: |
           node --version
           pnpm install --frozen-lockfile
-      - name: check format
-        run: pnpm exec prettier --check packages/email-petition-element
+      # Checks are gated by the `check-email-petition-element` job (see `needs`).
       - name: build
         run: pnpm build --filter="@dxe/email-petition-element"
       - name: sync to S3
@@ -137,9 +194,21 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
+  # Deploy apps when the email-petition `test` gate passed or was skipped (the
+  # petition stack was unchanged), but not when it failed or was cancelled.
+  #
+  # `!cancelled()` is required so the job still evaluates when `test` is skipped.
+  # GitHub only skips the implicit `success()` gate when the `if` contains a status
+  # check function.
+  # https://docs.github.com/en/actions/reference/workflows-and-actions/expressions#status-check-functions
+
   deploy-freezoe:
     needs: [test, changes]
-    if: needs.changes.outputs.freezoe == 'true' || github.event_name == 'workflow_dispatch'
+    if: >-
+      !cancelled() &&
+      github.event_name != 'pull_request' &&
+      (needs.test.result == 'success' || needs.test.result == 'skipped') &&
+      (needs.changes.outputs.freezoe == 'true' || github.event_name == 'workflow_dispatch')
     permissions:
       contents: read
     uses: ./.github/workflows/frontend.yml
@@ -154,7 +223,11 @@ jobs:
 
   deploy-chickens:
     needs: [test, changes]
-    if: needs.changes.outputs.chickens == 'true' || github.event_name == 'workflow_dispatch'
+    if: >-
+      !cancelled() &&
+      github.event_name != 'pull_request' &&
+      (needs.test.result == 'success' || needs.test.result == 'skipped') &&
+      (needs.changes.outputs.chickens == 'true' || github.event_name == 'workflow_dispatch')
     permissions:
       contents: read
     uses: ./.github/workflows/frontend.yml
@@ -169,7 +242,11 @@ jobs:
 
   deploy-ducks:
     needs: [test, changes]
-    if: needs.changes.outputs.ducks == 'true' || github.event_name == 'workflow_dispatch'
+    if: >-
+      !cancelled() &&
+      github.event_name != 'pull_request' &&
+      (needs.test.result == 'success' || needs.test.result == 'skipped') &&
+      (needs.changes.outputs.ducks == 'true' || github.event_name == 'workflow_dispatch')
     permissions:
       contents: read
     uses: ./.github/workflows/frontend.yml
