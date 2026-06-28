@@ -1,0 +1,177 @@
+# Builds and deploys the email-petition web component and the frontend sites,
+# gating each deploy on the @dxe/email-petition test suite.
+#
+# The shared `test` job runs the email-petition tests and linter, and every
+# deploy job depends on it via `needs: test`, so a failing test or lint blocks
+# all deploys. Keeping these in one workflow means the suite runs a single time
+# per push instead of once per deploy. Per-deploy path scoping is handled by the
+# `changes` job (GitHub doesn't support job-level `paths:` filters).
+
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - apps/freezoe.org/**
+      - apps/helpthechickens.com/**
+      - apps/helptheducks.com/**
+      - packages/**
+  workflow_dispatch:
+
+# Ensure only one run per branch is in flight so an older run can't finish after
+# a newer one and overwrite the current artifacts.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Shared test gate for the deploy jobs below.
+  test:
+    name: Test & lint email-petition
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 22
+      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+        with:
+          run_install: false
+      - name: install
+        run: pnpm install --frozen-lockfile
+      - name: lint
+        run: pnpm lint --filter="@dxe/email-petition"
+      - name: test
+        run: pnpm test --filter="@dxe/email-petition"
+
+  # Maps changed files to the deploys that depend on them.
+  changes:
+    name: Detect changes
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      element: ${{ steps.filter.outputs.element }}
+      freezoe: ${{ steps.filter.outputs.freezoe }}
+      chickens: ${{ steps.filter.outputs.chickens }}
+      ducks: ${{ steps.filter.outputs.ducks }}
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          persist-credentials: false
+      - uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36 # v3.0.2
+        id: filter
+        with:
+          filters: |
+            element:
+              - packages/email-petition-element/**
+              - packages/email-petition/**
+              - packages/components/**
+            freezoe:
+              - apps/freezoe.org/**
+              - packages/**
+            chickens:
+              - apps/helpthechickens.com/**
+              - packages/**
+            ducks:
+              - apps/helptheducks.com/**
+              - packages/**
+
+  deploy-email-petition-element:
+    name: Deploy email-petition-element
+    needs: [test, changes]
+    # workflow_dispatch has no diff to filter on, so deploy everything in that case.
+    if: needs.changes.outputs.element == 'true' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 22
+      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+        with:
+          run_install: false
+      - name: build
+        run: |
+          node --version
+          pnpm install --frozen-lockfile
+          pnpm build --filter="@dxe/email-petition-element"
+      - name: sync to S3
+        # cache-control: The bundle filename is stable (not content-hashed), so
+        # third-party sites embedding it will keep serving a cached copy unless we
+        # set an explicit, short Cache-Control. 5 minutes balances letting third
+        # parties pick up published updates promptly against request volume.
+        run: |
+          aws s3 sync packages/email-petition-element/dist \
+            "s3://${AWS_S3_BUCKET}/email-petition" \
+            --acl public-read \
+            --delete \
+            --cache-control "public, max-age=300"
+        env:
+          AWS_S3_BUCKET: ${{ vars.DXE_STATIC_S3_BUCKET }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: "us-west-1"
+      - uses: chetan/invalidate-cloudfront-action@6adb1f613f4102ad81cd08a7ba83b8abe490cb8d # v2.4.2
+        env:
+          DISTRIBUTION: ${{ vars.DXE_STATIC_CLOUDFRONT_DISTRIBUTION }}
+          PATHS: >-
+            /email-petition/*
+          AWS_REGION: "us-west-2"
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+  deploy-freezoe:
+    needs: [test, changes]
+    if: needs.changes.outputs.freezoe == 'true' || github.event_name == 'workflow_dispatch'
+    permissions:
+      contents: read
+    uses: ./.github/workflows/frontend.yml
+    with:
+      package-name: freezoe.org
+      package-path: apps/freezoe.org
+      aws-s3-bucket: ${{ vars.FREE_ZOE_S3_BUCKET }}
+      aws-cloudfront-distribution: ${{ vars.FREE_ZOE_CLOUDFRONT_DISTRIBUTION }}
+    secrets:
+      aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+  deploy-chickens:
+    needs: [test, changes]
+    if: needs.changes.outputs.chickens == 'true' || github.event_name == 'workflow_dispatch'
+    permissions:
+      contents: read
+    uses: ./.github/workflows/frontend.yml
+    with:
+      package-name: helpthechickens.com
+      package-path: apps/helpthechickens.com
+      aws-s3-bucket: ${{ vars.HELP_THE_CHICKENS_S3_BUCKET }}
+      aws-cloudfront-distribution: ${{ vars.HELP_THE_CHICKENS_CLOUDFRONT_DISTRIBUTION }}
+    secrets:
+      aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+  deploy-ducks:
+    needs: [test, changes]
+    if: needs.changes.outputs.ducks == 'true' || github.event_name == 'workflow_dispatch'
+    permissions:
+      contents: read
+    uses: ./.github/workflows/frontend.yml
+    with:
+      package-name: helptheducks.com
+      package-path: apps/helptheducks.com
+      aws-s3-bucket: ${{ vars.HELP_THE_DUCKS_S3_BUCKET }}
+      aws-cloudfront-distribution: ${{ vars.HELP_THE_DUCKS_CLOUDFRONT_DISTRIBUTION }}
+    secrets:
+      aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
