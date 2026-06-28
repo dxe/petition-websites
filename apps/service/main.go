@@ -90,11 +90,15 @@ func (s *server) runServer() {
 }
 
 func worker(db *sqlx.DB) {
-	var err error
-	mailClient, err = mailer.CreateClient()
-	if err != nil {
-		fmt.Printf("Could not create mail client: %v\n", err)
-		return
+	if config.IsDevelopment {
+		fmt.Println("Development mode: emails will be logged instead of sent")
+	} else {
+		var err error
+		mailClient, err = mailer.CreateClient()
+		if err != nil {
+			fmt.Printf("Could not create mail client: %v\n", err)
+			return
+		}
 	}
 	for {
 		processNewMessages(db)
@@ -136,13 +140,19 @@ func processNewMessages(db *sqlx.DB) {
 			continue
 		}
 		fromEmail := strings.Join(strings.Split(strings.ToLower(strings.Trim(normalizedName, " ")), " "), ".") + "@" + settings.FromDomain
-		err = mailer.Send(mailClient, mailer.SendOptions{
+		sendOptions := mailer.SendOptions{
 			From:    fmt.Sprintf("%s <%s>", message.Name, fromEmail),
 			ReplyTo: message.Email,
 			To:      settings.To(data.Municipality(message.City.String), data.Zip(message.Zip.String)),
 			Subject: settings.Subject,
 			Body:    message.Message,
-		})
+		}
+		if config.IsDevelopment {
+			mailer.LogEmail(sendOptions)
+			success = append(success, message.ID)
+			continue
+		}
+		err = mailer.Send(mailClient, sendOptions)
 		if err != nil {
 			fmt.Printf("Error sending email: %v", err)
 			fail = append(fail, message.ID)

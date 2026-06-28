@@ -10,6 +10,8 @@ var (
 	Port            = getEnvWithFallback("PORT", "3333")
 	Dsn             = getEnvWithFallback("DB_CONNECTION_STRING", "adb_user:adbpassword@tcp(localhost:3306)/campaign_mailer")
 	RecaptchaSecret = getEnvWithFallback("RECAPTCHA_SECRET", "")
+	GoEnv           = getEnvWithFallback("GO_ENV", "production")
+	IsDevelopment   = GoEnv == "development"
 )
 
 func getEnvWithFallback(key string, fallback string) string {
