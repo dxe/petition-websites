@@ -104,3 +104,15 @@ pnpm dev
 To see changes live in a website's dev server, run the website and this package
 together with Turbo filters from the repo root — see the
 [root README](../../README.md#develop).
+
+## Testing
+
+```sh
+pnpm test         # run once
+pnpm test:watch   # watch mode
+```
+
+We use `vitest` runner. The harness is wired up in `src/test/`.
+
+HTTP requests are mocked with MSW (Mock Service Worker). Tests can both stub the API responses and
+capture the outgoing request bodies.
