@@ -63,9 +63,11 @@ export function EmailPetition(props: {
     defaultGoal: number;
   };
 }) {
-  if (!LOCATION_INPUT_MODES.includes(props.locationInputMode)) {
+  const { onSubmit, locationInputMode, defaultMessage } = props;
+
+  if (!LOCATION_INPUT_MODES.includes(locationInputMode)) {
     throw new Error(
-      `Invalid location-input-mode "${props.locationInputMode}". Must be one of: ${LOCATION_INPUT_MODES.join(", ")}.`,
+      `Invalid location-input-mode "${locationInputMode}". Must be one of: ${LOCATION_INPUT_MODES.join(", ")}.`,
     );
   }
 
@@ -92,7 +94,7 @@ export function EmailPetition(props: {
   });
 
   const form = useForm<PetitionForm>({
-    resolver: zodResolver(makePetitionFormSchema(props.locationInputMode)),
+    resolver: zodResolver(makePetitionFormSchema(locationInputMode)),
     defaultValues: {
       name: "",
       email: "",
@@ -101,7 +103,7 @@ export function EmailPetition(props: {
       zip: "",
       city: "",
       sfResident: false,
-      message: props.defaultMessage,
+      message: defaultMessage,
     },
   });
   const {
@@ -120,8 +122,8 @@ export function EmailPetition(props: {
   const onReactHookFormSubmit = useMemo(
     () =>
       handleSubmit(async (data) => {
-        if (props.onSubmit != null) {
-          props.onSubmit();
+        if (onSubmit != null) {
+          onSubmit();
         }
         setIsSubmitting(true);
         if (!recaptchaRef.current) {
@@ -136,7 +138,7 @@ export function EmailPetition(props: {
           return;
         }
 
-        const location = resolveLocation(props.locationInputMode, data);
+        const location = resolveLocation(locationInputMode, data);
 
         const message = injectMessageValues(
           data.message,
@@ -204,13 +206,7 @@ export function EmailPetition(props: {
         setIsSubmitting(false);
         recaptchaRef.current?.reset();
       }),
-    [
-      handleSubmit,
-      props.locationInputMode,
-      props.onSubmit,
-      petitionId,
-      campaignName,
-    ],
+    [handleSubmit, locationInputMode, onSubmit, petitionId, campaignName],
   );
 
   const outsideUS = watch("outsideUS");
@@ -271,20 +267,15 @@ export function EmailPetition(props: {
         return;
       }
       resetField("message", {
-        defaultValue: injectMessageValues(
-          props.defaultMessage,
-          name,
-          city,
-          true,
-        ),
+        defaultValue: injectMessageValues(defaultMessage, name, city, true),
       });
     },
-    [dirtyFields.message, resetField],
+    [dirtyFields.message, resetField, defaultMessage],
   );
 
   // City injected into the visible message template ("" keeps the placeholder).
   const getMessageCity = () =>
-    resolveLocation(props.locationInputMode, getValues()).city ?? "";
+    resolveLocation(locationInputMode, getValues()).city ?? "";
 
   // Seed the visible message with relevant details so the signer sees the final
   // text to send instead of placeholders.
@@ -295,7 +286,7 @@ export function EmailPetition(props: {
     // derives from, and getValues) are the real dependencies.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    props.locationInputMode,
+    locationInputMode,
     zip,
     city,
     outsideUS,
@@ -384,7 +375,7 @@ export function EmailPetition(props: {
                 </FormItem>
               )}
             />
-            {props.locationInputMode === "zipWithSonomaCountyCity" && (
+            {locationInputMode === "zipWithSonomaCountyCity" && (
               <>
                 <FormField
                   control={control}
@@ -477,7 +468,7 @@ export function EmailPetition(props: {
                 />
               </>
             )}
-            {props.locationInputMode === "sfOnly" && (
+            {locationInputMode === "sfOnly" && (
               <FormField
                 control={control}
                 name="sfResident"
