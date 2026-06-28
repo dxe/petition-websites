@@ -51,6 +51,21 @@ const CAMPAIGN_MAILER_API_URL = `${process.env.NEXT_PUBLIC_CAMPAIGN_MAILER_API_R
 
 const CAPTCHA_SITE_KEY = "6LdiglcpAAAAAM9XE_TNnAiZ22NR9nSRxHMOFn8E";
 
+/** Body sent to the campaign mailer's `/message/create` endpoint. */
+export type MailerPayload = {
+  name: string;
+  email: string;
+  phone?: string;
+  outside_us: boolean;
+  zip?: string;
+  city?: string;
+  state?: string;
+  country?: string;
+  message: string;
+  campaign: string;
+  token: string;
+};
+
 export function EmailPetition(props: {
   petitionId: string;
   campaignName: string;
@@ -190,7 +205,7 @@ export function EmailPetition(props: {
               message: message,
               campaign: campaignName,
               token,
-            },
+            } satisfies MailerPayload,
             headers: {
               "Content-Type": "application/json",
             },
