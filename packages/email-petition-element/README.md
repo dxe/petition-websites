@@ -96,25 +96,22 @@ Use `test` to prefix IDs with `test:` so submissions don't affect production dat
 
 ## Attribute reference
 
-| Attribute             | Type    | Required | Description                                                                       |
-| --------------------- | ------- | -------- | --------------------------------------------------------------------------------- |
-| `petition-id`         | string  | yes      | ID passed to the petition signing API                                             |
-| `campaign-name`       | string  | yes      | Campaign name passed to the mailer API                                            |
-| `default-message`     | string  | yes      | Pre-filled message body; supports `[Your name]` and `[Your city]` placeholders    |
-| `location-input-mode` | string  | yes      | Which location fields to collect. `zipWithSonomaCountyCity` or `sfOnly`            |
-| `thermometer-goal`    | number  | no       | Shows a signature thermometer with this goal count                                |
-| `test`                | boolean | no       | Prefixes IDs with `test:` to avoid polluting production data                      |
-| `debug`               | boolean | no       | Logs resolved API URLs and IDs to the console                                     |
+| Attribute             | Type    | Required | Description                                                                    |
+| --------------------- | ------- | -------- | ------------------------------------------------------------------------------ |
+| `petition-id`         | string  | yes      | ID passed to the petition signing API                                          |
+| `campaign-name`       | string  | yes      | Campaign name passed to the mailer API                                         |
+| `default-message`     | string  | yes      | Pre-filled message body; supports `[Your name]` and `[Your city]` placeholders |
+| `location-input-mode` | string  | yes      | Which location fields to collect. `zipWithSonomaCountyCity` or `sfOnly`        |
+| `thermometer-goal`    | number  | no       | Shows a signature thermometer with this goal count                             |
+| `test`                | boolean | no       | Prefixes IDs with `test:` to avoid polluting production data                   |
+| `debug`               | boolean | no       | Logs resolved API URLs and IDs to the console                                  |
 
 ### Location input modes
 
-The `location-input-mode` attribute is required and controls how a signer's
-location is collected:
-
-- `zipWithSonomaCountyCity`: a US zip code field, an auto-derived city
-  selector for Sonoma County zips, and an "Outside the United States" toggle.
-- `sfOnly`: hides zip and city and instead shows a required "I am a resident of
-  San Francisco, CA" checkbox. Submissions are tagged with San Francisco, CA, US.
+`location-input-mode` is required and accepts `zipWithSonomaCountyCity` or
+`sfOnly`. See
+[Location input modes](../email-petition/README.md#location-input-modes) in the
+`@dxe/email-petition` package for what each mode collects and submits.
 
 ```html
 <email-petition

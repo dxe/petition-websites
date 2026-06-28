@@ -50,6 +50,28 @@ Develop all apps and packages together:
 pnpm dev
 ```
 
+### Test
+
+Run all tests across the monorepo:
+
+```bash
+pnpm test
+```
+
+Run tests for a single package:
+
+```bash
+pnpm test --filter @dxe/email-petition
+```
+
+Or: `cd packages/email-petition` and `pnpm test`.
+
+To run a package's tests in watch mode while developing, run `pnpm test:watch`
+from within that package's directory (e.g. `packages/email-petition`).
+
+Not every package has tests. For details on a specific package's test setup, see
+that package's README.
+
 ### Debugging
 
 If you run into build or dev server issues, try running `pnpm clean` to clear

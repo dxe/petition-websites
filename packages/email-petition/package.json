@@ -4,6 +4,8 @@
   "scripts": {
     "dev": "tsc --watch",
     "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "clean": "rm -rf dist .turbo"
   },
   "exports": {
@@ -24,11 +26,18 @@
     "zod": "^3.24.2"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "@types/react-google-recaptcha": "^2.1.9",
+    "@vitejs/plugin-react": "^4.3.4",
+    "happy-dom": "^15.11.7",
+    "msw": "^2.7.3",
     "tsc-alias": "^1.8.11",
-    "typescript": "5.8.2"
+    "typescript": "5.8.2",
+    "vitest": "^3.2.4"
   },
   "ignore-future-use-only": {
     "devDependencies": {
