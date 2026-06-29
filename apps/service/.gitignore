@@ -1,5 +1,5 @@
 # Service binaries
 service
 service.exe
-__debug_bin.exe
+__debug*
 .env.debug

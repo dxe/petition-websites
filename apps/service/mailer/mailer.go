@@ -3,6 +3,7 @@ package mailer
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -34,6 +35,16 @@ type SendOptions struct {
 	To      []string
 	Subject string
 	Body    string
+}
+
+func LogEmail(options SendOptions) {
+	fmt.Printf("[dev] Email:\n"+
+		"  From:    %s\n"+
+		"  ReplyTo: %s\n"+
+		"  To:      %s\n"+
+		"  Subject: %s\n"+
+		"  Body:    %s\n",
+		options.From, options.ReplyTo, strings.Join(options.To, ", "), options.Subject, options.Body)
 }
 
 func Send(client *ses.SES, options SendOptions) error {

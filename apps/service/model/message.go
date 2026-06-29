@@ -3,9 +3,10 @@ package model
 import (
 	"database/sql"
 	"fmt"
-	"github.com/jmoiron/sqlx"
 	"strings"
 	"time"
+
+	"github.com/jmoiron/sqlx"
 )
 
 type Message struct {
@@ -50,7 +51,10 @@ func InsertMessage(db *sqlx.DB, message Message) error {
 					  		)`,
 		message,
 	)
-	return err
+	if err != nil {
+		return fmt.Errorf("insert: %w", err)
+	}
+	return nil
 }
 
 func GetMessagesToProcess(db *sqlx.DB) ([]Message, error) {

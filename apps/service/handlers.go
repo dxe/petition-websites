@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"net/mail"
 
@@ -38,7 +39,7 @@ func (s *server) createMessageHandler(w http.ResponseWriter, r *http.Request) {
 	} else {
 		ok, err := verifyRecaptcha(body.Token)
 		if err != nil {
-			fmt.Printf("error verifying recaptcha: %v\n", err)
+			log.Printf("error verifying recaptcha: %v", err)
 			http.Error(w, "error verifying recaptcha", http.StatusInternalServerError)
 			return
 		}
@@ -88,6 +89,7 @@ func (s *server) createMessageHandler(w http.ResponseWriter, r *http.Request) {
 
 	err = model.InsertMessage(s.db, message)
 	if err != nil {
+		log.Printf("error saving message: %v", err)
 		http.Error(w, fmt.Sprintf("error saving message: %v", err), http.StatusInternalServerError)
 		return
 	}
@@ -109,6 +111,7 @@ func (s *server) getTallyHandler(w http.ResponseWriter, r *http.Request) {
 
 	tally, err := model.GetTally(s.db, campaign)
 	if err != nil {
+		log.Printf("error getting tally: %v", err)
 		http.Error(w, fmt.Sprintf("error getting tally: %v", err), http.StatusInternalServerError)
 		return
 	}
@@ -118,6 +121,7 @@ func (s *server) getTallyHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	json, err := json.Marshal(resp)
 	if err != nil {
+		log.Printf("error marshaling tally response: %v", err)
 		http.Error(w, "failed to marshal json", http.StatusInternalServerError)
 		return
 	}
@@ -157,6 +161,7 @@ func (s *server) getAssemblyMembersHandler(w http.ResponseWriter, r *http.Reques
 	}
 	json, err := json.Marshal(resp)
 	if err != nil {
+		log.Printf("error marshaling assembly members response: %v", err)
 		http.Error(w, "failed to marshal json", http.StatusInternalServerError)
 		return
 	}
