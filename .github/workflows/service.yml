@@ -13,6 +13,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Short commit sha
+        id: sha
+        run: echo "short=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+
       - name: Build image & push to ECR
         uses: kciter/aws-ecr-action@master
         with:
@@ -23,4 +27,4 @@ jobs:
           account_id: ${{ secrets.AWS_ACCOUNT_ID }}
           repo: dxe/helptheducks-service
           region: us-west-2
-          tags: latest,${{ github.sha }}
+          tags: latest,${{ steps.sha.outputs.short }}
