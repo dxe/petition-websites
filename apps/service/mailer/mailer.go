@@ -2,7 +2,6 @@ package mailer
 
 import (
 	"fmt"
-	"os"
 	"strings"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -11,12 +10,8 @@ import (
 )
 
 func CreateClient() (*ses.SES, error) {
-	accessKey := os.Getenv("AWS_ACCESS_KEY_ID")
-	secretKey := os.Getenv("AWS_SECRET_ACCESS_KEY")
-	if accessKey == "" || secretKey == "" {
-		return nil, fmt.Errorf("AWS credentials not set in environment variables")
-	}
-
+	// Credentials come from the default AWS SDK credential chain: the ECS task
+	// role in production, or AWS_ACCESS_KEY_ID/AWS_SECRET_ACCESS_KEY locally.
 	s, err := session.NewSessionWithOptions(session.Options{
 		Config: aws.Config{
 			Region: aws.String("us-west-2"),
